@@ -165,6 +165,138 @@ app.post('/api/matches/:id/result', authMiddleware, (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════
+
+function calcScore(match){
+  const GOAL_TYPES = ['gol','pc','ps'];
+  let h = 0, a = 0;
+  (match.events||[]).forEach(ev => {
+    if(!GOAL_TYPES.includes(ev.type)) return;
+    if(ev.team === match.home) h++;
+    else if(ev.team === match.away) a++;
+  });
+  match.scoreH = h;
+  match.scoreA = a;
+}
+
+function authCheck(req, res, match){
+  if(isAdmin(req)) return true;
+  if(match.home === req.user.team || match.away === req.user.team) return true;
+  res.status(403).json({ error: 'No autorizado para este partido' });
+  return false;
+}
+
+// ═══════════════════════════════════════════════════════
+//  FORMACIÓN (pre-partido, sin necesitar resultado)
+// ═══════════════════════════════════════════════════════
+
+// POST /api/matches/:id/lineup
+// Body: { side:'home'|'away', titulares:[], suplentes:[] }
+app.post('/api/matches/:id/lineup', authMiddleware, (req, res) => {
+  const matches = readJSON(MATCHES_FILE);
+  const match   = matches[req.params.id];
+  if(!match) return res.status(404).json({ error: 'Partido no encontrado' });
+  if(!authCheck(req, res, match)) return;
+
+  const { titulares=[], suplentes=[] } = req.body;
+  // Auto-detectar lado según equipo logueado
+  const side = req.body.side || (match.home === req.user.team ? 'home' : 'away');
+
+  if(side === 'home'){
+    match.lineup_home = titulares;
+    match.subs_home   = suplentes;
+  } else {
+    match.lineup_away = titulares;
+    match.subs_away   = suplentes;
+  }
+
+  // Avanzar fase si estaba en 'pre'
+  if(!match.phase || match.phase === 'pre') match.phase = 'lineup_sent';
+
+  writeJSON(MATCHES_FILE, matches);
+  res.json({ ok: true, match });
+});
+
+// ═══════════════════════════════════════════════════════
+//  EVENTOS (uno a uno, calcula score automático)
+// ═══════════════════════════════════════════════════════
+
+// POST /api/matches/:id/event
+// Body: { type, team, player, minuto, quarter }
+app.post('/api/matches/:id/event', authMiddleware, (req, res) => {
+  const matches = readJSON(MATCHES_FILE);
+  const match   = matches[req.params.id];
+  if(!match) return res.status(404).json({ error: 'Partido no encontrado' });
+  if(!authCheck(req, res, match)) return;
+
+  const { type, team, player='', minuto=0, quarter=1 } = req.body;
+  const event = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+    type, team, player, minuto: Number(minuto), quarter: Number(quarter),
+    addedAt: new Date().toISOString()
+  };
+
+  if(!match.events) match.events = [];
+  match.events.push(event);
+  match.events.sort((a,b) => (a.quarter-b.quarter)||( a.minuto-b.minuto));
+
+  calcScore(match);
+
+  // Asegurarse que la fase sea 'partido'
+  if(!match.phase || match.phase === 'pre' || match.phase === 'lineup_sent'){
+    match.phase = 'partido';
+  }
+
+  writeJSON(MATCHES_FILE, matches);
+  res.json({ ok:true, event, scoreH: match.scoreH, scoreA: match.scoreA });
+});
+
+// DELETE /api/matches/:id/event/:eid
+app.delete('/api/matches/:id/event/:eid', authMiddleware, (req, res) => {
+  const matches = readJSON(MATCHES_FILE);
+  const match   = matches[req.params.id];
+  if(!match) return res.status(404).json({ error: 'Partido no encontrado' });
+  if(!authCheck(req, res, match)) return;
+
+  match.events = (match.events||[]).filter(e => e.id !== req.params.eid);
+  calcScore(match);
+
+  writeJSON(MATCHES_FILE, matches);
+  res.json({ ok:true, scoreH: match.scoreH, scoreA: match.scoreA });
+});
+
+// ═══════════════════════════════════════════════════════
+//  FASE (transiciones de estado del partido)
+// ═══════════════════════════════════════════════════════
+
+// POST /api/matches/:id/phase
+// Body: { phase:'partido'|'done', mode:'live'|'post', scoreH, scoreA }
+app.post('/api/matches/:id/phase', authMiddleware, (req, res) => {
+  const matches = readJSON(MATCHES_FILE);
+  const match   = matches[req.params.id];
+  if(!match) return res.status(404).json({ error: 'Partido no encontrado' });
+  if(!authCheck(req, res, match)) return;
+
+  const { phase, mode, scoreH, scoreA, shootoutH, shootoutA } = req.body;
+  match.phase = phase;
+  if(mode !== undefined)      match.mode      = mode;
+  if(scoreH !== undefined)    match.scoreH    = scoreH;
+  if(scoreA !== undefined)    match.scoreA    = scoreA;
+  if(shootoutH !== undefined) match.shootoutH = shootoutH;
+  if(shootoutA !== undefined) match.shootoutA = shootoutA;
+
+  if(phase === 'done'){
+    match.submitted    = true;
+    match.submitted_at = new Date().toISOString();
+    match.submitted_by = req.user.team;
+  }
+
+  writeJSON(MATCHES_FILE, matches);
+  res.json({ ok:true, match });
+});
+
+// ═══════════════════════════════════════════════════════
 //  ADMIN - cambiar contraseña
 // ═══════════════════════════════════════════════════════
 
@@ -201,6 +333,24 @@ app.get('/api/admin/users', authMiddleware, (req, res) => {
 // ═══════════════════════════════════════════════════════
 //  START
 // ═══════════════════════════════════════════════════════
+
+// Migrar datos existentes: agregar phase, subs, ids en eventos
+(function migrateData(){
+  const matches = readJSON(MATCHES_FILE);
+  let changed = false;
+  Object.values(matches).forEach(m => {
+    if(!m.phase){ m.phase = m.submitted ? 'done' : 'pre'; changed = true; }
+    if(!m.subs_home){ m.subs_home = []; changed = true; }
+    if(!m.subs_away){ m.subs_away = []; changed = true; }
+    (m.events||[]).forEach(ev => {
+      if(!ev.id){
+        ev.id = Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+        changed = true;
+      }
+    });
+  });
+  if(changed) writeJSON(MATCHES_FILE, matches);
+})();
 
 app.listen(PORT, () => {
   console.log(`\n✅  Servidor Torneo Máster +50 corriendo en http://localhost:${PORT}`);
