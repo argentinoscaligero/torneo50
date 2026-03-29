@@ -382,6 +382,10 @@ const PLAYERS = {
   ],
 };
 
+const API_BASE = window.location.port === '3000'
+  ? ''
+  : window.location.protocol + '//' + window.location.hostname + ':3000';
+
 const EVENT_TYPES = [
   { value:"gol",      label:"⚽ Gol",            icon:"⚽" },
   { value:"pc",       label:"🔵 PC (Gol)",        icon:"🔵" },
@@ -421,7 +425,7 @@ async function doLogin(){
   if(!pass){ msg.className='msg error'; msg.textContent='Ingresá la contraseña.'; return; }
 
   try {
-    const res  = await fetch('/api/login', {
+    const res  = await fetch(API_BASE+'/api/login', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ team, password: pass })
     });
@@ -470,7 +474,7 @@ async function enterApp(){
 
 async function loadMatches(){
   try {
-    const res  = await fetch('/api/matches/full', { headers: { Authorization: 'Bearer ' + STATE.token } });
+    const res  = await fetch(API_BASE+'/api/matches/full', { headers: { Authorization: 'Bearer ' + STATE.token } });
     STATE.matches = await res.json();
   } catch(e){
     console.error('Error cargando partidos', e);
@@ -766,7 +770,7 @@ async function submitPlanilla(){
   }
 
   try {
-    const res = await fetch(`/api/matches/${STATE.currentMatchId}/result`, {
+    const res = await fetch(`${API_BASE}/api/matches/${STATE.currentMatchId}/result`, {
       method: 'POST',
       headers: { 'Content-Type':'application/json', Authorization:'Bearer '+STATE.token },
       body: JSON.stringify({

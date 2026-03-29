@@ -719,6 +719,12 @@ const REGLAMENTO = [
   },
 ];
 
+// API base: si el HTML se sirve desde Apache (puerto 80) y el backend
+// corre en el 3000, apuntamos al 3000 en el mismo host.
+const API_BASE = window.location.port === '3000'
+  ? ''
+  : window.location.protocol + '//' + window.location.hostname + ':3000';
+
 // ═══════════════════════════════════════════════════════
 //  ESTADO LOCAL (scores desde localStorage)
 // ═══════════════════════════════════════════════════════
@@ -945,7 +951,7 @@ function renderEquipos(){
             ${team.uniformeOf.map(u=>`<span class="uniforme-pill">✅ ${u}</span>`).join('')}
           </div>` : ''}
           <div style="font-size:.78rem;color:var(--muted);margin-top:.5rem;margin-bottom:.2rem">
-            👩 Referente: <strong>${team.referente}</strong>
+            👩 Referente: <strong>${team.referente.split('·')[0].trim()}</strong>
           </div>
           ${playersHtml}
         </div>
@@ -1009,7 +1015,7 @@ async function doLogin(){
   if(!pass){ msg.className='login-msg error'; msg.textContent='Ingresá la contraseña.'; return; }
 
   try {
-    const res = await fetch('/api/login', {
+    const res = await fetch(API_BASE+'/api/login', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ team: user, password: pass })
@@ -1036,7 +1042,7 @@ async function doLogin(){
 
 async function fetchScoresFromBackend(){
   try {
-    const res = await fetch('/api/matches', { signal: AbortSignal.timeout(2000) });
+    const res = await fetch(API_BASE+'/api/matches', { signal: AbortSignal.timeout(2000) });
     if(!res.ok) return;
     const data = await res.json();
     // data: { "f1m1": { h: 2, a: 1 }, ... }
