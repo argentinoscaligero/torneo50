@@ -719,11 +719,9 @@ const REGLAMENTO = [
   },
 ];
 
-// API base: si el HTML se sirve desde Apache (puerto 80) y el backend
-// corre en el 3000, apuntamos al 3000 en el mismo host.
-const API_BASE = window.location.port === '3000'
-  ? ''
-  : window.location.protocol + '//' + window.location.hostname + ':3000';
+// Apache hace proxy de /api/ → http://localhost:3000/api/
+// así el frontend siempre usa rutas relativas (mismo origen, mismo protocolo)
+const API_BASE = '';
 
 // ═══════════════════════════════════════════════════════
 //  ESTADO LOCAL (scores desde localStorage)
