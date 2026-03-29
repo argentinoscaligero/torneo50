@@ -17,8 +17,6 @@
       --shadow-soft: 0 8px 24px rgba(0,0,0,0.06);
       --q-direct-bg: rgba(249,176,0,0.18);
       --q-direct-border: rgba(249,176,0,0.55);
-      --q-playoff-bg: rgba(0,133,199,0.14);
-      --q-playoff-border: rgba(0,133,199,0.45);
       --row-hover: rgba(0,75,141,0.05);
     }
     *{box-sizing:border-box;margin:0;padding:0}
@@ -112,12 +110,21 @@
     table.standings tbody td:first-child{text-align:left;padding-left:.7rem;font-weight:700;font-size:.82rem}
     table.standings tbody tr:hover{background:var(--row-hover)}
     tr.rank-1{background:var(--q-direct-bg)}
-    tr.rank-2,tr.rank-3{background:var(--q-playoff-bg)}
-    .standings-legend{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem;font-size:.8rem;color:var(--muted)}
-    .legend-item{display:flex;align-items:center;gap:.4rem}
-    .legend-dot{width:10px;height:10px;border-radius:999px;flex-shrink:0}
-    .dot-direct{background:var(--accent)}
-    .dot-playoff{background:var(--secondary)}
+
+    /* ── STATS ── */
+    .stats-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem}
+    .stats-card{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);overflow:hidden}
+    .stats-card-title{padding:.65rem 1rem;background:var(--primary);color:#fff;font-weight:800;font-size:.88rem}
+    .stats-list{padding:.3rem 0}
+    .stats-row{display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:.4rem;padding:.42rem .9rem;border-bottom:1px solid rgba(0,0,0,.04);font-size:.83rem}
+    .stats-row:last-child{border-bottom:none}
+    .stats-row:hover{background:var(--row-hover)}
+    .stats-pos{font-weight:900;color:var(--muted);font-size:.75rem;text-align:right}
+    .stats-name{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .stats-team{font-size:.72rem;color:var(--muted);font-weight:400}
+    .stats-val{font-weight:900;color:var(--primary);font-size:.9rem;white-space:nowrap}
+    .stats-empty{padding:1.2rem;text-align:center;color:var(--muted);font-size:.85rem;font-style:italic}
+    @media(max-width:640px){.stats-wrap{grid-template-columns:1fr}}
 
     /* ── EQUIPOS ── */
     .equipos-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.2rem}
@@ -203,6 +210,7 @@
     <nav class="nav-links">
       <a href="#fixture">Fixture</a>
       <a href="#posiciones">Posiciones</a>
+      <a href="#stats">Goleadoras</a>
       <a href="#equipos">Equipos</a>
       <a href="#reglamento">Reglamento</a>
       <a href="planilla.html" class="nav-login">🔐 Acceso Equipos</a>
@@ -248,9 +256,21 @@
     <h2 class="section-title">Tabla de Posiciones</h2>
     <p class="section-subtitle">Se actualiza con cada resultado cargado. Victoria 3 pts · Empate 1 pt · Shootout: +1 pt.</p>
     <div class="standings-wrap" id="standingsWrap"></div>
-    <div class="standings-legend">
-      <div class="legend-item"><div class="legend-dot dot-direct"></div> Clasifica directo</div>
-      <div class="legend-item"><div class="legend-dot dot-playoff"></div> Entra a playoffs</div>
+  </section>
+
+  <!-- GOLEADORAS & TARJETAS -->
+  <section id="stats">
+    <h2 class="section-title">Goleadoras &amp; Tarjetas</h2>
+    <p class="section-subtitle">Se actualiza en tiempo real con los eventos cargados.</p>
+    <div class="stats-wrap">
+      <div class="stats-card">
+        <div class="stats-card-title">⚽ Goleadoras</div>
+        <div class="stats-list" id="statsScorers"><div class="stats-empty">Sin goles registrados aún.</div></div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-card-title">🟡 Tarjetas</div>
+        <div class="stats-list" id="statsCards"><div class="stats-empty">Sin tarjetas registradas aún.</div></div>
+      </div>
     </div>
   </section>
 
@@ -874,7 +894,7 @@ function renderStandings(){
 
     const rows = sorted.map((t, i) => {
       const s = stats[t];
-      const cls = i===0 ? 'rank-1' : i<=2 ? `rank-${i+1}` : '';
+      const cls = i===0 ? 'rank-1' : '';
       const dif = s.gf - s.gc;
       return `<tr class="${cls}">
         <td><strong>${i+1}.</strong> ${t}</td>
@@ -1059,6 +1079,55 @@ async function fetchScoresFromBackend(){
 }
 
 // ═══════════════════════════════════════════════════════
+//  GOLEADORAS & TARJETAS
+// ═══════════════════════════════════════════════════════
+
+async function fetchStats(){
+  try {
+    const d = await fetch('/api/stats');
+    const data = await d.json();
+    renderScorers(data.scorers || []);
+    renderCards(data.cards || []);
+  } catch(e){ /* backend no disponible */ }
+}
+
+function renderScorers(list){
+  const el = document.getElementById('statsScorers');
+  if(!el) return;
+  if(!list.length){ el.innerHTML='<div class="stats-empty">Sin goles registrados aún.</div>'; return; }
+  el.innerHTML = list.map((r,i) => `
+    <div class="stats-row">
+      <span class="stats-pos">${i+1}</span>
+      <div>
+        <div class="stats-name">${r.player||'—'}</div>
+        <div class="stats-team">${r.team}${r.pc||r.ps ? ` · ${r.pc?r.pc+'PC ':''}${r.ps?r.ps+'PS':''}`.trim() : ''}</div>
+      </div>
+      <span class="stats-val">${r.total} ⚽</span>
+    </div>`).join('');
+}
+
+function renderCards(list){
+  const el = document.getElementById('statsCards');
+  if(!el) return;
+  if(!list.length){ el.innerHTML='<div class="stats-empty">Sin tarjetas registradas aún.</div>'; return; }
+  el.innerHTML = list.map((r,i) => {
+    const parts = [];
+    if(r.amarilla) parts.push(`${r.amarilla}🟡`);
+    if(r.roja)     parts.push(`${r.roja}🔴`);
+    if(r.verde)    parts.push(`${r.verde}🟢`);
+    return `
+    <div class="stats-row">
+      <span class="stats-pos">${i+1}</span>
+      <div>
+        <div class="stats-name">${r.player||'—'}</div>
+        <div class="stats-team">${r.team}</div>
+      </div>
+      <span class="stats-val">${parts.join(' ')}</span>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════
 
@@ -1072,6 +1141,7 @@ async function fetchScoresFromBackend(){
   renderReglamento();
   populateLoginSelect();
   fetchScoresFromBackend();
+  fetchStats();
 })();
 </script>
 </body>

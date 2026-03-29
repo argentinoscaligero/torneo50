@@ -91,6 +91,31 @@ app.get('/api/matches', (req, res) => {
   res.json(scores);
 });
 
+// GET /api/stats  → goleadoras y tarjetas (público)
+app.get('/api/stats', (req, res) => {
+  const matches = readJSON(MATCHES_FILE);
+  const scorers = {}, cards = {};
+  Object.values(matches).forEach(m => {
+    (m.events||[]).forEach(ev => {
+      if(!ev.player) return;
+      const key = `${ev.player}||${ev.team}`;
+      if(['gol','pc','ps'].includes(ev.type)){
+        if(!scorers[key]) scorers[key]={player:ev.player,team:ev.team,goles:0,pc:0,ps:0,total:0};
+        scorers[key][ev.type]++;
+        scorers[key].total++;
+      }
+      if(['amarilla','roja','verde'].includes(ev.type)){
+        if(!cards[key]) cards[key]={player:ev.player,team:ev.team,amarilla:0,roja:0,verde:0};
+        cards[key][ev.type]++;
+      }
+    });
+  });
+  res.json({
+    scorers: Object.values(scorers).sort((a,b)=>b.total-a.total),
+    cards: Object.values(cards).sort((a,b)=>(b.amarilla+b.roja+b.verde)-(a.amarilla+a.roja+a.verde))
+  });
+});
+
 // GET /api/matches/full  → todos los datos (requiere auth)
 app.get('/api/matches/full', authMiddleware, (req, res) => {
   const matches = readJSON(MATCHES_FILE);
