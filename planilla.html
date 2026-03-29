@@ -509,14 +509,14 @@ function renderTimerBtns(){
   const el=document.getElementById('timerBtns'); if(!el)return;
   const e=elapsed(), atEnd=e>=T.MAX;
   if(T.quarter>4){
-    el.innerHTML=`<button class="btn btn-primary" onclick="confirmFinish()">✅ Finalizar partido</button>`;
+    el.innerHTML=`<span style="color:var(--green);font-weight:700;font-size:.85rem">✅ 4° tiempo completado — usá el botón "Cerrar partido" más abajo</span>`;
     return;
   }
   if(atEnd && !T.running){
     el.innerHTML = T.quarter<4
       ? `<span style="color:var(--muted);font-size:.82rem">Fin del ${T.quarter}° tiempo</span>
          <button class="btn btn-primary" onclick="nextQuarter()">▶ Iniciar ${T.quarter+1}° tiempo</button>`
-      : `<button class="btn btn-primary" onclick="confirmFinish()">✅ Finalizar partido</button>`;
+      : `<span style="color:var(--green);font-weight:700;font-size:.85rem">✅ 4° tiempo completado — usá el botón "Cerrar partido" más abajo</span>`;
     return;
   }
   if(T.running){
@@ -676,23 +676,19 @@ function renderDetail(){
   const phase=m.phase||'pre';
   let html='';
 
-  // ── FORMACIÓN (siempre visible si no está en done) ──
-  if(phase!=='done'){
-    html+=renderFormationSection(m);
-  }
-
-  // ── ESTADO DEL PARTIDO ──
-  if(phase==='pre'||phase==='lineup_sent'){
-    html+=renderModeSelect(m, phase);
-  } else if(phase==='partido'){
-    if(m.mode==='live') html+=renderLiveSection(m);
-    else html+=renderPostSection(m);
-  } else if(phase==='done'){
+  if(phase==='done'){
     html+=renderDoneSection(m);
+  } else {
+    html+=renderFormationSection(m);
+    if(phase==='pre'||phase==='lineup_sent'){
+      html+=renderModeSelect(m, phase);
+    } else if(phase==='partido'){
+      if(m.mode==='live') html+=renderLiveSection(m);
+      else html+=renderPostSection(m);
+    }
+    html+=renderEventsSection(m, phase);
+    html+=renderCloseSection(m);
   }
-
-  // ── EVENTOS (siempre visibles) ──
-  html+=renderEventsSection(m, phase);
 
   document.getElementById('dpBody').innerHTML=html;
   if(m.mode==='live' && phase==='partido') updateTimerUI();
@@ -733,6 +729,10 @@ function renderFormationSection(m){
         }).join('')
     : `<div class="no-players">Planilla de inscripción no disponible</div>`;
 
+  const myOk       = side==='home' ? !!m.lineup_home_ok : !!m.lineup_away_ok;
+  const opponentOk = side==='home' ? !!m.lineup_away_ok : !!m.lineup_home_ok;
+  const opponentName = side==='home' ? m.away : m.home;
+
   return `<div class="section">
     <div class="sec-title">📋 Tu formación — ${teamName}
       <span id="formCountBadge" style="font-weight:400;font-size:.75rem;color:var(--muted);margin-left:.4rem">
@@ -740,10 +740,18 @@ function renderFormationSection(m){
       </span>
     </div>
     <div class="player-scroll">${rows}</div>
-    ${!done?`<div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+    <div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
       <button class="btn btn-primary btn-sm" onclick="submitLineup()">Guardar formación</button>
       <span id="lineupMsg" class="msg" style="display:inline-block;margin:0;padding:.3rem .7rem"></span>
-    </div>`:''}
+    </div>
+    <div style="margin-top:.55rem;font-size:.78rem;display:flex;gap:1rem;flex-wrap:wrap">
+      <span style="color:${myOk?'var(--green)':'var(--muted)'}">
+        ${myOk?'✅':'⏳'} Tu formación: ${myOk?'enviada':'pendiente'}
+      </span>
+      <span style="color:${opponentOk?'var(--green)':'var(--muted)'}">
+        ${opponentOk?'✅':'⏳'} ${opponentName}: ${opponentOk?'enviada':'pendiente'}
+      </span>
+    </div>
   </div>`;
 }
 
@@ -876,12 +884,7 @@ async function addLiveEvent(type){
   }catch(e){ console.error(e); }
 }
 
-async function confirmFinish(){
-  const m=S.matches[S.currentId];
-  const d=await api('POST',`/api/matches/${S.currentId}/phase`,
-    {phase:'done',scoreH:m.scoreH,scoreA:m.scoreA});
-  if(d.ok){ S.matches[S.currentId]=d.match; resetTimer(); renderDetail(); }
-}
+// confirmFinish ya no se usa — el cierre pasa por closeMatch()
 
 // ── POST MODE ──
 function renderPostSection(m){
@@ -929,10 +932,6 @@ function renderPostSection(m){
         <div><label>&nbsp;</label><button class="btn btn-primary btn-sm" onclick="addPostEvent()">+ Agregar</button></div>
       </div>
     </div>
-    <div style="margin-top:.9rem;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center">
-      <button class="btn btn-primary" onclick="submitPost()">✅ Confirmar y finalizar</button>
-      <span id="postMsg" class="msg" style="display:inline-block;margin:0;padding:.3rem .7rem"></span>
-    </div>
   </div>`;
 }
 
@@ -957,20 +956,63 @@ async function addPostEvent(){
   }catch(e){ console.error(e); }
 }
 
-async function submitPost(){
-  const m=S.matches[S.currentId];
-  const msg=document.getElementById('postMsg');
-  const h=parseInt(document.getElementById('postH')?.value);
-  const a=parseInt(document.getElementById('postA')?.value);
-  if(isNaN(h)||isNaN(a)){ msg.className='msg error';msg.textContent='Ingresá el resultado.';return; }
-  const sh=parseInt(document.getElementById('postSH')?.value)||null;
-  const sa=parseInt(document.getElementById('postSA')?.value)||null;
+// ── CERRAR PARTIDO ──
+function renderCloseSection(m){
+  const homeOk = !!m.lineup_home_ok;
+  const awayOk = !!m.lineup_away_ok;
+  const canClose = homeOk && awayOk;
+
+  const dot = ok => ok
+    ? `<span style="color:var(--green);font-weight:700">✅</span>`
+    : `<span style="color:var(--muted)">⏳</span>`;
+
+  return `<div class="section" style="border:2px solid ${canClose?'rgba(46,125,50,.25)':'rgba(0,0,0,.07)'}">
+    <div class="sec-title">🏁 Cerrar partido</div>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap;font-size:.82rem;margin-bottom:.65rem">
+      <span>${dot(homeOk)} ${m.home}: ${homeOk?'<strong>formación enviada</strong>':'pendiente'}</span>
+      <span>${dot(awayOk)} ${m.away}: ${awayOk?'<strong>formación enviada</strong>':'pendiente'}</span>
+    </div>
+    ${canClose
+      ? `<p style="font-size:.8rem;color:var(--muted);margin-bottom:.7rem">
+           Ambas formaciones confirmadas. Cualquier equipo puede cerrar el partido.
+         </p>
+         <button class="btn btn-primary" onclick="closeMatch()" style="background:var(--green)">🏁 Cerrar partido</button>
+         <span id="closeMsg" class="msg" style="display:inline-block;margin-left:.5rem;padding:.3rem .7rem"></span>`
+      : `<p style="font-size:.8rem;color:var(--muted)">
+           Ambos equipos deben guardar su formación antes de poder cerrar el partido.
+         </p>`
+    }
+  </div>`;
+}
+
+async function closeMatch(){
+  const m = S.matches[S.currentId];
+  const msg = document.getElementById('closeMsg');
+
+  let scoreH = m.scoreH ?? 0, scoreA = m.scoreA ?? 0;
+  let shootoutH = m.shootoutH ?? null, shootoutA = m.shootoutA ?? null;
+
+  // En modo post, leer resultado de los inputs
+  if(m.mode === 'post'){
+    const h = parseInt(document.getElementById('postH')?.value);
+    const a = parseInt(document.getElementById('postA')?.value);
+    if(isNaN(h) || isNaN(a)){
+      if(msg){ msg.className='msg error'; msg.textContent='Ingresá el resultado antes de cerrar.'; }
+      return;
+    }
+    scoreH = h; scoreA = a;
+    shootoutH = parseInt(document.getElementById('postSH')?.value) || null;
+    shootoutA = parseInt(document.getElementById('postSA')?.value) || null;
+  }
+
   try{
-    const d=await api('POST',`/api/matches/${S.currentId}/phase`,
-      {phase:'done',scoreH:h,scoreA:a,shootoutH:sh,shootoutA:sa});
-    if(d.ok){ S.matches[S.currentId]=d.match; renderDetail(); }
-    else{ msg.className='msg error'; msg.textContent=d.error||'Error'; }
-  }catch(e){ msg.className='msg error'; msg.textContent='Error de conexión'; }
+    const d = await api('POST', `/api/matches/${S.currentId}/phase`,
+      {phase:'done', scoreH, scoreA, shootoutH, shootoutA});
+    if(d.ok){ S.matches[S.currentId]=d.match; resetTimer(); renderDetail(); }
+    else if(msg){ msg.className='msg error'; msg.textContent=d.error||'Error'; }
+  }catch(e){
+    if(msg){ msg.className='msg error'; msg.textContent='Error de conexión'; }
+  }
 }
 
 // ── DONE ──

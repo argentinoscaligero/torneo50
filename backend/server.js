@@ -229,11 +229,13 @@ app.post('/api/matches/:id/lineup', authMiddleware, (req, res) => {
   const side = req.body.side || (match.home === req.user.team ? 'home' : 'away');
 
   if(side === 'home'){
-    match.lineup_home = titulares;
-    match.subs_home   = suplentes;
+    match.lineup_home    = titulares;
+    match.subs_home      = suplentes;
+    match.lineup_home_ok = true;
   } else {
-    match.lineup_away = titulares;
-    match.subs_away   = suplentes;
+    match.lineup_away    = titulares;
+    match.subs_away      = suplentes;
+    match.lineup_away_ok = true;
   }
 
   // Avanzar fase si estaba en 'pre'
@@ -304,18 +306,24 @@ app.post('/api/matches/:id/phase', authMiddleware, (req, res) => {
   if(!authCheck(req, res, match)) return;
 
   const { phase, mode, scoreH, scoreA, shootoutH, shootoutA } = req.body;
+
+  if(phase === 'done'){
+    if(!match.lineup_home_ok || !match.lineup_away_ok){
+      return res.status(400).json({
+        error: `Falta confirmar la formación de: ${!match.lineup_home_ok ? match.home : match.away}.`
+      });
+    }
+    match.submitted    = true;
+    match.submitted_at = new Date().toISOString();
+    match.submitted_by = req.user.team;
+  }
+
   match.phase = phase;
   if(mode !== undefined)      match.mode      = mode;
   if(scoreH !== undefined)    match.scoreH    = scoreH;
   if(scoreA !== undefined)    match.scoreA    = scoreA;
   if(shootoutH !== undefined) match.shootoutH = shootoutH;
   if(shootoutA !== undefined) match.shootoutA = shootoutA;
-
-  if(phase === 'done'){
-    match.submitted    = true;
-    match.submitted_at = new Date().toISOString();
-    match.submitted_by = req.user.team;
-  }
 
   writeJSON(MATCHES_FILE, matches);
   res.json({ ok:true, match });
@@ -367,6 +375,8 @@ app.get('/api/admin/users', authMiddleware, (req, res) => {
     if(!m.phase){ m.phase = m.submitted ? 'done' : 'pre'; changed = true; }
     if(!m.subs_home){ m.subs_home = []; changed = true; }
     if(!m.subs_away){ m.subs_away = []; changed = true; }
+    if(m.lineup_home_ok === undefined){ m.lineup_home_ok = !!(m.lineup_home && m.lineup_home.length); changed = true; }
+    if(m.lineup_away_ok === undefined){ m.lineup_away_ok = !!(m.lineup_away && m.lineup_away.length); changed = true; }
     (m.events||[]).forEach(ev => {
       if(!ev.id){
         ev.id = Date.now().toString(36) + Math.random().toString(36).slice(2,6);
