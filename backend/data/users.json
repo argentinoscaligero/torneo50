@@ -1,0 +1,15 @@
+{
+  "Black Velvet":      { "password": "BV2026",  "group": "A" },
+  "Siamo Eterne":      { "password": "SE2026",  "group": "A" },
+  "No tan Santas":     { "password": "NS2026",  "group": "A" },
+  "Zanjeras":          { "password": "ZA2026",  "group": "A" },
+  "Las Suricatas":     { "password": "LS2026",  "group": "B" },
+  "Las Terrazas":      { "password": "LT2026",  "group": "B" },
+  "Viento Norte":      { "password": "VN2026",  "group": "B" },
+  "NEA Irupe":         { "password": "NI2026",  "group": "B" },
+  "San Fer":           { "password": "SF2026",  "group": "C" },
+  "Deportivo Soraya":  { "password": "DS2026",  "group": "C" },
+  "Eternas Guerreras": { "password": "EG2026",  "group": "C" },
+  "Las Inoxidables":   { "password": "LI2026",  "group": "C" },
+  "admin":             { "password": "ADMIN2026", "group": "ADMIN" }
+}
