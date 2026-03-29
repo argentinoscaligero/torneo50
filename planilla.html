@@ -107,16 +107,19 @@
     .sec-title{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);margin-bottom:.75rem;padding-bottom:.35rem;border-bottom:2px solid rgba(0,75,141,.1)}
 
     /* ── PHASE: FORMATION ── */
-    .formation-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
-    .form-col h4{font-size:.8rem;font-weight:800;color:var(--primary);margin-bottom:.45rem}
-    .player-scroll{max-height:220px;overflow-y:auto;overflow-x:hidden;border:1px solid rgba(0,0,0,.07);border-radius:10px;padding:.3rem}
-    .prow{display:flex;align-items:center;gap:.4rem;padding:.25rem .35rem;border-radius:7px;cursor:pointer;font-size:.8rem;width:100%;min-width:0;overflow:hidden}
-    .prow:hover{background:rgba(0,75,141,.05)}
-    .prow input{accent-color:var(--primary);flex-shrink:0}
-    .prow .nro{min-width:22px;color:var(--muted);font-size:.72rem;font-weight:700;flex-shrink:0}
-    .prow .pname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.78rem}
-    .no-players{color:var(--muted);font-size:.82rem;font-style:italic;padding:.4rem 0}
-    .form-count{font-size:.73rem;color:var(--muted);margin-top:.35rem}
+    .player-scroll{max-height:280px;overflow-y:auto;border:1px solid rgba(0,0,0,.07);border-radius:10px}
+    .prow{display:grid;grid-template-columns:28px 1fr auto auto;align-items:center;gap:.3rem;padding:.38rem .55rem;border-bottom:1px solid rgba(0,0,0,.04);font-size:.82rem}
+    .prow:last-child{border-bottom:none}
+    .prow:hover{background:rgba(0,75,141,.04)}
+    .prow .nro{color:var(--muted);font-size:.72rem;font-weight:700;text-align:right}
+    .prow .pname{font-size:.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .prow .chk-lbl{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;padding:0 .3rem}
+    .prow .chk-lbl span{font-size:.6rem;font-weight:800;color:var(--muted);text-transform:uppercase}
+    .prow .chk-lbl input{accent-color:var(--primary);cursor:pointer;width:15px;height:15px}
+    .form-header{display:grid;grid-template-columns:28px 1fr auto auto;gap:.3rem;padding:.28rem .55rem;font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid rgba(0,75,141,.1)}
+    .form-header .fh-ts{text-align:center;padding:0 .3rem}
+    .no-players{color:var(--muted);font-size:.82rem;font-style:italic;padding:.7rem .55rem}
+    .form-count{font-size:.73rem;color:var(--muted);margin-top:.4rem}
 
     /* ── PHASE: MODE SELECT ── */
     .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
@@ -700,34 +703,43 @@ function renderFormationSection(m){
   const side = m.home===S.team?'home':(m.away===S.team?'away':'home');
   const teamName = side==='home'?m.home:m.away;
   const players = PLAYERS[teamName]||[];
-  const titulares = side==='home'?m.lineup_home:m.lineup_away;
+  const titulares = side==='home'?(m.lineup_home||[]):(m.lineup_away||[]);
   const suplentes = side==='home'?(m.subs_home||[]):(m.subs_away||[]);
+  const done = (m.phase==='done');
 
-  const mkList = (arr, cls) => players.length
-    ? players.map(p=>{
-        const key=`${p.nro}-${p.a}`;
-        return `<label class="prow">
-          <input type="checkbox" class="${cls}" data-key="${key}"
-            ${arr.includes(key)?'checked':''} onchange="onCheckPlayer(this,'${cls}')">
-          <span class="nro">${p.nro}</span>
-          <span class="pname">${p.a}, ${p.n}</span>
-        </label>`;
-      }).join('')
+  const cntT = titulares.length, cntS = suplentes.length;
+
+  const rows = players.length
+    ? `<div class="form-header">
+        <div></div><div>Jugadora</div>
+        <div class="fh-ts">T</div>
+        <div class="fh-ts">S</div>
+      </div>`
+      + players.map(p=>{
+          const key=`${p.nro}-${p.a}`;
+          const isT=titulares.includes(key), isS=suplentes.includes(key);
+          return `<div class="prow">
+            <span class="nro">${p.nro}</span>
+            <span class="pname">${p.a}, ${p.n}</span>
+            <label class="chk-lbl">
+              <input type="checkbox" class="chk-tit" data-key="${key}" ${isT?'checked':''} onchange="onCheckFormation()">
+              <span>T</span>
+            </label>
+            <label class="chk-lbl">
+              <input type="checkbox" class="chk-sup" data-key="${key}" ${isS?'checked':''} onchange="onCheckFormation()">
+              <span>S</span>
+            </label>
+          </div>`;
+        }).join('')
     : `<div class="no-players">Planilla de inscripción no disponible</div>`;
 
-  const done = (m.phase==='done');
   return `<div class="section">
-    <div class="sec-title">📋 Tu formación — ${teamName}</div>
-    <div class="formation-grid">
-      <div class="form-col">
-        <h4>Titulares <span id="cntTit" style="font-weight:400;color:var(--muted);font-size:.75rem">(${titulares.length})</span></h4>
-        <div class="player-scroll">${mkList(titulares,'chk-tit')}</div>
-      </div>
-      <div class="form-col">
-        <h4>Suplentes <span id="cntSup" style="font-weight:400;color:var(--muted);font-size:.75rem">(${suplentes.length})</span></h4>
-        <div class="player-scroll">${mkList(suplentes,'chk-sup')}</div>
-      </div>
+    <div class="sec-title">📋 Tu formación — ${teamName}
+      <span id="formCountBadge" style="font-weight:400;font-size:.75rem;color:var(--muted);margin-left:.4rem">
+        ${cntT} titular${cntT!==1?'es':''} · ${cntS} suplente${cntS!==1?'s':''}
+      </span>
     </div>
+    <div class="player-scroll">${rows}</div>
     ${!done?`<div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
       <button class="btn btn-primary btn-sm" onclick="submitLineup()">Guardar formación</button>
       <span id="lineupMsg" class="msg" style="display:inline-block;margin:0;padding:.3rem .7rem"></span>
@@ -735,11 +747,11 @@ function renderFormationSection(m){
   </div>`;
 }
 
-function onCheckPlayer(cb, cls){
-  const row=cb.closest('.form-col');
-  const count=row.querySelectorAll(`.${cls}:checked`).length;
-  const cnt=cls==='chk-tit'?document.getElementById('cntTit'):document.getElementById('cntSup');
-  if(cnt) cnt.textContent=`(${count})`;
+function onCheckFormation(){
+  const cntT=document.querySelectorAll('.chk-tit:checked').length;
+  const cntS=document.querySelectorAll('.chk-sup:checked').length;
+  const badge=document.getElementById('formCountBadge');
+  if(badge) badge.textContent=`${cntT} titular${cntT!==1?'es':''} · ${cntS} suplente${cntS!==1?'s':''}`;
 }
 
 async function submitLineup(){
