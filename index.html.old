@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Torneo Máster +50 Femenino 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #004b8d;   /* azul institucional */
+      --secondary: #0085c7; /* celeste */
+      --accent: #f9b000;    /* dorado/amarillo */
+      --bg: #f5f7fb;
+      --card-bg: #ffffff;
+      --text: #222;
+      --muted: #666;
+      --radius-lg: 18px;
+      --radius-sm: 10px;
+      --shadow-soft: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(245,247,251,0.9);
+      border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-left img {
+      height: 40px;
+      width: auto;
+      border-radius: 999px;
+    }
+
+    .nav-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a {
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+
+    .nav-links a:hover {
+      background: rgba(0,75,141,0.08);
+      color: var(--primary);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      padding-bottom: 3rem;
+    }
+
+    /* Hero */
+    .hero {
+      margin-top: 1.5rem;
+      background: radial-gradient(circle at top left, rgba(0,133,199,0.16), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(249,176,0,0.16), transparent 55%),
+                  #ffffff;
+      border-radius: 26px;
+      box-shadow: var(--shadow-soft);
+      padding: 2rem 2rem 2.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.2fr);
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      max-width: 32rem;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(0,75,141,0.08);
+      color: var(--primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      padding: 0.7rem 1.3rem;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(0,75,141,0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(0,75,141,0.06);
+      color: var(--primary);
+      padding: 0.7rem 1.1rem;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .hero-right {
+      text-align: center;
+    }
+
+    .hero-right img {
+      max-width: 220px;
+      width: 100%;
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.2);
+      background: #fff;
+    }
+
+    .hero-caption {
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* Sections */
+    section {
+      margin-top: 2.5rem;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.3rem 1.4rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+
+    .card ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0.4rem 0 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .card ul li {
+      margin-bottom: 0.25rem;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .card ul li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.3rem;
+    }
+
+    /* Franchises */
+    .franchises-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-top: 1.2rem;
+    }
+
+    .franchise-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.5rem;
+    }
+
+    .franchise-logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .franchise-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .franchise-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .franchise-tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+      min-height: 2.2em;
+    }
+
+    .franchise-link {
+      margin-top: 0.3rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .franchise-link:hover {
+      text-decoration: underline;
+    }
+
+    .franchise-detail {
+      margin-top: 1.8rem;
+      padding: 1.4rem 1.6rem;
+      border-radius: var(--radius-lg);
+      background: #ffffff;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .franchise-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .franchise-detail-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .franchise-detail-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .franchise-detail h3 {
+      font-size: 1.1rem;
+      margin: 0;
+      color: var(--primary);
+    }
+
+    .franchise-detail small {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .franchise-detail-columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 1rem;
+      margin-top: 0.7rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      margin-right: 0.25rem;
+      margin-bottom: 0.2rem;
+      background: rgba(0,75,141,0.06);
+      color: var(--primary);
+    }
+
+    footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-right {
+        order: -1;
+      }
+      .franchises-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .grid-2 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      main {
+        padding: 1rem;
+      }
+      .hero {
+        padding: 1.4rem;
+      }
+      .hero-title {
+        font-size: 1.6rem;
+      }
+      .franchises-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="nav-left">
+      <!-- Logo de la Asociación -->
+      <img src="assets/logo-asociacion.png" alt="Asociación Master y Grand Master" />
+      <div>
+        <div class="nav-title">Asociación Master & Grand Master</div>
+        <div style="font-size:0.8rem;color:var(--muted);">
+          Torneo Máster +50 Femenino 2026
+        </div>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#torneo">El torneo</a>
+      <a href="#formato">Formato</a>
+      <a href="#calendario">Calendario</a>
+      <a href="#playoffs">Playoffs</a>
+      <a href="#copa-nacional">Copa Nacional</a>
+      <a href="#franquicias">Franquicias</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="torneo">
+    <div>
+      <div class="hero-title">Torneo Máster +50 Femenino 2026</div>
+      <div class="hero-subtitle">
+        Competencia anual de franquicias para jugadoras +50 de toda la Argentina
+        con formato profesional, calendario propio y evento Final Four.
+      </div>
+      <div class="hero-tags">
+        <span class="tag">Domingos · 9 a 13 hs</span>
+        <span class="tag">16 franquicias</span>
+        <span class="tag">Playoffs &amp; Final Four</span>
+      </div>
+      <div class="hero-actions">
+        <a href="#franquicias"><button class="btn-primary">Ver franquicias</button></a>
+        <a href="#reglamento"><button class="btn-secondary">Descargar reglamento</button></a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <!-- Logo del Torneo -->
+      <img src="assets/logo-torneo-master-50.png" alt="Logo Torneo Máster +50" />
+      <div class="hero-caption">
+        Imagen oficial del Torneo Máster +50 Femenino 2026.
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE EL TORNEO -->
+  <section id="formato">
+    <h2 class="section-title">Formato deportivo</h2>
+    <p class="section-subtitle">
+      El torneo está diseñado para respetar las características físicas y deportivas
+      de la categoría +50, con un sistema de franquicias, draft y estructura de playoff
+      que garantiza equilibrio competitivo.
+    </p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Estructura general</h3>
+        <ul>
+          <li>16 franquicias en total.</li>
+          <li>2 zonas de 8 equipos (ida y vuelta).</li>
+          <li>Partidos los domingos entre las 9 y las 13 hs.</li>
+          <li>Máximo 2 fechas por mes.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Franquicias &amp; Draft</h3>
+        <ul>
+          <li>Equipos con identidad propia: nombre, escudo, colores y uniforme.</li>
+          <li>Un club o grupo puede tomar una franquicia.</li>
+          <li>Jugadoras sin equipo ingresan al Draft.</li>
+          <li>Hasta 3 jugadoras no federadas por franquicia.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALENDARIO -->
+  <section id="calendario">
+    <h2 class="section-title">Calendario 2026</h2>
+    <p class="section-subtitle">
+      La fase regular se disputa entre marzo y noviembre, con receso invernal y fechas
+      específicamente planificadas para evitar superposición con otras competencias.
+    </p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Fase regular</h3>
+        <ul>
+          <li>Marzo: fechas 1 y 2</li>
+          <li>Abril: fechas 3 y 4</li>
+          <li>Mayo: fechas 5 y 6</li>
+          <li>Junio: fecha 7 · luego receso</li>
+          <li>Septiembre: fechas 8 y 9</li>
+          <li>Octubre: fechas 10 y 11</li>
+          <li>Noviembre: fechas 12, 13 y 14</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Ventanas de transferencia</h3>
+        <ul>
+          <li>Mayo</li>
+          <li>Receso de invierno</li>
+          <li>Septiembre</li>
+          <li>Pre-playoffs (según reglamento)</li>
+          <li>No se permiten transferencias fuera de estos períodos.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAYOFFS -->
+  <section id="playoffs">
+    <h2 class="section-title">Playoffs &amp; Final Four</h2>
+    <p class="section-subtitle">
+      El formato de definición combina clasificación directa por posiciones de zona
+      con repechajes y un evento Final Four como cierre de temporada.
+    </p>
+
+    <div class="card">
+      <h3>Esquema de clasificación</h3>
+      <ul>
+        <li>1° de Zona A y 1° de Zona B → clasificados directos al Final Four.</li>
+        <li>3° vs 4° de cada zona → Repechaje 1.</li>
+        <li>2° de cada zona vs ganadores del Repechaje 1 → Repechaje 2.</li>
+        <li>Ganadoras del Repechaje 2 completan el Final Four.</li>
+      </ul>
+      <br />
+      <h3>Final Four</h3>
+      <ul>
+        <li>Semifinales en fin de semana cercano al 8 de diciembre.</li>
+        <li>Partido por el 3° puesto y Final del Torneo.</li>
+        <li>Evento especial con transmisión y premiación.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- COPA NACIONAL -->
+  <section id="copa-nacional">
+    <h2 class="section-title">Copa Nacional de Clubes +50</h2>
+    <p class="section-subtitle">
+      Competencia complementaria durante el receso, con participación de clubes
+      del interior y presencia de franquicias del AMBA.
+    </p>
+    <div class="card">
+      <h3>Formato de la Copa Nacional</h3>
+      <ul>
+        <li>12 equipos: 4 de Buenos Aires (franquicias) + 8 invitados.</li>
+        <li>4 grupos de 3 equipos (jueves y viernes).</li>
+        <li>Semifinales y finales (sábado y domingo).</li>
+        <li>Cruces para definir posiciones del 5° al 12° puesto.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FRANQUICIAS GRID -->
+  <section id="franquicias">
+    <h2 class="section-title">Franquicias participantes</h2>
+    <p class="section-subtitle">
+      16 franquicias con identidad propia, representando ecosistemas, fauna,
+      flora y símbolos característicos de nuestro país.
+    </p>
+
+    <div class="franchises-grid">
+      <!-- 1 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/ceibas.png" alt="Ceibas HC" />
+        </div>
+        <div class="franchise-name">Ceibas Hockey Club</div>
+        <div class="franchise-tagline">Flores de ceibo · rojo y verde</div>
+        <a href="#franquicia-ceibas" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 2 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/jacaranda.png" alt="Jacarandá HC" />
+        </div>
+        <div class="franchise-name">Jacarandá Hockey Club</div>
+        <div class="franchise-tagline">Violeta y celeste jacarandá</div>
+        <a href="#franquicia-jacaranda" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 3 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/criollas.png" alt="Criollas HC" />
+        </div>
+        <div class="franchise-name">Criollas Hockey Club</div>
+        <div class="franchise-tagline">Tradición y sol criollo</div>
+        <a href="#franquicia-criollas" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 4 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/yaguarete.png" alt="Yaguareté HC" />
+        </div>
+        <div class="franchise-name">Yaguareté Hockey Club</div>
+        <div class="franchise-tagline">Fuerza y garra del litoral</div>
+        <a href="#franquicia-yaguarete" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 5 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/tero-real.png" alt="Tero Real HC" />
+        </div>
+        <div class="franchise-name">Tero Real Hockey Club</div>
+        <div class="franchise-tagline">Vigilancia y territorio</div>
+        <a href="#franquicia-tero" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 6 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/caldenes.png" alt="Caldenes HC" />
+        </div>
+        <div class="franchise-name">Caldenes Hockey Club</div>
+        <div class="franchise-tagline">Pampa, raíces y viento</div>
+        <a href="#franquicia-caldenes" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 7 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/guanacos.png" alt="Guanacos HC" />
+        </div>
+        <div class="franchise-name">Guanacos Hockey Club</div>
+        <div class="franchise-tagline">Resistencia y altura</div>
+        <a href="#franquicia-guanacos" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 8 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/laguna-del-plata.png" alt="Laguna del Plata HC" />
+        </div>
+        <div class="franchise-name">Laguna del Plata HC</div>
+        <div class="franchise-tagline">Agua, calma y control</div>
+        <a href="#franquicia-laguna" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 9 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/horneras.png" alt="Horneras HC" />
+        </div>
+        <div class="franchise-name">Horneras Hockey Club</div>
+        <div class="franchise-tagline">Trabajo en equipo</div>
+        <a href="#franquicia-horneras" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 10 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/sauces-del-sur.png" alt="Sauces del Sur HC" />
+        </div>
+        <div class="franchise-name">Sauces del Sur HC</div>
+        <div class="franchise-tagline">Sur, viento y temple</div>
+        <a href="#franquicia-sauces" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 11 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/nandubay.png" alt="Ñandubay HC" />
+        </div>
+        <div class="franchise-name">Ñandubay Hockey Club</div>
+        <div class="franchise-tagline">Bosque y raíces profundas</div>
+        <a href="#franquicia-nandubay" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 12 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/tucanes.png" alt="Tucanes HC" />
+        </div>
+        <div class="franchise-name">Tucanes Hockey Club</div>
+        <div class="franchise-tagline">Color, alegría y ataque</div>
+        <a href="#franquicia-tucanes" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 13 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/cardenales.png" alt="Cardenales HC" />
+        </div>
+        <div class="franchise-name">Cardenales Hockey Club</div>
+        <div class="franchise-tagline">Canto fuerte y presencia</div>
+        <a href="#franquicia-cardenales" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 14 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/pampas.png" alt="Pampas HC" />
+        </div>
+        <div class="franchise-name">Pampas Hockey Club</div>
+        <div class="franchise-tagline">Caballos, llanura y velocidad</div>
+        <a href="#franquicia-pampas" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 15 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/chaniares.png" alt="Chañares HC" />
+        </div>
+        <div class="franchise-name">Chañares Hockey Club</div>
+        <div class="franchise-tagline">Monte y resiliencia</div>
+        <a href="#franquicia-chaniares" class="franchise-link">Ver detalle</a>
+      </div>
+      <!-- 16 -->
+      <div class="franchise-card">
+        <div class="franchise-logo">
+          <img src="assets/franquicias/calandrias.png" alt="Calandrias HC" />
+        </div>
+        <div class="franchise-name">Calandrias Hockey Club</div>
+        <div class="franchise-tagline">Juego, ritmo y creatividad</div>
+        <a href="#franquicia-calandrias" class="franchise-link">Ver detalle</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETALLE DE CADA FRANQUICIA -->
+  <section id="detalle-franquicias" style="margin-top:2.5rem;">
+    <h2 class="section-title">Detalle de franquicias</h2>
+    <p class="section-subtitle">
+      Cada franquicia contará con su espacio propio para publicar plantel, cuerpo técnico,
+      fixture, resultados y contenidos multimedia.
+    </p>
+
+    <!-- Ceibas -->
+    <article id="franquicia-ceibas" class="franchise-detail">
+      <div class="franchise-detail-header">
+        <div class="franchise-detail-logo">
+          <img src="assets/franquicias/ceibas.png" alt="Ceibas HC" />
+        </div>
+        <div>
+          <h3>Ceibas Hockey Club</h3>
+          <small>Identidad basada en el ceibo, flor nacional argentina.</small>
+        </div>
+      </div>
+      <div class="franchise-detail-columns">
+        <div>
+          <strong>Colores oficiales</strong><br />
+          <span class="chip">Rojo ceibo</span>
+          <span class="chip">Verde hoja</span>
+          <span class="chip">Blanco</span>
+          <br /><br />
+          <strong>Descripción</strong><br />
+          Equipo que representa la fuerza simbólica del ceibo, con un estilo de juego intenso,
+          ofensivo y mucha identidad nacional.
+        </div>
+        <div>
+          <strong>Espacio reservado</strong><br />
+          Aquí podrás publicar:<br />
+          – Plantel actualizado<br />
+          – Cuerpo técnico<br />
+          – Fixture y resultados<br />
+          – Fotos y videos<br />
+          – Noticias de la franquicia
+        </div>
+      </div>
+    </article>
+
+    <!-- Jacarandá -->
+    <article id="franquicia-jacaranda" class="franchise-detail">
+      <div class="franchise-detail-header">
+        <div class="franchise-detail-logo">
+          <img src="assets/franquicias/jacaranda.png" alt="Jacarandá HC" />
+        </div>
+        <div>
+          <h3>Jacarandá Hockey Club</h3>
+          <small>Inspirado en los jacarandás en flor de la ciudad.</small>
+        </div>
+      </div>
+      <div class="franchise-detail-columns">
+        <div>
+          <strong>Colores oficiales</strong><br />
+          <span class="chip">Violeta jacarandá</span>
+          <span class="chip">Celeste</span>
+          <span class="chip">Blanco</span>
+          <br /><br />
+          <strong>Descripción</strong><br />
+          Franquicia con identidad urbana, juego asociado y mucha proyección
+          por bandas, como las copas de los árboles sobre la ciudad.
+        </div>
+        <div>
+          <strong>Espacio reservado</strong><br />
+          – Listado de jugadoras<br />
+          – Staff técnico<br />
+          – Fixture y tabla parcial<br />
+          – Material gráfico y comunicados
+        </div>
+      </div>
+    </article>
+
+    <!-- Ejemplo: podés duplicar este bloque para cada franquicia y adaptar -->
+    <!-- Criollas -->
+    <article id="franquicia-criollas" class="franchise-detail">
+      <div class="franchise-detail-header">
+        <div class="franchise-detail-logo">
+          <img src="assets/franquicias/criollas.png" alt="Criollas HC" />
+        </div>
+        <div>
+          <h3>Criollas Hockey Club</h3>
+          <small>Tradición, historia y hockey bien argentino.</small>
+        </div>
+      </div>
+      <div class="franchise-detail-columns">
+        <div>
+          <strong>Colores oficiales</strong><br />
+          <span class="chip">Ocre</span>
+          <span class="chip">Rojo vino</span>
+          <span class="chip">Blanco</span>
+          <br /><br />
+          <strong>Descripción</strong><br />
+          Equipo de carácter fuerte, con estilo criollo y mucho peso
+          en la posesión de pelota y la lectura del juego.
+        </div>
+        <div>
+          <strong>Espacio reservado</strong><br />
+          Personalizá esta sección con el detalle que quieras para la franquicia.
+        </div>
+      </div>
+    </article>
+
+    <!-- Repetir estructura para las demás franquicias:
+         yaguarete, tero, caldenes, guanacos, laguna, horneras,
+         sauces, nandubay, tucanes, cardenales, pampas, chaniares, calandrias -->
+  </section>
+
+  <!-- REGLAMENTO -->
+  <section id="reglamento" style="margin-top:2.5rem;">
+    <h2 class="section-title">Reglamento del torneo</h2>
+    <p class="section-subtitle">
+      El torneo se rige por el reglamento FIH vigente, con adaptaciones específicas
+      para la categoría +50 y el sistema de franquicias.
+    </p>
+    <div class="card">
+      <h3>Aspectos principales</h3>
+      <ul>
+        <li>Formato de juego: 4 tiempos de 15 minutos.</li>
+        <li>Puntuación: 3 puntos victoria, 1 punto empate, 1 punto extra por shootouts.</li>
+        <li>Sistema disciplinario con Fair Play (verde, amarilla, roja).</li>
+        <li>Ventanas de transferencia definidas y reguladas.</li>
+        <li>Playoffs y Final Four según reglamento oficial.</li>
+      </ul>
+      <br />
+      <a href="docs/Reglamento_Torneo_Master_50_2026_FULL.pdf" class="franchise-link" target="_blank">
+        Descargar reglamento completo (PDF)
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    © 2026 Asociación Master &amp; Grand Master – Torneo Máster +50 Femenino.  
+    Sitio de presentación del proyecto de torneo y franquicias.
+  </div>
+</footer>
+
+</body>
+</html>

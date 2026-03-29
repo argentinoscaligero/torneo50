@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Torneo Máster +50 Femenino 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #004b8d;   /* azul institucional */
+      --secondary: #0085c7; /* celeste */
+      --accent: #f9b000;    /* dorado/amarillo */
+      --bg: #f5f7fb;
+      --card-bg: #ffffff;
+      --text: #222;
+      --muted: #666;
+      --radius-lg: 18px;
+      --radius-sm: 10px;
+      --shadow-soft: 0 8px 24px rgba(0,0,0,0.06);
+
+      /* standings highlights */
+      --q-direct-bg: rgba(249,176,0,0.18);
+      --q-direct-border: rgba(249,176,0,0.55);
+      --q-playoff-bg: rgba(0,133,199,0.14);
+      --q-playoff-border: rgba(0,133,199,0.45);
+      --row-hover: rgba(0,75,141,0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(245,247,251,0.9);
+      border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-left img {
+      height: 40px;
+      width: auto;
+      border-radius: 999px;
+    }
+
+    .nav-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a {
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+
+    .nav-links a:hover {
+      background: rgba(0,75,141,0.08);
+      color: var(--primary);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      padding-bottom: 3rem;
+    }
+
+    /* Hero */
+    .hero {
+      margin-top: 1.5rem;
+      background: radial-gradient(circle at top left, rgba(0,133,199,0.16), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(249,176,0,0.16), transparent 55%),
+                  #ffffff;
+      border-radius: 26px;
+      box-shadow: var(--shadow-soft);
+      padding: 2rem 2rem 2.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.2fr);
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      max-width: 32rem;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(0,75,141,0.08);
+      color: var(--primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      padding: 0.7rem 1.3rem;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(0,75,141,0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(0,75,141,0.06);
+      color: var(--primary);
+      padding: 0.7rem 1.1rem;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .hero-right { text-align: center; }
+
+    .hero-right img {
+      max-width: 220px;
+      width: 100%;
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.2);
+      background: #fff;
+    }
+
+    .hero-caption {
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* Sections */
+    section { margin-top: 2.5rem; }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.3rem 1.4rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+
+    .card ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0.4rem 0 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .card ul li {
+      margin-bottom: 0.25rem;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .card ul li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.3rem;
+    }
+
+    /* Standings */
+    .standings-wrap {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.3rem;
+      margin-top: 1.2rem;
+    }
+
+    .standings-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-top: 0.9rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+
+    .dot-direct { background: var(--accent); }
+    .dot-playoff { background: var(--secondary); }
+
+    table.standings {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      border-radius: 14px;
+      font-size: 0.92rem;
+    }
+
+    table.standings thead th {
+      text-align: left;
+      padding: 0.7rem 0.65rem;
+      background: rgba(0,75,141,0.06);
+      color: var(--primary);
+      font-weight: 800;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      position: sticky;
+      top: 0;
+    }
+
+    table.standings tbody td {
+      padding: 0.62rem 0.65rem;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    table.standings tbody tr:hover { background: var(--row-hover); }
+
+    .pos { width: 42px; font-weight: 800; color: var(--primary); }
+    .team { font-weight: 700; }
+    .muted { color: var(--muted); font-weight: 600; }
+
+    /* Highlight rows by rank */
+    tr.rank-1 {
+      background: var(--q-direct-bg);
+      outline: 2px solid var(--q-direct-border);
+      outline-offset: -2px;
+    }
+
+    tr.rank-2, tr.rank-3, tr.rank-4 {
+      background: var(--q-playoff-bg);
+      outline: 2px solid var(--q-playoff-border);
+      outline-offset: -2px;
+    }
+
+    /* Schedule */
+    .schedule-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .pill-btn {
+      border: 1px solid rgba(0,0,0,0.08);
+      background: #fff;
+      color: var(--primary);
+      font-weight: 700;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .pill-btn.active {
+      background: rgba(0,75,141,0.08);
+      border-color: rgba(0,75,141,0.18);
+    }
+
+    .round-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.3rem;
+      margin-top: 1rem;
+    }
+
+    .round-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.1rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .round-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+
+    .round-title {
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.05rem;
+    }
+
+    .round-date {
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .matches {
+      display: grid;
+      gap: 0.55rem;
+      margin-top: 0.4rem;
+    }
+
+    .match {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.7rem;
+      padding: 0.55rem 0.7rem;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.05);
+      font-size: 0.92rem;
+    }
+
+    .match .left, .match .right {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      min-width: 0;
+    }
+
+    /* LOGO badge (reemplaza iniciales) */
+    .team-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.08);
+      overflow: hidden;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+    }
+
+    .team-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 3px;
+    }
+
+    .team-name {
+      font-weight: 800;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+
+    .vs {
+      font-weight: 900;
+      color: var(--muted);
+      font-size: 0.85rem;
+      flex: 0 0 auto;
+    }
+
+    /* PRO: standings cell w/ link */
+    .team-cell-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      min-width: 0;
+      padding: 0.15rem 0.35rem;
+      border-radius: 12px;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    .team-cell-link:hover {
+      background: rgba(0,75,141,0.06);
+      transform: translateY(-1px);
+    }
+
+    .team-cell-link:focus {
+      outline: 2px solid rgba(0,133,199,0.45);
+      outline-offset: 2px;
+    }
+
+    .team-cell-link .team-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+    }
+
+    .team-name-standings {
+      font-weight: 850;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+
+    /* Franchises */
+    .franchises-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem;
+      margin-top: 1.2rem;
+    }
+
+    .franchise-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.5rem;
+    }
+
+    .franchise-logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 999px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .franchise-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .franchise-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .franchise-tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+      min-height: 2.2em;
+    }
+
+    .franchise-link {
+      margin-top: 0.3rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .franchise-link:hover { text-decoration: underline; }
+
+    .franchise-detail {
+      margin-top: 1.8rem;
+      padding: 1.4rem 1.6rem;
+      border-radius: var(--radius-lg);
+      background: #ffffff;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .franchise-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .franchise-detail-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .franchise-detail-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .franchise-detail h3 {
+      font-size: 1.1rem;
+      margin: 0;
+      color: var(--primary);
+    }
+
+    .franchise-detail small {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .franchise-detail-columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 1rem;
+      margin-top: 0.7rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      margin-right: 0.25rem;
+      margin-bottom: 0.2rem;
+      background: rgba(0,75,141,0.06);
+      color: var(--primary);
+    }
+
+    footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero { grid-template-columns: minmax(0, 1fr); }
+      .hero-right { order: -1; }
+      .franchises-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-2 { grid-template-columns: minmax(0, 1fr); }
+      .standings-wrap { grid-template-columns: minmax(0, 1fr); }
+      .round-grid { grid-template-columns: minmax(0, 1fr); }
+      .team-name { max-width: 200px; }
+      .team-name-standings { max-width: 220px; }
+    }
+
+    @media (max-width: 640px) {
+      .nav { flex-direction: column; align-items: flex-start; }
+      main { padding: 1rem; }
+      .hero { padding: 1.4rem; }
+      .hero-title { font-size: 1.6rem; }
+      .franchises-grid { grid-template-columns: minmax(0, 1fr); }
+      .team-name { max-width: 170px; }
+      .team-name-standings { max-width: 180px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="nav-left">
+      <!-- Logo de la Asociación -->
+      <img src="assets/logo-asociacion.png" alt="Asociación Master y Grand Master" />
+      <div>
+        <div class="nav-title">Asociación Master &amp; Grand Master</div>
+        <div style="font-size:0.8rem;color:var(--muted);">
+          Torneo Máster +50 Femenino 2026
+        </div>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#torneo">El torneo</a>
+      <a href="#formato">Formato</a>
+      <a href="#calendario">Calendario</a>
+      <a href="#posiciones">Posiciones</a>
+      <a href="#playoffs">Playoffs</a>
+      <a href="#copa-nacional">Copa Nacional</a>
+      <a href="#franquicias">Franquicias</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="torneo">
+    <div>
+      <div class="hero-title">Torneo Máster +50 Femenino 2026</div>
+      <div class="hero-subtitle">
+        Competencia anual de franquicias para jugadoras +50 de la región AMBA,
+        con formato profesional, calendario propio y evento Final Four.
+      </div>
+      <div class="hero-tags">
+        <span class="tag">Domingos · 9 a 13 hs</span>
+        <span class="tag">16 franquicias</span>
+        <span class="tag">Playoffs &amp; Final Four</span>
+      </div>
+      <div class="hero-actions">
+        <a href="#franquicias"><button class="btn-primary">Ver franquicias</button></a>
+        <a href="#reglamento"><button class="btn-secondary">Descargar reglamento</button></a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <!-- Logo del Torneo -->
+      <img src="assets/logo-torneo-master-50.png" alt="Logo Torneo Máster +50" />
+      <div class="hero-caption">
+        Imagen oficial del Torneo Máster +50 Femenino 2026.
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE EL TORNEO -->
+  <section id="formato">
+    <h2 class="section-title">Formato deportivo</h2>
+    <p class="section-subtitle">
+      El torneo está diseñado para respetar las características físicas y deportivas
+      de la categoría +50, con un sistema de franquicias, draft y estructura de playoff
+      que garantiza equilibrio competitivo.
+    </p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Estructura general</h3>
+        <ul>
+          <li>16 franquicias en total.</li>
+          <li>2 zonas de 8 equipos (ida y vuelta).</li>
+          <li>Partidos los domingos entre las 9 y las 13 hs.</li>
+          <li>Máximo 2 fechas por mes.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Franquicias &amp; Draft</h3>
+        <ul>
+          <li>Equipos con identidad propia: nombre, escudo, colores y uniforme.</li>
+          <li>Un club o grupo puede tomar una franquicia.</li>
+          <li>Jugadoras sin equipo ingresan al Draft.</li>
+          <li>Hasta 3 jugadoras no federadas por franquicia.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALENDARIO -->
+  <section id="calendario">
+    <h2 class="section-title">Calendario 2026</h2>
+    <p class="section-subtitle">
+      Fase regular (14 fechas): marzo a noviembre, con receso invernal. Fixture por fecha y por zona.
+    </p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Fechas oficiales</h3>
+        <ul>
+          <li>8 y 22 de marzo</li>
+          <li>12 y 26 de abril</li>
+          <li>10 y 24 de mayo</li>
+          <li>7 y 14 de junio</li>
+          <li>6 y 20 de septiembre</li>
+          <li>4, 18 y 25 de octubre</li>
+          <li>8 de noviembre</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Playoffs</h3>
+        <ul>
+          <li>Cuartos / Repechajes: 15 y 29 de noviembre</li>
+          <li>Final Four: fin de semana del 8 de diciembre</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.3rem;">
+      <h3>Fixture completo (Fase regular)</h3>
+      <div class="schedule-controls">
+        <button class="pill-btn active" data-filter="all">Ver todo</button>
+        <button class="pill-btn" data-filter="A">Solo Zona A</button>
+        <button class="pill-btn" data-filter="B">Solo Zona B</button>
+      </div>
+
+      <div id="scheduleContainer" class="round-grid"></div>
+      <div style="margin-top:0.8rem;font-size:0.85rem;color:var(--muted);">
+        Nota: horarios y sedes se publicarán en la semana previa a cada fecha.
+      </div>
+    </div>
+  </section>
+
+  <!-- POSICIONES -->
+  <section id="posiciones">
+    <h2 class="section-title">Tablas de posiciones</h2>
+    <p class="section-subtitle">
+      Se muestran por zona. Resaltado automático para clasificaciones a Final Four y Repechajes.
+    </p>
+
+    <div class="standings-legend">
+      <span class="legend-pill"><span class="legend-dot dot-direct"></span> 1° de zona: directo a Final Four</span>
+      <span class="legend-pill"><span class="legend-dot dot-playoff"></span> 2° a 4°: zona de playoffs/repechaje</span>
+    </div>
+
+    <div class="standings-wrap">
+      <div class="card">
+        <h3>Zona A</h3>
+        <div style="overflow:auto;">
+          <table class="standings" id="tableA">
+            <thead>
+              <tr>
+                <th class="pos">#</th>
+                <th>Equipo</th>
+                <th class="muted">PJ</th>
+                <th class="muted">PG</th>
+                <th class="muted">PE</th>
+                <th class="muted">PP</th>
+                <th class="muted">GF</th>
+                <th class="muted">GC</th>
+                <th class="muted">DG</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody id="bodyA"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Zona B</h3>
+        <div style="overflow:auto;">
+          <table class="standings" id="tableB">
+            <thead>
+              <tr>
+                <th class="pos">#</th>
+                <th>Equipo</th>
+                <th class="muted">PJ</th>
+                <th class="muted">PG</th>
+                <th class="muted">PE</th>
+                <th class="muted">PP</th>
+                <th class="muted">GF</th>
+                <th class="muted">GC</th>
+                <th class="muted">DG</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody id="bodyB"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.3rem;">
+      <h3>Interpretación de la tabla</h3>
+      <ul>
+        <li>1° de cada zona clasifica directo al Final Four.</li>
+        <li>3° vs 4° de cada zona: Repechaje 1.</li>
+        <li>2° de cada zona vs ganador de Repechaje 1: Repechaje 2.</li>
+        <li>Ganadores de Repechaje 2 completan el Final Four.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PLAYOFFS -->
+  <section id="playoffs">
+    <h2 class="section-title">Playoffs &amp; Final Four</h2>
+    <p class="section-subtitle">
+      El formato de definición combina clasificación directa por posiciones de zona
+      con repechajes y un evento Final Four como cierre de temporada.
+    </p>
+
+    <div class="card">
+      <h3>Esquema de clasificación</h3>
+      <ul>
+        <li>1° de Zona A y 1° de Zona B → clasificados directos al Final Four.</li>
+        <li>3° vs 4° de cada zona → Repechaje 1.</li>
+        <li>2° de cada zona vs ganadores del Repechaje 1 → Repechaje 2.</li>
+        <li>Ganadoras del Repechaje 2 completan el Final Four.</li>
+      </ul>
+      <br />
+      <h3>Fechas</h3>
+      <ul>
+        <li>Cuartos / Repechajes: 15 y 29 de noviembre</li>
+        <li>Final Four: fin de semana cercano al 8 de diciembre</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- COPA NACIONAL -->
+  <section id="copa-nacional">
+    <h2 class="section-title">Copa Nacional de Clubes +50</h2>
+    <p class="section-subtitle">
+      Competencia complementaria durante el receso, con participación de clubes
+      del interior y presencia de franquicias del AMBA.
+    </p>
+    <div class="card">
+      <h3>Formato de la Copa Nacional</h3>
+      <ul>
+        <li>12 equipos: 4 de Buenos Aires (franquicias) + 8 invitados.</li>
+        <li>4 grupos de 3 equipos (jueves y viernes).</li>
+        <li>Semifinales y finales (sábado y domingo).</li>
+        <li>Cruces para definir posiciones del 5° al 12° puesto.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FRANQUICIAS GRID -->
+  <section id="franquicias">
+    <h2 class="section-title">Franquicias participantes</h2>
+    <p class="section-subtitle">
+      16 franquicias con identidad propia, representando ecosistemas, fauna,
+      flora y símbolos característicos de nuestro país.
+    </p>
+
+    <div class="franchises-grid">
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/ceibas.png" alt="Ceibas HC" /></div>
+        <div class="franchise-name">Ceibas Hockey Club</div>
+        <div class="franchise-tagline">Flores de ceibo · rojo y verde</div>
+        <a href="#franquicia-ceibas" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/jacaranda.png" alt="Jacarandá HC" /></div>
+        <div class="franchise-name">Jacarandá Hockey Club</div>
+        <div class="franchise-tagline">Violeta y celeste jacarandá</div>
+        <a href="#franquicia-jacaranda" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/criollas.png" alt="Criollas HC" /></div>
+        <div class="franchise-name">Criollas Hockey Club</div>
+        <div class="franchise-tagline">Tradición y sol criollo</div>
+        <a href="#franquicia-criollas" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/yaguarete.png" alt="Yaguareté HC" /></div>
+        <div class="franchise-name">Yaguareté Hockey Club</div>
+        <div class="franchise-tagline">Fuerza y garra del litoral</div>
+        <a href="#franquicia-yaguarete" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/tero-real.png" alt="Tero Real HC" /></div>
+        <div class="franchise-name">Tero Real Hockey Club</div>
+        <div class="franchise-tagline">Vigilancia y territorio</div>
+        <a href="#franquicia-tero" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/caldenes.png" alt="Caldenes HC" /></div>
+        <div class="franchise-name">Caldenes Hockey Club</div>
+        <div class="franchise-tagline">Pampa, raíces y viento</div>
+        <a href="#franquicia-caldenes" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/guanacos.png" alt="Guanacos HC" /></div>
+        <div class="franchise-name">Guanacos Hockey Club</div>
+        <div class="franchise-tagline">Resistencia y altura</div>
+        <a href="#franquicia-guanacos" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/laguna-del-plata.png" alt="Laguna del Plata HC" /></div>
+        <div class="franchise-name">Laguna del Plata HC</div>
+        <div class="franchise-tagline">Agua, calma y control</div>
+        <a href="#franquicia-laguna" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/horneras.png" alt="Horneras HC" /></div>
+        <div class="franchise-name">Horneras Hockey Club</div>
+        <div class="franchise-tagline">Trabajo en equipo</div>
+        <a href="#franquicia-horneras" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/sauces-del-sur.png" alt="Sauces del Sur HC" /></div>
+        <div class="franchise-name">Sauces del Sur HC</div>
+        <div class="franchise-tagline">Sur, viento y temple</div>
+        <a href="#franquicia-sauces" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/nandubay.png" alt="Ñandubay HC" /></div>
+        <div class="franchise-name">Ñandubay Hockey Club</div>
+        <div class="franchise-tagline">Bosque y raíces profundas</div>
+        <a href="#franquicia-nandubay" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/tucanes.png" alt="Tucanes HC" /></div>
+        <div class="franchise-name">Tucanes Hockey Club</div>
+        <div class="franchise-tagline">Color, alegría y ataque</div>
+        <a href="#franquicia-tucanes" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/cardenales.png" alt="Cardenales HC" /></div>
+        <div class="franchise-name">Cardenales Hockey Club</div>
+        <div class="franchise-tagline">Canto fuerte y presencia</div>
+        <a href="#franquicia-cardenales" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/pampas.png" alt="Pampas HC" /></div>
+        <div class="franchise-name">Pampas Hockey Club</div>
+        <div class="franchise-tagline">Caballos, llanura y velocidad</div>
+        <a href="#franquicia-pampas" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/chaniares.png" alt="Chañares HC" /></div>
+        <div class="franchise-name">Chañares Hockey Club</div>
+        <div class="franchise-tagline">Monte y resiliencia</div>
+        <a href="#franquicia-chaniares" class="franchise-link">Ver detalle</a>
+      </div>
+
+      <div class="franchise-card">
+        <div class="franchise-logo"><img src="assets/franquicias/calandrias.png" alt="Calandrias HC" /></div>
+        <div class="franchise-name">Calandrias Hockey Club</div>
+        <div class="franchise-tagline">Juego, ritmo y creatividad</div>
+        <a href="#franquicia-calandrias" class="franchise-link">Ver detalle</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETALLE DE CADA FRANQUICIA (mantengo tu estructura base; vos después duplicás para todas) -->
+  <section id="detalle-franquicias" style="margin-top:2.5rem;">
+    <h2 class="section-title">Detalle de franquicias</h2>
+    <p class="section-subtitle">
+      Cada franquicia contará con su espacio propio para publicar plantel, cuerpo técnico,
+      fixture, resultados y contenidos multimedia.
+    </p>
+
+    <article id="franquicia-ceibas" class="franchise-detail">
+      <div class="franchise-detail-header">
+        <div class="franchise-detail-logo"><img src="assets/franquicias/ceibas.png" alt="Ceibas HC" /></div>
+        <div>
+          <h3>Ceibas Hockey Club</h3>
+          <small>Identidad basada en el ceibo, flor nacional argentina.</small>
+        </div>
+      </div>
+      <div class="franchise-detail-columns">
+        <div>
+          <strong>Colores oficiales</strong><br />
+          <span class="chip">Rojo ceibo</span>
+          <span class="chip">Verde hoja</span>
+          <span class="chip">Blanco</span>
+          <br /><br />
+          <strong>Descripción</strong><br />
+          Equipo que representa la fuerza simbólica del ceibo, con un estilo de juego intenso,
+          ofensivo y mucha identidad nacional.
+        </div>
+        <div>
+          <strong>Espacio reservado</strong><br />
+          Aquí podrás publicar:<br />
+          – Plantel actualizado<br />
+          – Cuerpo técnico<br />
+          – Fixture y resultados<br />
+          – Fotos y videos<br />
+          – Noticias de la franquicia
+        </div>
+      </div>
+    </article>
+
+    <article id="franquicia-jacaranda" class="franchise-detail">
+      <div class="franchise-detail-header">
+        <div class="franchise-detail-logo"><img src="assets/franquicias/jacaranda.png" alt="Jacarandá HC" /></div>
+        <div>
+          <h3>Jacarandá Hockey Club</h3>
+          <small>Inspirado en los jacarandás en flor de la ciudad.</small>
+        </div>
+      </div>
+      <div class="franchise-detail-columns">
+        <div>
+          <strong>Colores oficiales</strong><br />
+          <span class="chip">Violeta jacarandá</span>
+          <span class="chip">Celeste</span>
+          <span class="chip">Blanco</span>
+          <br /><br />
+          <strong>Descripción</strong><br />
+          Franquicia con identidad urbana, juego asociado y mucha proyección
+          por bandas, como las copas de los árboles sobre la ciudad.
+        </div>
+        <div>
+          <strong>Espacio reservado</strong><br />
+          – Listado de jugadoras<br />
+          – Staff técnico<br />
+          – Fixture y tabla parcial<br />
+          – Material gráfico y comunicados
+        </div>
+      </div>
+    </article>
+
+    <article id="franquicia-criollas" class="franchise-detail">
+      <div class="franchise-detail-header">
+        <div class="franchise-detail-logo"><img src="assets/franquicias/criollas.png" alt="Criollas HC" /></div>
+        <div>
+          <h3>Criollas Hockey Club</h3>
+          <small>Tradición, historia y hockey bien argentino.</small>
+        </div>
+      </div>
+      <div class="franchise-detail-columns">
+        <div>
+          <strong>Colores oficiales</strong><br />
+          <span class="chip">Ocre</span>
+          <span class="chip">Rojo vino</span>
+          <span class="chip">Blanco</span>
+          <br /><br />
+          <strong>Descripción</strong><br />
+          Equipo de carácter fuerte, con estilo criollo y mucho peso
+          en la posesión de pelota y la lectura del juego.
+        </div>
+        <div>
+          <strong>Espacio reservado</strong><br />
+          Personalizá esta sección con el detalle que quieras para la franquicia.
+        </div>
+      </div>
+    </article>
+
+    <!-- TIP: duplicá articles para las demás franquicias y asegurate que el id coincida con TEAM_ANCHORS del JS -->
+  </section>
+
+  <!-- REGLAMENTO -->
+  <section id="reglamento" style="margin-top:2.5rem;">
+    <h2 class="section-title">Reglamento del torneo</h2>
+    <p class="section-subtitle">
+      El torneo se rige por el reglamento FIH vigente, con adaptaciones específicas
+      para la categoría +50 y el sistema de franquicias.
+    </p>
+    <div class="card">
+      <h3>Aspectos principales</h3>
+      <ul>
+        <li>Formato de juego: 4 tiempos de 15 minutos.</li>
+        <li>Puntuación: 3 puntos victoria, 1 punto empate, 1 punto extra por shootouts.</li>
+        <li>Sistema disciplinario con Fair Play (verde, amarilla, roja).</li>
+        <li>Ventanas de transferencia definidas y reguladas.</li>
+        <li>Playoffs y Final Four según reglamento oficial.</li>
+      </ul>
+      <br />
+      <a href="docs/Reglamento_Torneo_Master_50_2026_FULL.pdf" class="franchise-link" target="_blank">
+        Descargar reglamento completo (PDF)
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    © 2026 Asociación Master &amp; Grand Master – Torneo Máster +50 Femenino.  
+    Sitio de presentación del proyecto de torneo y franquicias.
+  </div>
+</footer>
+
+<script>
+  // =========================
+  // DATA: ZONAS
+  // =========================
+  const ZONA_A = [
+    "Ceibas HC",
+    "Jacarandá HC",
+    "Criollas HC",
+    "Yaguareté HC",
+    "Tero Real HC",
+    "Caldenes HC",
+    "Guanacos HC",
+    "Laguna del Plata HC"
+  ];
+
+  const ZONA_B = [
+    "Horneras HC",
+    "Sauces del Sur HC",
+    "Ñandubay HC",
+    "Tucanes HC",
+    "Cardenales HC",
+    "Pampas HC",
+    "Chañares HC",
+    "Calandrias HC"
+  ];
+
+  // =========================
+  // LOGOS (fallback a placeholder)
+  // =========================
+  const TEAM_LOGOS = {
+    "Ceibas HC": "assets/franquicias/ceibas.png",
+    "Jacarandá HC": "assets/franquicias/jacaranda.png",
+    "Criollas HC": "assets/franquicias/criollas.png",
+    "Yaguareté HC": "assets/franquicias/yaguarete.png",
+    "Tero Real HC": "assets/franquicias/tero-real.png",
+    "Caldenes HC": "assets/franquicias/caldenes.png",
+    "Guanacos HC": "assets/franquicias/guanacos.png",
+    "Laguna del Plata HC": "assets/franquicias/laguna-del-plata.png",
+
+    "Horneras HC": "assets/franquicias/horneras.png",
+    "Sauces del Sur HC": "assets/franquicias/sauces-del-sur.png",
+    "Ñandubay HC": "assets/franquicias/nandubay.png",
+    "Tucanes HC": "assets/franquicias/tucanes.png",
+    "Cardenales HC": "assets/franquicias/cardenales.png",
+    "Pampas HC": "assets/franquicias/pampas.png",
+    "Chañares HC": "assets/franquicias/chaniares.png",
+    "Calandrias HC": "assets/franquicias/calandrias.png"
+  };
+
+  const logoOf = (teamName) => TEAM_LOGOS[teamName] || "assets/franquicias/placeholder.png";
+
+  // =========================
+  // PRO: anchors para que tabla vaya al detalle de franquicia
+  // OJO: el id debe existir en el HTML (#franquicia-xxxx)
+  // =========================
+  const TEAM_ANCHORS = {
+    "Ceibas HC": "#franquicia-ceibas",
+    "Jacarandá HC": "#franquicia-jacaranda",
+    "Criollas HC": "#franquicia-criollas",
+    "Yaguareté HC": "#franquicia-yaguarete",
+    "Tero Real HC": "#franquicia-tero",
+    "Caldenes HC": "#franquicia-caldenes",
+    "Guanacos HC": "#franquicia-guanacos",
+    "Laguna del Plata HC": "#franquicia-laguna",
+
+    "Horneras HC": "#franquicia-horneras",
+    "Sauces del Sur HC": "#franquicia-sauces",
+    "Ñandubay HC": "#franquicia-nandubay",
+    "Tucanes HC": "#franquicia-tucanes",
+    "Cardenales HC": "#franquicia-cardenales",
+    "Pampas HC": "#franquicia-pampas",
+    "Chañares HC": "#franquicia-chaniares",
+    "Calandrias HC": "#franquicia-calandrias"
+  };
+
+  const anchorOf = (teamName) => TEAM_ANCHORS[teamName] || "#detalle-franquicias";
+
+  // =========================
+  // DATA: FECHAS (14 rounds)
+  // =========================
+  const dates = [
+    { round: 1, label: "Fecha 1", date: "8 de marzo" },
+    { round: 2, label: "Fecha 2", date: "22 de marzo" },
+    { round: 3, label: "Fecha 3", date: "12 de abril" },
+    { round: 4, label: "Fecha 4", date: "26 de abril" },
+    { round: 5, label: "Fecha 5", date: "10 de mayo" },
+    { round: 6, label: "Fecha 6", date: "24 de mayo" },
+    { round: 7, label: "Fecha 7", date: "7 de junio" },
+    { round: 8, label: "Fecha 8", date: "14 de junio" },
+    { round: 9, label: "Fecha 9", date: "6 de septiembre" },
+    { round: 10, label: "Fecha 10", date: "20 de septiembre" },
+    { round: 11, label: "Fecha 11", date: "4 de octubre" },
+    { round: 12, label: "Fecha 12", date: "18 de octubre" },
+    { round: 13, label: "Fecha 13", date: "25 de octubre" },
+    { round: 14, label: "Fecha 14", date: "8 de noviembre" }
+  ];
+
+  // =========================
+  // Round-robin pairings for 8 teams (index 0..7)
+  // =========================
+  const RR = [
+    [[0,7],[1,6],[2,5],[3,4]], // R1
+    [[6,0],[5,7],[4,1],[3,2]], // R2
+    [[0,5],[6,4],[7,3],[1,2]], // R3
+    [[4,0],[3,5],[2,6],[1,7]], // R4
+    [[0,3],[4,2],[5,1],[6,7]], // R5
+    [[2,0],[1,3],[7,4],[6,5]], // R6
+    [[0,1],[2,7],[3,6],[4,5]], // R7
+    // vuelta
+    [[7,0],[6,1],[5,2],[4,3]], // R8
+    [[0,6],[7,5],[1,4],[2,3]], // R9
+    [[5,0],[4,6],[3,7],[2,1]], // R10
+    [[0,4],[5,3],[6,2],[7,1]], // R11
+    [[3,0],[2,4],[1,5],[7,6]], // R12
+    [[0,2],[3,1],[4,7],[5,6]], // R13
+    [[1,0],[7,2],[6,3],[5,4]]  // R14
+  ];
+
+  const buildMatches = (teams, rrRound) => rrRound.map(([h,a]) => [teams[h], teams[a]]);
+
+  const schedule = dates.map((d, idx) => ({
+    ...d,
+    A: buildMatches(ZONA_A, RR[idx]),
+    B: buildMatches(ZONA_B, RR[idx])
+  }));
+
+  // =========================
+  // RENDER: Schedule
+  // =========================
+  const scheduleContainer = document.getElementById("scheduleContainer");
+  const buttons = document.querySelectorAll(".pill-btn");
+
+  function renderSchedule(filter = "all") {
+    scheduleContainer.innerHTML = "";
+    schedule.forEach(r => {
+      const card = document.createElement("div");
+      card.className = "round-card";
+
+      const meta = document.createElement("div");
+      meta.className = "round-meta";
+      meta.innerHTML = `<div class="round-title">${r.label}</div><div class="round-date">${r.date}</div>`;
+      card.appendChild(meta);
+
+      const wrap = document.createElement("div");
+      wrap.className = "round-grid";
+      wrap.style.gridTemplateColumns = "1fr";
+      wrap.style.gap = "0.9rem";
+
+      const makeZoneBlock = (zoneName, matches) => {
+        const zone = document.createElement("div");
+        zone.className = "card";
+        zone.style.boxShadow = "none";
+        zone.style.padding = "0.9rem";
+        zone.style.borderRadius = "14px";
+        zone.style.background = "rgba(0,0,0,0.01)";
+        zone.innerHTML = `<h3 style="margin-bottom:0.6rem;">Zona ${zoneName}</h3>`;
+
+        const list = document.createElement("div");
+        list.className = "matches";
+
+        matches.forEach(([home, away]) => {
+          const row = document.createElement("div");
+          row.className = "match";
+          row.innerHTML = `
+            <div class="left">
+              <div class="team-badge" title="${home}">
+                <img src="${logoOf(home)}" alt="${home}" />
+              </div>
+              <div class="team-name" title="${home}">${home}</div>
+            </div>
+            <div class="vs">vs</div>
+            <div class="right">
+              <div class="team-name" style="text-align:right;" title="${away}">${away}</div>
+              <div class="team-badge" title="${away}">
+                <img src="${logoOf(away)}" alt="${away}" />
+              </div>
+            </div>
+          `;
+          list.appendChild(row);
+        });
+
+        zone.appendChild(list);
+        return zone;
+      };
+
+      if (filter === "all" || filter === "A") wrap.appendChild(makeZoneBlock("A", r.A));
+      if (filter === "all" || filter === "B") wrap.appendChild(makeZoneBlock("B", r.B));
+
+      card.appendChild(wrap);
+      scheduleContainer.appendChild(card);
+    });
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderSchedule(btn.dataset.filter);
+    });
+  });
+
+  renderSchedule("all");
+
+  // =========================
+  // DATA: Standings (DEMO: en cero)
+  // =========================
+  const standingsA = ZONA_A.map(t => ({ team: t, PJ: 0, PG: 0, PE: 0, PP: 0, GF: 0, GC: 0, Pts: 0 }));
+  const standingsB = ZONA_B.map(t => ({ team: t, PJ: 0, PG: 0, PE: 0, PP: 0, GF: 0, GC: 0, Pts: 0 }));
+
+  // Sorting: points desc, goal difference desc, goals for desc, then name asc
+  function sortTable(arr) {
+    return [...arr].sort((a,b) => {
+      const dga = a.GF - a.GC;
+      const dgb = b.GF - b.GC;
+      if (b.Pts !== a.Pts) return b.Pts - a.Pts;
+      if (dgb !== dga) return dgb - dga;
+      if (b.GF !== a.GF) return b.GF - a.GF;
+      return a.team.localeCompare(b.team, "es");
+    });
+  }
+
+  function renderStandings(bodyId, data) {
+    const body = document.getElementById(bodyId);
+    body.innerHTML = "";
+
+    const sorted = sortTable(data);
+    sorted.forEach((row, i) => {
+      const tr = document.createElement("tr");
+      const rank = i + 1;
+
+      if (rank === 1) tr.classList.add("rank-1");
+      if (rank >= 2 && rank <= 4) tr.classList.add(`rank-${rank}`);
+
+      const DG = row.GF - row.GC;
+
+      tr.innerHTML = `
+        <td class="pos">${rank}</td>
+        <td class="team">
+          <a class="team-cell-link" href="${anchorOf(row.team)}" title="Ver detalle de ${row.team}">
+            <span class="team-badge" aria-hidden="true">
+              <img src="${logoOf(row.team)}" alt="${row.team}" />
+            </span>
+            <span class="team-name-standings">${row.team}</span>
+          </a>
+        </td>
+        <td class="muted">${row.PJ}</td>
+        <td class="muted">${row.PG}</td>
+        <td class="muted">${row.PE}</td>
+        <td class="muted">${row.PP}</td>
+        <td class="muted">${row.GF}</td>
+        <td class="muted">${row.GC}</td>
+        <td class="muted">${DG}</td>
+        <td><strong>${row.Pts}</strong></td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+
+  renderStandings("bodyA", standingsA);
+  renderStandings("bodyB", standingsB);
+</script>
+
+</body>
+</html>
