@@ -312,10 +312,10 @@
 // ═══════════════════════════════════════════════════════
 
 const FECHAS_TORNEO = [
-  { num: 1, date: "29 de marzo 2026",   label: "Fecha 1",   status: "jugada" },
+  { num: 1, date: "29 de marzo 2026",   label: "Fecha 1",   status: "en_curso" },
   { num: 2, date: "12 de abril 2026",   label: "Fecha 2",   status: "pendiente" },
   { num: 3, date: "17 de mayo 2026",    label: "Fecha 3",   status: "pendiente" },
-  { num: 4, date: "14 de junio 2026",   label: "Playoffs",  status: "pendiente" },
+  { num: 4, date: "14 de junio 2026",   label: "Finales",   status: "finales" },
 ];
 
 const FIXTURE = [
@@ -777,7 +777,7 @@ function renderHeroFechas(){
       <span class="date-num">F${f.num}</span>
       <div>
         <div class="date-info">${f.date}</div>
-        <div class="date-sub">${f.status === 'jugada' ? '✅ Jugada' : f.status === 'pendiente' ? '⏳ Pendiente' : '🏆 Playoffs'}</div>
+        <div class="date-sub">${f.status === 'en_curso' ? '🟢 En curso' : f.status === 'finales' ? '🏆 Finales' : '⏳ Pendiente'}</div>
       </div>
     </div>
   `).join('');
