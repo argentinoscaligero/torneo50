@@ -1021,7 +1021,8 @@ async function doLogin(){
     const data = await res.json();
     if(res.ok && data.token){
       sessionStorage.setItem('tm50_token', data.token);
-      sessionStorage.setItem('tm50_team', user);
+      sessionStorage.setItem('tm50_team',  data.team);
+      sessionStorage.setItem('tm50_group', data.group);
       window.location.href = 'planilla.html';
     } else {
       msg.className='login-msg error';

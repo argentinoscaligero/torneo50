@@ -484,12 +484,21 @@ async function loadMatches(){
 //  RENDER MATCH LIST
 // ═══════════════════════════════════════════════════════
 
+// Solo la fecha 1 está habilitada; el resto se habilita cuando llegue su turno
+const FECHA_ACTIVA = 1;
+
 function renderFechaTabs(){
   const el = document.getElementById('fechaTabs');
   const fechas = [...new Set(Object.values(STATE.matches).map(m=>m.fecha))].sort();
-  el.innerHTML = fechas.map(f => `
-    <button class="tab-btn ${f===STATE.currentFecha?'active':''}" onclick="setFecha(${f},this)">Fecha ${f}</button>
-  `).join('');
+  el.innerHTML = fechas.map(f => {
+    const locked = f > FECHA_ACTIVA && !STATE.isAdmin;
+    return `<button class="tab-btn ${f===STATE.currentFecha?'active':''} ${locked?'locked':''}"
+      onclick="${locked?'':''+'setFecha('+f+',this)'}"
+      ${locked ? 'disabled title="Se habilita al llegar la fecha"' : ''}
+      style="${locked?'opacity:.4;cursor:not-allowed':''}">
+      Fecha ${f}${locked?' 🔒':''}
+    </button>`;
+  }).join('');
 }
 
 function setFecha(n, btn){
