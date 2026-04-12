@@ -732,6 +732,10 @@ function renderDetail(){
 
   if(phase==='done'){
     html+=renderDoneSection(m);
+    if(S.isAdmin){
+      html+=renderEventsSection(m, phase);
+      html+=renderAdminEventForm(m);
+    }
   } else {
     html+=renderFormationSection(m);
     if(phase==='pre'||phase==='lineup_sent'){
@@ -1035,6 +1039,7 @@ async function addPostEvent(){
       m.scoreH=d.scoreH; m.scoreA=d.scoreA;
       updateScoreHeader();
       refreshEventsLog();
+      syncAdminInputs(m);
     }
   }catch(e){ console.error(e); }
 }
@@ -1210,9 +1215,36 @@ function renderDoneSection(m){
 // ── EVENTS ──
 const EV_ICONS = {gol:'⚽',pc:'🔵',ps:'🟠',amarilla:'🟡',roja:'🔴',verde:'🟢'};
 
+function renderAdminEventForm(m){
+  const playerOpts=teamName=>{
+    const pl=PLAYERS[teamName]||[];
+    return `<option value="">— Jugadora —</option>`
+      +pl.map(p=>`<option data-team="${teamName}">${p.nro!=='—'?'#'+p.nro+' ':''}${p.a} ${p.n}</option>`).join('');
+  };
+  return `<div class="section">
+    <div class="sec-title">⚽ Agregar evento (admin)</div>
+    <div class="post-event-form">
+      <div><label>Min.</label><input type="number" id="pMin" min="1" max="60" value="1" /></div>
+      <div><label>Tipo</label>
+        <select id="pType">${EV_TYPES.map(t=>`<option value="${t.v}">${t.icon} ${t.label}</option>`).join('')}</select>
+      </div>
+      <div><label>Equipo y jugadora</label>
+        <select id="pPlayer" style="width:100%">
+          <optgroup label="${m.home}">${playerOpts(m.home)}</optgroup>
+          <optgroup label="${m.away}">${playerOpts(m.away)}</optgroup>
+        </select>
+      </div>
+      <div><label>&nbsp;</label><button class="btn btn-primary btn-sm" onclick="addPostEvent()">+ Agregar</button></div>
+    </div>
+    <p style="font-size:.73rem;color:var(--muted);margin-top:.5rem">
+      💡 Al agregar o quitar goles el marcador se recalcula automáticamente.
+    </p>
+  </div>`;
+}
+
 function renderEventsSection(m, phase){
   const evs=(m.events||[]);
-  const readonly=phase==='done';
+  const readonly=phase==='done' && !S.isAdmin;
   const listHtml=evs.length
     ? evs.map(ev=>`
         <div class="ev-row">
@@ -1246,6 +1278,12 @@ function refreshEventsLog(){
   el.scrollTop = el.scrollHeight;
 }
 
+function syncAdminInputs(m){
+  // Actualiza los inputs del panel admin con el score recalculado
+  const ih=document.getElementById('adH'); if(ih) ih.value=m.scoreH??'';
+  const ia=document.getElementById('adA'); if(ia) ia.value=m.scoreA??'';
+}
+
 async function delEvent(eid){
   const m=S.matches[S.currentId];
   try{
@@ -1255,6 +1293,7 @@ async function delEvent(eid){
       m.scoreH=d.scoreH; m.scoreA=d.scoreA;
       updateScoreHeader();
       refreshEventsLog();
+      syncAdminInputs(m);
     }
   }catch(e){ console.error(e); }
 }
