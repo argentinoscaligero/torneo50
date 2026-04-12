@@ -759,8 +759,10 @@ function mergeScores(){
   const saved = getScores();
   FIXTURE.forEach(f => f.matches.forEach(m => {
     if(saved[m.id]){
-      m.scoreH = saved[m.id].h;
-      m.scoreA = saved[m.id].a;
+      m.scoreH    = saved[m.id].h;
+      m.scoreA    = saved[m.id].a;
+      m.shootoutH = saved[m.id].sh ?? null;
+      m.shootoutA = saved[m.id].sa ?? null;
     }
   }));
 }
@@ -785,6 +787,11 @@ function calcStandings(){
     if(h > a){ sh.pg++; sh.pts+=3; sa.pp++; }
     else if(a > h){ sa.pg++; sa.pts+=3; sh.pp++; }
     else { sh.pe++; sa.pe++; sh.pts+=1; sa.pts+=1; }
+    // Punto extra por shootout (empate en tiempo reglamentario)
+    if(h === a && m.shootoutH !== null && m.shootoutA !== null){
+      if(m.shootoutH > m.shootoutA) sh.pts+=1;
+      else if(m.shootoutA > m.shootoutH) sa.pts+=1;
+    }
   }));
   return stats;
 }
@@ -1078,7 +1085,8 @@ async function fetchScoresFromBackend(){
     // data: { "f1m1": { h: 2, a: 1 }, ... }
     const stored = {};
     Object.keys(data).forEach(id => {
-      stored[id] = { h: data[id].h, a: data[id].a };
+      stored[id] = { h: data[id].h, a: data[id].a,
+        sh: data[id].sh ?? null, sa: data[id].sa ?? null };
     });
     localStorage.setItem('tm50_scores', JSON.stringify(stored));
     mergeScores();

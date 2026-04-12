@@ -103,7 +103,8 @@ app.get('/api/matches', (req, res) => {
   Object.keys(matches).forEach(id => {
     const m = matches[id];
     if(m.scoreH !== null && m.scoreA !== null){
-      scores[id] = { h: m.scoreH, a: m.scoreA };
+      scores[id] = { h: m.scoreH, a: m.scoreA,
+        sh: m.shootoutH ?? null, sa: m.shootoutA ?? null };
     }
   });
   res.json(scores);
