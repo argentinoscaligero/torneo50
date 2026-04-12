@@ -1,0 +1,4 @@
+node_modules/
+.claude/
+*.env
+.DS_Store

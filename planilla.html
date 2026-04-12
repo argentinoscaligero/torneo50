@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Planilla de Partido · Máster +50 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary:#004b8d;--secondary:#0085c7;--accent:#f9b000;
+      --bg:#f5f7fb;--card:#fff;--text:#222;--muted:#666;
+      --green:#2e7d32;--yellow:#f57f17;--red:#c62828;
+      --radius:16px;--shadow:0 6px 20px rgba(0,0,0,.07);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+    a{color:inherit;text-decoration:none}
+
+    /* ── HEADER ── */
+    header{background:var(--primary);color:#fff;padding:.65rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;position:sticky;top:0;z-index:10}
+    .hdr-left{display:flex;align-items:center;gap:.7rem}
+    .hdr-left img{height:34px;border-radius:999px;background:#fff}
+    .hdr-title{font-weight:800;font-size:.9rem}
+    .hdr-sub{font-size:.72rem;opacity:.75}
+    .hdr-right{display:flex;align-items:center;gap:.6rem}
+    .hdr-team{font-size:.8rem;font-weight:700;opacity:.85}
+    .btn-logout{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:.3rem .75rem;border-radius:999px;cursor:pointer;font-size:.8rem;font-weight:700}
+    .btn-logout:hover{background:rgba(255,255,255,.25)}
+
+    /* ── BUTTONS ── */
+    .btn{border:none;border-radius:999px;cursor:pointer;font-weight:700;font-size:.88rem;padding:.55rem 1.1rem;transition:all .15s}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 12px rgba(0,75,141,.25)}
+    .btn-primary:hover{background:var(--secondary)}
+    .btn-secondary{background:rgba(0,75,141,.08);color:var(--primary)}
+    .btn-secondary:hover{background:rgba(0,75,141,.15)}
+    .btn-danger{background:rgba(198,40,40,.09);color:var(--red);border:1px solid rgba(198,40,40,.2)}
+    .btn-danger:hover{background:rgba(198,40,40,.16)}
+    .btn-sm{padding:.32rem .7rem;font-size:.78rem}
+    .btn-icon{width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:10px}
+    .btn-full{width:100%}
+
+    /* ── LAYOUT ── */
+    main{max-width:860px;margin:0 auto;padding:1.2rem;padding-bottom:3rem}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+    /* ── MSGS ── */
+    .msg{padding:.55rem .9rem;border-radius:10px;font-size:.83rem;margin-top:.6rem;display:none}
+    .msg.error{background:rgba(200,0,0,.07);color:#c00;border:1px solid rgba(200,0,0,.15);display:block}
+    .msg.ok{background:rgba(0,160,70,.07);color:#006020;border:1px solid rgba(0,160,70,.15);display:block}
+    .msg.warn{background:rgba(245,127,23,.1);color:#8a5000;border:1px solid rgba(245,127,23,.2);display:block}
+
+    /* ── LOGIN ── */
+    #loginScreen{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:1rem}
+    .login-card{background:var(--card);border-radius:20px;padding:2rem;box-shadow:var(--shadow);width:100%;max-width:400px}
+    .login-card h2{color:var(--primary);font-size:1.15rem;margin-bottom:1.1rem}
+    .field{display:grid;gap:.22rem;margin-bottom:.8rem}
+    label{font-size:.78rem;font-weight:800;color:var(--primary)}
+    input,select{width:100%;border-radius:10px;border:1px solid rgba(0,0,0,.1);padding:.58rem .75rem;font-size:.92rem;outline:none;background:#fff;transition:border-color .15s,box-shadow .15s}
+    input:focus,select:focus{border-color:rgba(0,133,199,.5);box-shadow:0 0 0 3px rgba(0,133,199,.12)}
+
+    /* ── APP ── */
+    #appScreen{display:none}
+    .welcome{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:var(--radius);padding:1rem 1.3rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
+    .welcome-name{font-size:1.1rem;font-weight:800}
+    .welcome-group{font-size:.82rem;opacity:.8;margin-top:.1rem}
+
+    /* Fecha tabs */
+    .tabs{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1rem}
+    .tab-btn{border:1px solid rgba(0,0,0,.08);background:#fff;color:var(--primary);font-weight:700;padding:.38rem .8rem;border-radius:999px;cursor:pointer;font-size:.83rem;box-shadow:var(--shadow);transition:all .15s}
+    .tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .tab-btn:disabled{opacity:.4;cursor:not-allowed}
+
+    /* Match list */
+    .match-list{display:grid;gap:.75rem}
+    .match-item{background:var(--card);border-radius:var(--radius);padding:.9rem 1.1rem;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem;cursor:pointer;border-left:4px solid transparent;transition:transform .15s,box-shadow .15s}
+    .match-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.1)}
+    .match-item.phase-pre{border-color:rgba(0,0,0,.1)}
+    .match-item.phase-lineup{border-color:var(--accent)}
+    .match-item.phase-partido-live{border-color:var(--red)}
+    .match-item.phase-partido-post{border-color:var(--secondary)}
+    .match-item.phase-done{border-color:var(--green)}
+    .mi-teams{font-weight:800;font-size:.95rem}
+    .mi-vs{font-size:.75rem;color:var(--muted);background:rgba(0,0,0,.05);padding:.1rem .4rem;border-radius:999px;margin:0 .35rem}
+    .mi-meta{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.3rem}
+    .mp{background:rgba(0,75,141,.07);color:var(--primary);padding:.14rem .45rem;border-radius:999px;font-size:.75rem;font-weight:700}
+    .mp.sede{background:rgba(249,176,0,.15);color:#8a6000}
+    .phase-badge{font-size:.73rem;font-weight:800;padding:.18rem .5rem;border-radius:999px}
+    .pb-pre{background:rgba(0,0,0,.05);color:var(--muted)}
+    .pb-lineup{background:rgba(249,176,0,.2);color:#8a6000}
+    .pb-live{background:rgba(198,40,40,.1);color:var(--red)}
+    .pb-post{background:rgba(0,133,199,.1);color:var(--secondary)}
+    .pb-done{background:rgba(46,125,50,.1);color:var(--green)}
+    .mi-score{font-weight:900;font-size:1rem;color:var(--primary);background:rgba(0,75,141,.07);padding:.2rem .6rem;border-radius:10px;min-width:54px;text-align:center}
+
+    /* ── MATCH DETAIL PANEL (full screen) ── */
+    #detailPanel{position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;display:none}
+    #detailPanel.open{display:block}
+    .dp-header{background:var(--primary);color:#fff;padding:.65rem 1.1rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:5}
+    .dp-back{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:.3rem .75rem;border-radius:999px;cursor:pointer;font-size:.8rem;font-weight:700;flex-shrink:0}
+    .dp-info{flex:1;min-width:0}
+    .dp-title{font-weight:800;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .dp-group{font-size:.72rem;opacity:.75}
+    .dp-score{font-size:1.5rem;font-weight:900;background:rgba(255,255,255,.15);padding:.18rem .65rem;border-radius:10px;letter-spacing:.05em;flex-shrink:0;min-width:70px;text-align:center}
+    .dp-body{max-width:780px;margin:0 auto;padding:1.1rem}
+
+    /* Section blocks */
+    .section{background:var(--card);border-radius:var(--radius);padding:1.1rem;box-shadow:var(--shadow);margin-bottom:.9rem}
+    .sec-title{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);margin-bottom:.75rem;padding-bottom:.35rem;border-bottom:2px solid rgba(0,75,141,.1)}
+
+    /* ── PHASE: FORMATION ── */
+    .player-scroll{max-height:280px;overflow-y:auto;border:1px solid rgba(0,0,0,.07);border-radius:10px}
+    .prow{display:grid;grid-template-columns:28px 1fr auto auto;align-items:center;gap:.3rem;padding:.38rem .55rem;border-bottom:1px solid rgba(0,0,0,.04);font-size:.82rem}
+    .prow:last-child{border-bottom:none}
+    .prow:hover{background:rgba(0,75,141,.04)}
+    .prow .nro{color:var(--muted);font-size:.72rem;font-weight:700;text-align:right}
+    .prow .pname{font-size:.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .prow .chk-lbl{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;padding:0 .3rem}
+    .prow .chk-lbl span{font-size:.6rem;font-weight:800;color:var(--muted);text-transform:uppercase}
+    .prow .chk-lbl input{accent-color:var(--primary);cursor:pointer;width:15px;height:15px}
+    .form-header{display:grid;grid-template-columns:28px 1fr auto auto;gap:.3rem;padding:.28rem .55rem;font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid rgba(0,75,141,.1)}
+    .form-header .fh-ts{text-align:center;padding:0 .3rem}
+    .no-players{color:var(--muted);font-size:.82rem;font-style:italic;padding:.7rem .55rem}
+    .form-count{font-size:.73rem;color:var(--muted);margin-top:.4rem}
+
+    /* ── PHASE: MODE SELECT ── */
+    .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+    .mode-card{border:2px solid rgba(0,75,141,.12);background:#fff;border-radius:14px;padding:1.3rem;cursor:pointer;text-align:center;transition:all .15s}
+    .mode-card:hover{border-color:var(--primary);background:rgba(0,75,141,.03);transform:translateY(-2px)}
+    .mode-icon{font-size:2.2rem;margin-bottom:.4rem}
+    .mode-name{font-weight:800;color:var(--primary);font-size:.95rem}
+    .mode-desc{font-size:.75rem;color:var(--muted);margin-top:.25rem;line-height:1.4}
+
+    /* ── TIMER ── */
+    .timer-wrap{text-align:center;padding:.5rem 0}
+    .quarter-dots{font-size:1.1rem;color:var(--primary);letter-spacing:.35em;margin-bottom:.2rem}
+    .quarter-lbl{font-size:.77rem;font-weight:700;color:var(--muted);margin-bottom:.6rem}
+    .timer-display{font-size:3.8rem;font-weight:900;color:var(--primary);font-variant-numeric:tabular-nums;line-height:1;margin-bottom:.75rem;transition:color .3s}
+    .timer-display.live{color:var(--red)}
+    .timer-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+
+    /* ── QUICK EVENT ── */
+    .qe-wrap{display:grid;gap:.7rem}
+    .team-toggle{display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(0,75,141,.15);border-radius:10px;overflow:hidden}
+    .team-toggle button{border:none;background:#fff;padding:.5rem;cursor:pointer;font-weight:700;font-size:.8rem;color:var(--muted);transition:all .15s}
+    .team-toggle button.active{background:var(--primary);color:#fff}
+    .qe-player{width:100%;border-radius:10px;border:1px solid rgba(0,0,0,.1);padding:.5rem .7rem;font-size:.85rem;background:#fff}
+    .ev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem}
+    .ev-btn{border:1px solid rgba(0,0,0,.08);background:#fff;border-radius:12px;padding:.55rem .3rem;cursor:pointer;text-align:center;box-shadow:var(--shadow);transition:all .15s}
+    .ev-btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(0,0,0,.1)}
+    .ev-btn:active{transform:translateY(0)}
+    .ev-icon{font-size:1.35rem;display:block;margin-bottom:.1rem}
+    .ev-label{font-size:.7rem;font-weight:700;color:var(--primary)}
+
+    /* ── POST MODE SCORE INPUT ── */
+    .score-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+    .score-block{flex:1;min-width:110px;text-align:center}
+    .score-block label{display:block;font-size:.78rem;font-weight:800;color:var(--muted);margin-bottom:.4rem}
+    .score-input{width:82px;font-size:2.2rem;font-weight:900;text-align:center;border-radius:12px;border:2px solid rgba(0,75,141,.2);padding:.3rem;color:var(--primary);display:block;margin:0 auto}
+    .score-sep{font-size:1.8rem;font-weight:900;color:var(--muted);flex-shrink:0}
+    .shoot-row{display:flex;align-items:center;gap:.5rem;margin-top:.5rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+    .shoot-inp{width:52px;font-size:1.1rem;font-weight:800;text-align:center;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.25rem;color:var(--primary)}
+    .post-event-form{display:grid;grid-template-columns:58px 1fr 1fr auto;gap:.45rem;align-items:end;margin-top:.6rem}
+    .post-event-form label{font-size:.72rem;font-weight:800;color:var(--primary)}
+    .post-event-form select,.post-event-form input{font-size:.82rem;border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.42rem .55rem;background:#fff}
+
+    /* ── EVENTS LOG ── */
+    .events-log{display:grid;gap:.3rem;max-height:220px;overflow-y:auto}
+    .ev-row{display:flex;align-items:center;gap:.45rem;padding:.32rem .5rem;border-radius:9px;background:rgba(0,0,0,.025);font-size:.8rem}
+    .ev-min{font-weight:900;color:var(--primary);min-width:34px;font-size:.77rem}
+    .ev-det{flex:1;min-width:0}
+    .ev-del{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.9rem;padding:0 .15rem;flex-shrink:0}
+    .ev-del:hover{color:var(--red)}
+    .no-events{color:var(--muted);font-size:.82rem;font-style:italic;padding:.3rem 0}
+
+    /* ── DONE ── */
+    .done-summary{text-align:center;padding:1rem 0}
+    .done-score{font-size:2.8rem;font-weight:900;color:var(--primary);margin:.4rem 0}
+    .done-teams{font-size:.9rem;color:var(--muted)}
+
+    .admin-panel{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden}
+    .admin-panel-tabs{display:flex;border-bottom:1px solid rgba(0,0,0,.08)}
+    .admin-panel-tab{flex:1;padding:.55rem .5rem;text-align:center;font-size:.8rem;font-weight:700;cursor:pointer;color:var(--muted);border:none;background:none;border-bottom:2px solid transparent}
+    .admin-panel-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+    .admin-panel-body{padding:.9rem}
+    .plantel-edit-row{display:flex;align-items:center;gap:.4rem;padding:.3rem .4rem;border-bottom:1px solid rgba(0,0,0,.05);font-size:.8rem}
+    .plantel-edit-row:last-child{border-bottom:none}
+
+    @media(max-width:600px){
+      /* Header */
+      header{padding:.5rem .75rem}
+      .hdr-title{font-size:.82rem}
+      .hdr-sub{display:none}
+      .hdr-team{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem}
+      /* Main */
+      main{padding:.75rem;padding-bottom:4rem}
+      /* Welcome */
+      .welcome{padding:.8rem 1rem;gap:.5rem}
+      .welcome-name{font-size:1rem}
+      .welcome-group{font-size:.78rem}
+      /* Fecha tabs — scroll horizontal */
+      .tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:.3rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+      .tabs::-webkit-scrollbar{display:none}
+      .tab-btn{white-space:nowrap;flex-shrink:0;font-size:.78rem;padding:.35rem .7rem}
+      /* Match list */
+      .match-item{padding:.75rem .9rem}
+      .mi-teams{font-size:.88rem}
+      .mi-vs{font-size:.7rem}
+      /* Detail panel header */
+      .dp-body{padding:.75rem}
+      .dp-score{font-size:1.1rem;min-width:58px;padding:.15rem .5rem}
+      .dp-title{font-size:.82rem}
+      .dp-group{font-size:.68rem}
+      /* Sections */
+      .section{padding:.85rem}
+      /* Formation — checkboxes más grandes para touch */
+      .player-scroll{max-height:260px}
+      .prow{padding:.52rem .5rem;gap:.4rem}
+      .prow .chk-lbl input{width:20px;height:20px}
+      .prow .chk-lbl{padding:0 .4rem}
+      .prow .pname{font-size:.85rem}
+      /* Mode select */
+      .mode-grid{grid-template-columns:1fr 1fr}
+      .mode-card{padding:.9rem .6rem}
+      .mode-icon{font-size:1.8rem}
+      .mode-name{font-size:.85rem}
+      /* Timer */
+      .timer-display{font-size:3.2rem}
+      .timer-btns{gap:.4rem}
+      .timer-btns .btn{font-size:.85rem;padding:.5rem .9rem}
+      /* Team toggle — nombres largos */
+      .team-toggle button{font-size:.72rem;padding:.55rem .3rem;line-height:1.3}
+      /* Player select */
+      .qe-player{font-size:.88rem;padding:.55rem .65rem}
+      /* Event buttons — más grandes para touch */
+      .ev-grid{grid-template-columns:repeat(3,1fr);gap:.4rem}
+      .ev-btn{padding:.7rem .2rem}
+      .ev-icon{font-size:1.5rem}
+      .ev-label{font-size:.68rem}
+      /* Post score */
+      .score-input{width:72px;font-size:1.9rem}
+      .score-sep{font-size:1.5rem}
+      /* Post event form — 2 col en móvil */
+      .post-event-form{grid-template-columns:52px 1fr}
+      .post-event-form > div:nth-child(3){grid-column:1 / -1}
+      .post-event-form > div:nth-child(4){grid-column:1 / -1;text-align:right}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-left">
+    <img src="assets/logo-asociacion.png" alt="Logo" />
+    <div>
+      <div class="hdr-title">Planilla de Partido</div>
+      <div class="hdr-sub">Máster +50 Femenino 2026</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <span class="hdr-team" id="hdrTeam"></span>
+    <button class="btn-logout" onclick="logout()">Salir</button>
+  </div>
+</header>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h2>🔐 Acceso Equipos</h2>
+    <div class="field">
+      <label>Equipo</label>
+      <select id="lTeam">
+        <option value="">— Seleccioná tu equipo —</option>
+        <option>Black Velvet</option><option>Siamo Eterne</option>
+        <option>No tan Santas</option><option>Zanjeras</option>
+        <option>Las Suricatas</option><option>Las Terrazas</option>
+        <option>Viento Norte</option><option>NEA Irupe</option>
+        <option>San Fer</option><option>Deportivo Soraya</option>
+        <option>Eternas Guerreras</option><option>Las Inoxidables</option>
+        <option>admin</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="lPass" placeholder="Contraseña del equipo"
+        onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <button class="btn btn-primary btn-full" onclick="doLogin()">Ingresar</button>
+    <div id="loginMsg" class="msg"></div>
+    <p style="margin-top:.9rem;font-size:.75rem;color:var(--muted);text-align:center">
+      ¿Problemas? <a href="mailto:campeonato@argmastershockey.com.ar"
+        style="color:var(--secondary);font-weight:700">campeonato@argmastershockey.com.ar</a>
+    </p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen">
+  <main>
+    <div class="welcome" id="welcomeBanner">
+      <div>
+        <div class="welcome-name" id="welcomeName">—</div>
+        <div class="welcome-group" id="welcomeGroup">—</div>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <a href="index.html">
+          <button class="btn btn-secondary" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)">← Volver al sitio</button>
+        </a>
+        <button class="btn btn-sm" id="adminPanelBtn" style="display:none;background:rgba(255,165,0,.25);color:#fff;border:1px solid rgba(255,165,0,.4)" onclick="toggleAdminPanel()">⚙️ Admin</button>
+      </div>
+    </div>
+    <div class="tabs" id="fechaTabs"></div>
+    <div id="adminPanelWrap"></div>
+    <div id="matchList"></div>
+  </main>
+</div>
+
+<!-- MATCH DETAIL PANEL -->
+<div id="detailPanel">
+  <div class="dp-header">
+    <button class="dp-back" onclick="closeDetail()">← Volver</button>
+    <div class="dp-info">
+      <div class="dp-title" id="dpTitle"></div>
+      <div class="dp-group" id="dpGroup"></div>
+    </div>
+    <div class="dp-score" id="dpScore">– – –</div>
+  </div>
+  <div class="dp-body" id="dpBody"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  DATOS DE PLANTELES
+// ═══════════════════════════════════════════════════════
+let PLAYERS = {
+  "Black Velvet":[
+    {nro:"3",a:"Arizabalo",n:"Ariadna"},{nro:"15",a:"Biotti",n:"Julia"},
+    {nro:"8",a:"Di Meglio",n:"Juana"},{nro:"9",a:"Etchegoyen",n:"Monica"},
+    {nro:"5",a:"Fagiani",n:"Fernanda"},{nro:"7",a:"Garcia Girado",n:"Silvina"},
+    {nro:"18",a:"García Munitis",n:"Ana Maria"},{nro:"1",a:"Gil",n:"María Cecilia"},
+    {nro:"4",a:"Molinari",n:"Maria Paula"},{nro:"19",a:"Morales",n:"Daniela"},
+    {nro:"6",a:"Pettinari",n:"Adriana"},{nro:"22",a:"Torres",n:"Laura"},
+    {nro:"10",a:"Pascual",n:"Rosana"},{nro:"14",a:"Quiroz",n:"Laura"},
+    {nro:"61",a:"Geido",n:"Eugenia"},{nro:"11",a:"Monzón",n:"Analia"},
+    {nro:"21",a:"Bortaro Tillard",n:"Constanza"},{nro:"2",a:"Centurion",n:"Soledad"},
+    {nro:"16",a:"Lambertini",n:"Laura"},{nro:"12",a:"Rouger",n:"Florencia"},
+  ],
+  "Siamo Eterne":[
+    {nro:"1",a:"Sainz",n:"Norma"},{nro:"23",a:"Teler",n:"Monica"},
+    {nro:"46",a:"Muchenik",n:"Fernanda"},{nro:"5",a:"Tagliafico",n:"Consuelo"},
+    {nro:"8",a:"Tagliafico",n:"Amparo"},{nro:"20",a:"Duarte",n:"Alejandra"},
+    {nro:"11",a:"Frascella",n:"Fiorella"},{nro:"9",a:"Dinale",n:"Jacqueline"},
+    {nro:"74",a:"Campos",n:"Paola Yanina"},{nro:"18",a:"Angeleri",n:"Mariana"},
+    {nro:"22",a:"Bessopianetto",n:"Natalia Lorena"},{nro:"32",a:"Leonardi",n:"Carolina"},
+    {nro:"29",a:"Ciappa",n:"Alejandra"},
+  ],
+  "No tan Santas":[
+    {nro:"8",a:"Barakat",n:"Gabriela"},{nro:"21",a:"Gonzales",n:"Mariana"},
+    {nro:"18",a:"Padilla",n:"Cecilia"},{nro:"13",a:"Santoro",n:"Paula"},
+    {nro:"1",a:"Haluza",n:"Wanda"},{nro:"6",a:"Lancestremere",n:"Silvina"},
+    {nro:"5",a:"Martinez Goya",n:"Sylvia"},{nro:"17",a:"Santambrogio",n:"Maria Laura"},
+    {nro:"9",a:"Onega",n:"Ximena"},{nro:"16",a:"Poracchia",n:"Carla"},
+    {nro:"22",a:"Sienra",n:"Marcela"},{nro:"14",a:"Pintabona",n:"Adriana"},
+    {nro:"15",a:"Tarquini",n:"Carla"},{nro:"22",a:"Collazo",n:"Maria Laura"},
+    {nro:"20",a:"Olivieri",n:"Ma. Graciana"},{nro:"10",a:"Coluccio",n:"Josefina"},
+    {nro:"11",a:"Guerrero",n:"Victoria"},{nro:"23",a:"Gutierrez",n:"Mercedes"},
+    {nro:"2",a:"Rabini",n:"Marina"},{nro:"32",a:"Rabini",n:"Mercedes"},
+    {nro:"12",a:"Perticone",n:"Paola"},{nro:"7",a:"Prada",n:"Andrea"},
+  ],
+  "Zanjeras":[
+    {nro:"1",a:"Bermudez",n:"Maria Victoria"},{nro:"15",a:"Bianchi",n:"Florencia Ana"},
+    {nro:"8",a:"Chevallier Boutell",n:"Jacinta"},{nro:"7",a:"Gamarra",n:"Manuela"},
+    {nro:"3",a:"Gamarra",n:"Maria"},{nro:"9",a:"Gamarra",n:"Sol"},
+    {nro:"24",a:"Gimenez Zapiola",n:"Josefina"},{nro:"31",a:"Graña",n:"Laura"},
+    {nro:"27",a:"Jantus",n:"Mariana"},{nro:"11",a:"Lorenzo",n:"Lucia"},
+    {nro:"6",a:"Massa",n:"Maria Eugenia"},{nro:"19",a:"Morel Quirno",n:"Ana"},
+    {nro:"17",a:"Perez Cobo",n:"Ana"},{nro:"13",a:"Radice",n:"Marcela"},
+    {nro:"5",a:"Rosato",n:"Lucrecia"},{nro:"20",a:"Salinas",n:"Mariana"},
+    {nro:"12",a:"Tait",n:"Vivian"},{nro:"2",a:"Vazquez Durrie",n:"Luciana"},
+    {nro:"25",a:"Boselli",n:"Luisa"},{nro:"30",a:"Garat",n:"Sofia Ines"},
+  ],
+  "Las Suricatas":[
+    {nro:"5",a:"Alonso",n:"Miriam"},{nro:"3",a:"Padilla",n:"Paula"},
+    {nro:"17",a:"Casiraghi",n:"Virginia"},{nro:"9",a:"Brinnand",n:"Moira"},
+    {nro:"11",a:"Pearson",n:"Moira"},{nro:"14",a:"Gonzalez Robles",n:"Mercedes"},
+    {nro:"16",a:"Bodmer",n:"Alejandra"},{nro:"31",a:"Escobar",n:"Alejandra T."},
+    {nro:"13",a:"Morea",n:"Gloria"},{nro:"10",a:"Palma",n:"Mirta"},
+    {nro:"12",a:"Sias",n:"Adriana"},{nro:"1",a:"Ocampo",n:"Ana"},
+    {nro:"6",a:"Iraola",n:"Soledad"},{nro:"8",a:"Iraola",n:"Pilar"},
+    {nro:"7",a:"Darritchon",n:"Marcela"},{nro:"23",a:"Fernandez",n:"Gabriela"},
+    {nro:"18",a:"Gilligan",n:"Rosario"},{nro:"20",a:"Cabrera Figueroa",n:"Maria Mercedes"},
+    {nro:"2",a:"Benitez Cruz",n:"Laura"},
+  ],
+  "Las Terrazas":[
+    {nro:"—",a:"Szeliga",n:"Marina"},{nro:"—",a:"Hussey",n:"Ana Maria"},
+    {nro:"—",a:"Llobera",n:"Laura"},{nro:"—",a:"Sanchez",n:"M. Alejandra"},
+    {nro:"—",a:"Mach",n:"Zulma"},{nro:"—",a:"Klag",n:"Luciane"},
+    {nro:"—",a:"Rey Fortes",n:"Valeria"},{nro:"—",a:"Sampalione",n:"Valeria"},
+    {nro:"—",a:"Sanguinetti",n:"Cristina"},{nro:"—",a:"Hussey",n:"Marcela"},
+    {nro:"—",a:"Bespresvany",n:"Jessica"},{nro:"—",a:"Pinilla",n:"Paola"},
+    {nro:"—",a:"Barayazarra",n:"Sara"},{nro:"—",a:"Alvarez",n:"Gabriela"},
+    {nro:"—",a:"Herfurth",n:"Natalia"},{nro:"—",a:"Rossi",n:"Karina"},
+    {nro:"—",a:"Yaconianni",n:"Teresa"},
+  ],
+  "Viento Norte":[
+    {nro:"24",a:"Mooney",n:"Ines"},{nro:"10",a:"Molina Zavalia",n:"Silvia Andrea"},
+    {nro:"3",a:"Etchemaite",n:"Ana Maria"},{nro:"5",a:"Pierrou",n:"Maria Eugenia"},
+    {nro:"27",a:"Hernandez",n:"Veronica"},{nro:"9",a:"Pisula",n:"Mariana"},
+    {nro:"19",a:"Giardelli",n:"Maria Victoria"},{nro:"4",a:"Barré",n:"Paola"},
+    {nro:"6",a:"Perez",n:"Adriana"},{nro:"1",a:"Aberg Cobo",n:"Marina"},
+    {nro:"17",a:"Devoto",n:"Maria Teresita"},{nro:"12",a:"Pastorino",n:"Claudia"},
+    {nro:"2",a:"Forchner",n:"Corina"},{nro:"8",a:"Forchner",n:"Gisela"},
+    {nro:"25",a:"Picciola",n:"Silvina"},{nro:"11",a:"Patiño",n:"Mariana"},
+    {nro:"22",a:"Mac Culloch",n:"Patricia"},
+  ],
+  "NEA Irupe":[
+    {nro:"—",a:"Meconi",n:"Andrea"},{nro:"—",a:"Lapacó",n:"Paula"},
+    {nro:"—",a:"Silva",n:"Paola"},{nro:"—",a:"Mendoza",n:"Cecilia"},
+    {nro:"—",a:"Miño",n:"Susana"},{nro:"—",a:"Germano",n:"Paula"},
+    {nro:"—",a:"Schmoll",n:"Nancy"},{nro:"—",a:"Garcia",n:"Patricia"},
+    {nro:"—",a:"Baroli",n:"Gabriela"},{nro:"—",a:"Lafata",n:"Maria Natalia"},
+    {nro:"—",a:"Formoso",n:"Marina"},{nro:"—",a:"García Repáraz",n:"Florencia"},
+    {nro:"—",a:"Sánchez",n:"Silvana Claudia"},{nro:"—",a:"Maldonado",n:"Fabiana"},
+    {nro:"—",a:"Alvarez",n:"Carolina"},{nro:"—",a:"Raffo",n:"Alejandra"},
+  ],
+  "San Fer":[
+    {nro:"19",a:"Batagliero",n:"Viviana Andrea"},{nro:"24",a:"Colombo",n:"María Belen"},
+    {nro:"5",a:"Compagni",n:"Nancy"},{nro:"1",a:"Dermgerd",n:"Marcela Patricia"},
+    {nro:"27",a:"Dubini",n:"Cecilia Ines"},{nro:"38",a:"Elias",n:"Maria"},
+    {nro:"16",a:"Estramil Ozores",n:"Veronica"},{nro:"15",a:"Fumo",n:"Romina Paola"},
+    {nro:"99",a:"Gomez Autorino",n:"María Paula"},{nro:"11",a:"Guedes",n:"Claudia"},
+    {nro:"9",a:"Poggi",n:"María Virginia"},{nro:"10",a:"Rimoldi",n:"Jorgelina"},
+    {nro:"17",a:"Ripalda",n:"Romina Liliana"},{nro:"21",a:"Santurio",n:"Valeria Luciana"},
+    {nro:"7",a:"Schuth",n:"Julia Mariana"},{nro:"29",a:"Solari",n:"Ana Ines"},
+    {nro:"22",a:"Solari",n:"Mariel Beatriz"},{nro:"26",a:"Solari",n:"Maria Soledad"},
+    {nro:"6",a:"Teruel",n:"Amneris"},{nro:"41",a:"Toffanin",n:"Melina"},
+  ],
+  "Deportivo Soraya":[
+    {nro:"—",a:"Recondo",n:"Ana Inés"},{nro:"—",a:"Gutman",n:"Mariana"},
+    {nro:"—",a:"Malaspina",n:"María Alejandra"},{nro:"—",a:"Scapin",n:"Roxana"},
+    {nro:"—",a:"Diaz Offeney",n:"Cristina"},{nro:"—",a:"Francetich",n:"María José"},
+    {nro:"—",a:"Escobar",n:"Carolina"},{nro:"—",a:"Parodi",n:"María José"},
+    {nro:"—",a:"Siancha",n:"Adriana"},{nro:"—",a:"Sueldo",n:"Maria Lorena"},
+    {nro:"—",a:"Calabria",n:"Carola"},{nro:"1",a:"Canepa",n:"Paola"},
+    {nro:"—",a:"Castello",n:"Flor"},{nro:"—",a:"D'aprile",n:"Gabriela"},
+    {nro:"—",a:"Gil",n:"María Celina"},{nro:"—",a:"Acosta",n:"Huerto"},
+  ],
+  "Eternas Guerreras":[
+    {nro:"—",a:"Bianchi",n:"Alejandra M."},{nro:"—",a:"Castro",n:"Silvia"},
+    {nro:"—",a:"Descalzo",n:"Maria Pia"},{nro:"—",a:"Descalzo",n:"Adriana Maria"},
+    {nro:"—",a:"Duarte",n:"Raquel"},{nro:"—",a:"Fauez",n:"Marisa"},
+    {nro:"—",a:"Guglieri",n:"Marta"},{nro:"—",a:"Moore",n:"Roxana Alejandra"},
+    {nro:"—",a:"Orezzoli",n:"Alejandra Paula"},{nro:"—",a:"Ottaviani",n:"Sonia"},
+    {nro:"—",a:"Pierdominici",n:"Sandra"},{nro:"—",a:"Santi",n:"Mónica Alejandra"},
+    {nro:"—",a:"Sosa Mayo",n:"Claudia"},{nro:"—",a:"Speroni",n:"Cecilia"},
+    {nro:"—",a:"Suarez",n:"Maria Eduarda"},{nro:"—",a:"Arias",n:"Alejandra V."},
+    {nro:"—",a:"Barcena",n:"Adriana"},{nro:"—",a:"Sanfilippo",n:"Claudia"},
+  ],
+  "Las Inoxidables":[
+    {nro:"—",a:"Tihista",n:"Sabina"},{nro:"—",a:"Marani",n:"Luciana"},
+    {nro:"—",a:"Parodi",n:"Graciela Beatriz"},{nro:"—",a:"Casella",n:"Mariela"},
+    {nro:"—",a:"Negrini",n:"Laura"},{nro:"—",a:"Zone",n:"Judith"},
+    {nro:"—",a:"Hurtado",n:"Viviana"},{nro:"—",a:"Manduti",n:"Cecilia Laura"},
+    {nro:"—",a:"Vinue",n:"Ana Maria"},{nro:"—",a:"Alfaro",n:"Maria Laura"},
+    {nro:"—",a:"Amarilla",n:"Evelin"},{nro:"—",a:"Castilla",n:"Maria Victoria"},
+  ],
+};
+
+const EV_TYPES = [
+  {v:"gol",      icon:"⚽", label:"Gol"},
+  {v:"pc",       icon:"🔵", label:"PC"},
+  {v:"ps",       icon:"🟠", label:"PS"},
+  {v:"amarilla", icon:"🟡", label:"Amarilla"},
+  {v:"roja",     icon:"🔴", label:"Roja"},
+  {v:"verde",    icon:"🟢", label:"Verde"},
+];
+
+let FECHA_ACTIVA = 1;
+
+async function loadConfig(){
+  try{
+    const d = await fetch('/api/config');
+    const cfg = await d.json();
+    if(cfg.fechaActiva) FECHA_ACTIVA = cfg.fechaActiva;
+  }catch(e){}
+}
+
+async function loadPlayers(){
+  try{
+    const d = await fetch('/api/teams');
+    const data = await d.json();
+    if(Object.keys(data).length > 0){
+      // Convert from {apellido,nombre,nro} to {a,n,nro} format used internally
+      PLAYERS = {};
+      Object.keys(data).forEach(team => {
+        PLAYERS[team] = data[team].map(p => ({nro:p.nro, a:p.apellido, n:p.nombre}));
+      });
+    }
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════
+//  STATE & API
+// ═══════════════════════════════════════════════════════
+const API_BASE = '';
+
+const S = {
+  token:null, team:null, group:null, isAdmin:false,
+  matches:{}, currentFecha:1, currentId:null,
+  liveTeamSide:'home', // 'home' | 'away'
+  livePlayer:'',
+};
+
+async function api(method, path, body){
+  const opts = { method, headers:{ Authorization:'Bearer '+S.token } };
+  if(body){ opts.headers['Content-Type']='application/json'; opts.body=JSON.stringify(body); }
+  const r = await fetch(API_BASE+path, opts);
+  return r.json();
+}
+
+// ═══════════════════════════════════════════════════════
+//  TIMER
+// ═══════════════════════════════════════════════════════
+const T = {
+  quarter:1, running:false,
+  elapsedAtPause:0, startedAt:null,
+  interval:null, MAX:900
+};
+
+const elapsed = () => !T.running ? T.elapsedAtPause
+  : T.elapsedAtPause + Math.floor((Date.now()-T.startedAt)/1000);
+
+const fmtSec = s => {
+  s = Math.min(s, T.MAX);
+  return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+};
+
+function startTimer(){
+  if(T.running) return;
+  T.startedAt = Date.now();
+  T.running = true;
+  T.interval = setInterval(()=>{
+    updateTimerUI();
+    if(elapsed() >= T.MAX){ pauseTimer(); updateTimerUI(); }
+  }, 500);
+  updateTimerUI();
+  saveTimer();
+}
+function pauseTimer(){
+  if(!T.running) return;
+  T.elapsedAtPause = Math.min(elapsed(), T.MAX);
+  T.running=false; T.startedAt=null;
+  clearInterval(T.interval); T.interval=null;
+  saveTimer();
+  updateTimerUI();
+}
+function nextQuarter(){
+  T.quarter++; T.elapsedAtPause=0; T.startedAt=null; T.running=false;
+  updateTimerUI(); saveTimer();
+}
+function endQuarterManual(){
+  pauseTimer(); T.elapsedAtPause=T.MAX; updateTimerUI(); saveTimer();
+}
+function resetTimer(){
+  pauseTimer(); T.quarter=1; T.elapsedAtPause=0; T.startedAt=null;
+}
+function saveTimer(){
+  if(!S.currentId) return;
+  sessionStorage.setItem('tmr_'+S.currentId, JSON.stringify({
+    quarter:T.quarter, elapsedAtPause:T.elapsedAtPause,
+    startedAt: T.running ? T.startedAt : null
+  }));
+}
+function loadTimer(id){
+  const d = JSON.parse(sessionStorage.getItem('tmr_'+id)||'null');
+  if(!d){ T.quarter=1; T.elapsedAtPause=0; T.startedAt=null; T.running=false; return; }
+  T.quarter=d.quarter||1;
+  T.elapsedAtPause=d.elapsedAtPause||0;
+  T.running=false; T.startedAt=null;
+  if(d.startedAt){
+    const extra=Math.floor((Date.now()-d.startedAt)/1000);
+    T.elapsedAtPause=Math.min(T.elapsedAtPause+extra, T.MAX);
+  }
+}
+function updateTimerUI(){
+  const el=document.getElementById('timerDisplay'); if(!el)return;
+  const e=elapsed();
+  el.textContent=fmtSec(e);
+  el.className='timer-display'+(T.running?' live':'');
+  const ql=document.getElementById('quarterLbl');
+  if(ql){
+    const dots=[1,2,3,4].map(q=>q<T.quarter?'●':q===T.quarter?'◉':'○').join(' ');
+    ql.textContent=`${dots}   ${T.quarter}° Tiempo`;
+  }
+  renderTimerBtns();
+}
+function renderTimerBtns(){
+  const el=document.getElementById('timerBtns'); if(!el)return;
+  const e=elapsed(), atEnd=e>=T.MAX;
+  if(T.quarter>4){
+    el.innerHTML=`<span style="color:var(--green);font-weight:700;font-size:.85rem">✅ 4° tiempo completado — usá el botón "Cerrar partido" más abajo</span>`;
+    return;
+  }
+  if(atEnd && !T.running){
+    el.innerHTML = T.quarter<4
+      ? `<span style="color:var(--muted);font-size:.82rem">Fin del ${T.quarter}° tiempo</span>
+         <button class="btn btn-primary" onclick="nextQuarter()">▶ Iniciar ${T.quarter+1}° tiempo</button>`
+      : `<span style="color:var(--green);font-weight:700;font-size:.85rem">✅ 4° tiempo completado — usá el botón "Cerrar partido" más abajo</span>`;
+    return;
+  }
+  if(T.running){
+    el.innerHTML=`<button class="btn btn-secondary" onclick="pauseTimer()">⏸ Pausar</button>
+      <button class="btn btn-danger" onclick="endQuarterManual()">⏹ Fin ${T.quarter}° tiempo</button>`;
+  } else {
+    const lbl=T.elapsedAtPause>0?'▶ Reanudar':`▶ Iniciar ${T.quarter}° tiempo`;
+    el.innerHTML=`<button class="btn btn-primary" onclick="startTimer()">${lbl}</button>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════════════════
+async function doLogin(){
+  const team=document.getElementById('lTeam').value;
+  const pass=document.getElementById('lPass').value;
+  const msg=document.getElementById('loginMsg');
+  msg.className='msg';
+  if(!team){msg.className='msg error';msg.textContent='Seleccioná tu equipo.';return;}
+  if(!pass){msg.className='msg error';msg.textContent='Ingresá la contraseña.';return;}
+  try{
+    const d=await api('POST','/api/login',{team,password:pass});
+    if(d.token){
+      S.token=d.token; S.team=d.team; S.group=d.group; S.isAdmin=d.group==='ADMIN';
+      sessionStorage.setItem('tm50_token',d.token);
+      sessionStorage.setItem('tm50_team',d.team);
+      sessionStorage.setItem('tm50_group',d.group);
+      await enterApp();
+    } else {
+      msg.className='msg error'; msg.textContent=d.error||'Credenciales incorrectas.';
+    }
+  }catch(e){
+    msg.className='msg error';
+    msg.textContent='⚠️ No se puede conectar al servidor. Verificá que el backend esté corriendo.';
+  }
+}
+function logout(){
+  sessionStorage.clear(); resetTimer();
+  S.token=S.team=S.group=null; S.isAdmin=false; S.matches={};
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('lPass').value='';
+}
+async function enterApp(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+  document.getElementById('hdrTeam').textContent=S.team;
+  document.getElementById('welcomeName').textContent=S.isAdmin?'👑 Administrador':S.team;
+  document.getElementById('welcomeGroup').textContent=S.isAdmin?'Acceso completo':`Grupo ${S.group}`;
+  await Promise.all([loadConfig(), loadPlayers()]);
+  await loadMatches();
+  renderFechaTabs();
+  renderMatchList();
+  if(S.isAdmin) document.getElementById('adminPanelBtn').style.display='';
+  renderAdminPanel();
+}
+
+// ═══════════════════════════════════════════════════════
+//  MATCH LIST
+// ═══════════════════════════════════════════════════════
+async function loadMatches(){
+  try{
+    S.matches = await api('GET','/api/matches/full');
+  }catch(e){ console.error(e); }
+}
+
+function renderFechaTabs(){
+  const fechas=[...new Set(Object.values(S.matches).map(m=>m.fecha))].sort();
+  document.getElementById('fechaTabs').innerHTML=fechas.map(f=>{
+    const locked = f>FECHA_ACTIVA && !S.isAdmin;
+    return `<button class="tab-btn ${f===S.currentFecha?'active':''}"
+      onclick="${locked?'':` setFecha(${f},this)`}"
+      ${locked?`disabled title="Se habilita al llegar la fecha"`:''}
+      style="${locked?'opacity:.4;cursor:not-allowed':''}">
+      Fecha ${f}${locked?' 🔒':''}
+    </button>`;
+  }).join('');
+}
+
+function setFecha(n,btn){
+  S.currentFecha=n;
+  document.querySelectorAll('#fechaTabs .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMatchList();
+}
+
+function phaseBadge(m){
+  if(m.phase==='done' && m.wo) return `<span class="phase-badge pb-done" style="background:var(--red)">🏳️ W.O.</span>`;
+  if(m.phase==='done')         return `<span class="phase-badge pb-done">✅ Finalizado</span>`;
+  if(m.phase==='partido')      return m.mode==='live'
+    ? `<span class="phase-badge pb-live">🔴 En vivo</span>`
+    : `<span class="phase-badge pb-post">📊 Completando</span>`;
+  if(m.phase==='lineup_sent')  return `<span class="phase-badge pb-lineup">📋 Formación enviada</span>`;
+  return `<span class="phase-badge pb-pre">📝 Sin iniciar</span>`;
+}
+function phaseClass(m){
+  if(m.phase==='done') return 'phase-done';
+  if(m.phase==='partido') return m.mode==='live'?'phase-partido-live':'phase-partido-post';
+  if(m.phase==='lineup_sent') return 'phase-lineup';
+  return 'phase-pre';
+}
+
+function renderMatchList(){
+  const items=Object.entries(S.matches)
+    .filter(([,m])=>m.fecha===S.currentFecha)
+    .filter(([,m])=>S.isAdmin||m.home===S.team||m.away===S.team)
+    .sort(([,a],[,b])=>a.group.localeCompare(b.group)||(a.horario||'').localeCompare(b.horario||''));
+
+  if(!items.length){
+    document.getElementById('matchList').innerHTML=
+      `<div class="card" style="padding:1.5rem;text-align:center;color:var(--muted)">No hay partidos para esta fecha.</div>`;
+    return;
+  }
+
+  document.getElementById('matchList').innerHTML=`<div class="match-list">`+items.map(([id,m])=>{
+    const hasScore=m.scoreH!==null&&m.scoreA!==null;
+    return `<div class="match-item ${phaseClass(m)}" onclick="openDetail('${id}')">
+      <div>
+        <div class="mi-teams">${m.home}<span class="mi-vs">vs</span>${m.away}</div>
+        <div class="mi-meta" style="margin-top:.3rem">
+          <span class="mp">Grupo ${m.group}</span>
+          ${m.sede?`<span class="mp sede">📍 ${m.sede}</span>`:''}
+          ${m.horario?`<span class="mp">🕐 ${m.horario}</span>`:''}
+          ${phaseBadge(m)}
+        </div>
+      </div>
+      ${hasScore?`<div class="mi-score">${m.scoreH} – ${m.scoreA}</div>`:''}
+    </div>`;
+  }).join('')+'</div>';
+}
+
+// ═══════════════════════════════════════════════════════
+//  MATCH DETAIL
+// ═══════════════════════════════════════════════════════
+function openDetail(id){
+  S.currentId=id;
+  const m=S.matches[id];
+  loadTimer(id);
+  document.getElementById('dpTitle').textContent=`${m.home} vs ${m.away}`;
+  document.getElementById('dpGroup').textContent=`Grupo ${m.group}${m.sede?' · '+m.sede:''}${m.horario?' · '+m.horario:''}`;
+  updateScoreHeader();
+  renderDetail();
+  document.getElementById('detailPanel').classList.add('open');
+  document.getElementById('detailPanel').scrollTop=0;
+}
+function closeDetail(){
+  pauseTimer();
+  document.getElementById('detailPanel').classList.remove('open');
+  S.currentId=null;
+  renderMatchList();
+}
+function updateScoreHeader(){
+  const m=S.matches[S.currentId];
+  if(!m) return;
+  const h=m.scoreH, a=m.scoreA;
+  document.getElementById('dpScore').textContent=(h!==null&&a!==null)?`${h} – ${a}`:'– –';
+}
+function renderDetail(){
+  const m=S.matches[S.currentId];
+  const phase=m.phase||'pre';
+  let html='';
+
+  if(phase==='done'){
+    html+=renderDoneSection(m);
+    if(S.isAdmin){
+      html+=renderEventsSection(m, phase);
+      html+=renderAdminEventForm(m);
+    }
+  } else {
+    html+=renderFormationSection(m);
+    if(phase==='pre'||phase==='lineup_sent'){
+      html+=renderModeSelect(m, phase);
+    } else if(phase==='partido'){
+      if(m.mode==='live') html+=renderLiveSection(m);
+      else html+=renderPostSection(m);
+    }
+    html+=renderEventsSection(m, phase);
+    html+=renderCloseSection(m);
+  }
+
+  if(S.isAdmin) html+=renderAdminSection(m);
+
+  document.getElementById('dpBody').innerHTML=html;
+  if(m.mode==='live' && phase==='partido') updateTimerUI();
+}
+
+// ── FORMATION ──
+function renderFormationSection(m){
+  const side = m.home===S.team?'home':(m.away===S.team?'away':'home');
+  const teamName = side==='home'?m.home:m.away;
+  const players = PLAYERS[teamName]||[];
+  const titulares = side==='home'?(m.lineup_home||[]):(m.lineup_away||[]);
+  const suplentes = side==='home'?(m.subs_home||[]):(m.subs_away||[]);
+  const done = (m.phase==='done');
+
+  const cntT = titulares.length, cntS = suplentes.length;
+
+  const rows = players.length
+    ? `<div class="form-header">
+        <div></div><div>Jugadora</div>
+        <div class="fh-ts">T</div>
+        <div class="fh-ts">S</div>
+      </div>`
+      + players.map(p=>{
+          const key=`${p.nro}-${p.a}`;
+          const isT=titulares.includes(key), isS=suplentes.includes(key);
+          return `<div class="prow">
+            <span class="nro">${p.nro}</span>
+            <span class="pname">${p.a}, ${p.n}</span>
+            <label class="chk-lbl">
+              <input type="checkbox" class="chk-tit" data-key="${key}" ${isT?'checked':''} onchange="onCheckFormation()">
+              <span>T</span>
+            </label>
+            <label class="chk-lbl">
+              <input type="checkbox" class="chk-sup" data-key="${key}" ${isS?'checked':''} onchange="onCheckFormation()">
+              <span>S</span>
+            </label>
+          </div>`;
+        }).join('')
+    : `<div class="no-players">Planilla de inscripción no disponible</div>`;
+
+  const myOk       = side==='home' ? !!m.lineup_home_ok : !!m.lineup_away_ok;
+  const opponentOk = side==='home' ? !!m.lineup_away_ok : !!m.lineup_home_ok;
+  const opponentName = side==='home' ? m.away : m.home;
+
+  return `<div class="section">
+    <div class="sec-title">📋 Tu formación — ${teamName}
+      <span id="formCountBadge" style="font-weight:400;font-size:.75rem;color:var(--muted);margin-left:.4rem">
+        ${cntT} titular${cntT!==1?'es':''} · ${cntS} suplente${cntS!==1?'s':''}
+      </span>
+    </div>
+    <div class="player-scroll">${rows}</div>
+    <div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+      <button class="btn btn-primary btn-sm" onclick="submitLineup()">Guardar formación</button>
+      <span id="lineupMsg" class="msg" style="display:inline-block;margin:0;padding:.3rem .7rem"></span>
+    </div>
+    <div style="margin-top:.55rem;font-size:.78rem;display:flex;gap:1rem;flex-wrap:wrap">
+      <span style="color:${myOk?'var(--green)':'var(--muted)'}">
+        ${myOk?'✅':'⏳'} Tu formación: ${myOk?'enviada':'pendiente'}
+      </span>
+      <span style="color:${opponentOk?'var(--green)':'var(--muted)'}">
+        ${opponentOk?'✅':'⏳'} ${opponentName}: ${opponentOk?'enviada':'pendiente'}
+      </span>
+    </div>
+  </div>`;
+}
+
+function onCheckFormation(){
+  const cntT=document.querySelectorAll('.chk-tit:checked').length;
+  const cntS=document.querySelectorAll('.chk-sup:checked').length;
+  const badge=document.getElementById('formCountBadge');
+  if(badge) badge.textContent=`${cntT} titular${cntT!==1?'es':''} · ${cntS} suplente${cntS!==1?'s':''}`;
+}
+
+async function submitLineup(){
+  const m=S.matches[S.currentId];
+  const side=m.home===S.team?'home':(m.away===S.team?'away':'home');
+  const titulares=[...document.querySelectorAll('.chk-tit:checked')].map(c=>c.dataset.key);
+  const suplentes=[...document.querySelectorAll('.chk-sup:checked')].map(c=>c.dataset.key);
+  const msg=document.getElementById('lineupMsg');
+  try{
+    const d=await api('POST',`/api/matches/${S.currentId}/lineup`,{side,titulares,suplentes});
+    if(d.ok){
+      S.matches[S.currentId]=d.match;
+      msg.className='msg ok'; msg.textContent='✅ Formación guardada';
+      setTimeout(()=>{msg.className='msg';},2000);
+      renderDetail();
+    }else{ msg.className='msg error'; msg.textContent=d.error||'Error'; }
+  }catch(e){ msg.className='msg error'; msg.textContent='Error de conexión'; }
+}
+
+// ── MODE SELECT ──
+function renderModeSelect(m, phase){
+  const ready = phase==='lineup_sent';
+  const subtitle = ready
+    ? 'Formación enviada. Elegí cómo registrar el partido.'
+    : 'Podés enviar la formación antes o ir directo al partido.';
+  return `<div class="section">
+    <div class="sec-title">⚽ Modo partido</div>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:.9rem">${subtitle}</p>
+    <div class="mode-grid">
+      <div class="mode-card" onclick="startMode('live')">
+        <div class="mode-icon">🔴</div>
+        <div class="mode-name">En vivo</div>
+        <div class="mode-desc">Cronómetro por tiempos. Cargás los eventos mientras se juega.</div>
+      </div>
+      <div class="mode-card" onclick="startMode('post')">
+        <div class="mode-icon">📝</div>
+        <div class="mode-name">Completar datos</div>
+        <div class="mode-desc">Cargás el resultado y los eventos después del partido.</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function startMode(mode){
+  const d=await api('POST',`/api/matches/${S.currentId}/phase`,{phase:'partido',mode});
+  if(d.ok){ S.matches[S.currentId]=d.match; renderDetail(); }
+}
+
+// ── LIVE ──
+function renderLiveSection(m){
+  S.liveTeamSide = S.team===m.home||S.isAdmin?'home':'away';
+  const teamHome=m.home, teamAway=m.away;
+  const playerOpts=side=>{
+    const pl=PLAYERS[side==='home'?teamHome:teamAway]||[];
+    return `<option value="">— Jugadora —</option>`
+      +pl.map(p=>`<option>${p.nro!=='—'?'#'+p.nro+' ':''}${p.a} ${p.n}</option>`).join('');
+  };
+
+  return `<div class="section">
+    <div class="sec-title">🔴 En vivo</div>
+
+    <div class="timer-wrap">
+      <div class="quarter-dots" id="quarterLbl">○ ○ ○ ○   1° Tiempo</div>
+      <div class="timer-display" id="timerDisplay">00:00</div>
+      <div class="timer-btns" id="timerBtns"></div>
+    </div>
+
+    <div style="margin-top:1.1rem;padding-top:.9rem;border-top:1px solid rgba(0,0,0,.06)">
+      <div class="sec-title" style="margin-bottom:.6rem">Registrar evento</div>
+      <div class="qe-wrap">
+        <div class="team-toggle">
+          <button id="btnHome" class="${S.liveTeamSide==='home'?'active':''}"
+            onclick="setLiveSide('home')">${teamHome}</button>
+          <button id="btnAway" class="${S.liveTeamSide==='away'?'active':''}"
+            onclick="setLiveSide('away')">${teamAway}</button>
+        </div>
+        <select class="qe-player" id="qePlayer" onchange="S.livePlayer=this.value">
+          ${playerOpts(S.liveTeamSide)}
+        </select>
+        <div class="ev-grid">
+          ${EV_TYPES.map(t=>`
+            <button class="ev-btn" onclick="addLiveEvent('${t.v}')">
+              <span class="ev-icon">${t.icon}</span>
+              <span class="ev-label">${t.label}</span>
+            </button>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function setLiveSide(side){
+  S.liveTeamSide=side;
+  const m=S.matches[S.currentId];
+  document.getElementById('btnHome').className=side==='home'?'active':'';
+  document.getElementById('btnAway').className=side==='away'?'active':'';
+  const teamName=side==='home'?m.home:m.away;
+  const pl=PLAYERS[teamName]||[];
+  const sel=document.getElementById('qePlayer');
+  sel.innerHTML=`<option value="">— Jugadora —</option>`
+    +pl.map(p=>`<option>${p.nro!=='—'?'#'+p.nro+' ':''}${p.a} ${p.n}</option>`).join('');
+  S.livePlayer='';
+}
+
+async function addLiveEvent(type){
+  const m=S.matches[S.currentId];
+  const team=S.liveTeamSide==='home'?m.home:m.away;
+  const player=document.getElementById('qePlayer')?.value||'';
+  const e=elapsed();
+  const minInQuarter=Math.ceil(e/60)||1;
+  const minuto=(T.quarter-1)*15+minInQuarter;
+  try{
+    const d=await api('POST',`/api/matches/${S.currentId}/event`,
+      {type,team,player,minuto,quarter:T.quarter});
+    if(d.ok){
+      if(!m.events) m.events=[];
+      m.events.push(d.event);
+      m.scoreH=d.scoreH; m.scoreA=d.scoreA;
+      updateScoreHeader();
+      refreshEventsLog();
+    } else {
+      // Mostrar error visible al usuario
+      const errMsg = d.error||'Error al registrar evento';
+      const existing = document.getElementById('liveErrMsg');
+      const container = document.getElementById('evLog')?.parentElement;
+      if(!existing && container){
+        const div = document.createElement('div');
+        div.id='liveErrMsg';
+        div.className='msg error';
+        div.style.cssText='margin-top:.5rem;padding:.4rem .7rem';
+        div.textContent='⚠️ '+errMsg+(errMsg.includes('401')||errMsg.includes('auth')?
+          ' — Tu sesión expiró, volvé a iniciar sesión.':'');
+        container.appendChild(div);
+        setTimeout(()=>div.remove(), 5000);
+      }
+    }
+  }catch(err){
+    console.error(err);
+    const existing = document.getElementById('liveErrMsg');
+    const container = document.getElementById('evLog')?.parentElement;
+    if(!existing && container){
+      const div = document.createElement('div');
+      div.id='liveErrMsg'; div.className='msg error';
+      div.style.cssText='margin-top:.5rem;padding:.4rem .7rem';
+      div.textContent='⚠️ Error de conexión. Verificá el internet e intentá de nuevo.';
+      container.appendChild(div);
+      setTimeout(()=>div.remove(), 5000);
+    }
+  }
+}
+
+// confirmFinish ya no se usa — el cierre pasa por closeMatch()
+
+// ── POST MODE ──
+function renderPostSection(m){
+  const h=m.scoreH??'', a=m.scoreA??'';
+  const sh=m.shootoutH??'', sa=m.shootoutA??'';
+  const playerOpts=teamName=>{
+    const pl=PLAYERS[teamName]||[];
+    return `<option value="">— Jugadora —</option>`
+      +pl.map(p=>`<option data-team="${teamName}">${p.nro!=='—'?'#'+p.nro+' ':''}${p.a} ${p.n}</option>`).join('');
+  };
+  return `<div class="section">
+    <div class="sec-title">📝 Completar datos</div>
+    <div class="score-row">
+      <div class="score-block">
+        <label>${m.home}</label>
+        <input class="score-input" type="number" id="postH" min="0" max="99" value="${h}" />
+      </div>
+      <div class="score-sep">–</div>
+      <div class="score-block">
+        <label>${m.away}</label>
+        <input class="score-input" type="number" id="postA" min="0" max="99" value="${a}" />
+      </div>
+    </div>
+    <div class="shoot-row">
+      <span>Shootouts:</span>
+      <input class="shoot-inp" type="number" id="postSH" min="0" max="10" value="${sh}" placeholder="—" />
+      <span>–</span>
+      <input class="shoot-inp" type="number" id="postSA" min="0" max="10" value="${sa}" placeholder="—" />
+      <span style="font-size:.72rem">(opcional)</span>
+    </div>
+
+    <div style="margin-top:.9rem;padding-top:.8rem;border-top:1px solid rgba(0,0,0,.06)">
+      <div class="sec-title" style="margin-bottom:.5rem">Agregar evento</div>
+      <div class="post-event-form">
+        <div><label>Min.</label><input type="number" id="pMin" min="1" max="60" value="1" /></div>
+        <div><label>Tipo</label>
+          <select id="pType">${EV_TYPES.map(t=>`<option value="${t.v}">${t.icon} ${t.label}</option>`).join('')}</select>
+        </div>
+        <div><label>Equipo y jugadora</label>
+          <select id="pPlayer" style="width:100%">
+            <optgroup label="${m.home}">${playerOpts(m.home)}</optgroup>
+            <optgroup label="${m.away}">${playerOpts(m.away)}</optgroup>
+          </select>
+        </div>
+        <div><label>&nbsp;</label><button class="btn btn-primary btn-sm" onclick="addPostEvent()">+ Agregar</button></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function addPostEvent(){
+  const m=S.matches[S.currentId];
+  const min=parseInt(document.getElementById('pMin')?.value)||1;
+  const type=document.getElementById('pType')?.value;
+  const sel=document.getElementById('pPlayer');
+  const opt=sel?.options[sel.selectedIndex];
+  const team=opt?.dataset?.team||opt?.parentElement?.label||m.home;
+  const player=opt?.value||'';
+  try{
+    const d=await api('POST',`/api/matches/${S.currentId}/event`,
+      {type,team,player,minuto:min,quarter:Math.ceil(min/15)||1});
+    if(d.ok){
+      if(!m.events) m.events=[];
+      m.events.push(d.event);
+      m.scoreH=d.scoreH; m.scoreA=d.scoreA;
+      updateScoreHeader();
+      refreshEventsLog();
+      syncAdminInputs(m);
+    }
+  }catch(e){ console.error(e); }
+}
+
+// ── CERRAR PARTIDO ──
+function renderCloseSection(m){
+  const homeOk = !!m.lineup_home_ok;
+  const awayOk = !!m.lineup_away_ok;
+  const canClose = homeOk && awayOk;
+
+  const dot = ok => ok
+    ? `<span style="color:var(--green);font-weight:700">✅</span>`
+    : `<span style="color:var(--muted)">⏳</span>`;
+
+  return `<div class="section" style="border:2px solid ${canClose?'rgba(46,125,50,.25)':'rgba(0,0,0,.07)'}">
+    <div class="sec-title">🏁 Cerrar partido</div>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap;font-size:.82rem;margin-bottom:.65rem">
+      <span>${dot(homeOk)} ${m.home}: ${homeOk?'<strong>formación enviada</strong>':'pendiente'}</span>
+      <span>${dot(awayOk)} ${m.away}: ${awayOk?'<strong>formación enviada</strong>':'pendiente'}</span>
+    </div>
+    ${canClose
+      ? `<p style="font-size:.8rem;color:var(--muted);margin-bottom:.7rem">
+           Ambas formaciones confirmadas. Cualquier equipo puede cerrar el partido.
+         </p>
+         <button class="btn btn-primary" onclick="closeMatch()" style="background:var(--green)">🏁 Cerrar partido</button>
+         <span id="closeMsg" class="msg" style="display:inline-block;margin-left:.5rem;padding:.3rem .7rem"></span>`
+      : `<p style="font-size:.8rem;color:var(--muted)">
+           Ambos equipos deben guardar su formación antes de poder cerrar el partido.
+         </p>`
+    }
+  </div>`;
+}
+
+async function closeMatch(){
+  const m = S.matches[S.currentId];
+  const msg = document.getElementById('closeMsg');
+
+  let scoreH = m.scoreH ?? 0, scoreA = m.scoreA ?? 0;
+  let shootoutH = m.shootoutH ?? null, shootoutA = m.shootoutA ?? null;
+
+  // En modo post, leer resultado de los inputs
+  if(m.mode === 'post'){
+    const h = parseInt(document.getElementById('postH')?.value);
+    const a = parseInt(document.getElementById('postA')?.value);
+    if(isNaN(h) || isNaN(a)){
+      if(msg){ msg.className='msg error'; msg.textContent='Ingresá el resultado antes de cerrar.'; }
+      return;
+    }
+    scoreH = h; scoreA = a;
+    shootoutH = parseInt(document.getElementById('postSH')?.value) || null;
+    shootoutA = parseInt(document.getElementById('postSA')?.value) || null;
+  }
+
+  try{
+    const d = await api('POST', `/api/matches/${S.currentId}/phase`,
+      {phase:'done', scoreH, scoreA, shootoutH, shootoutA});
+    if(d.ok){ S.matches[S.currentId]=d.match; resetTimer(); renderDetail(); }
+    else if(msg){ msg.className='msg error'; msg.textContent=d.error||'Error'; }
+  }catch(e){
+    if(msg){ msg.className='msg error'; msg.textContent='Error de conexión'; }
+  }
+}
+
+// ── ADMIN ──
+function renderAdminSection(m){
+  const sh = m.shootoutH ?? '';
+  const sa = m.shootoutA ?? '';
+  const phaseOpts = ['pre','lineup_sent','partido','done']
+    .map(p=>`<option value="${p}" ${m.phase===p?'selected':''}>${p}</option>`).join('');
+  const woLabel = m.wo
+    ? `<span style="color:var(--red);font-weight:700">⚠️ Ya es W.O. (ganó ${m.wo_winner==='home'?m.home:m.away})</span>`
+    : '';
+  return `<div class="section" style="border:2px solid rgba(200,100,0,.25);background:rgba(255,243,224,.4)">
+    <div class="sec-title" style="color:#e65100">🛠️ Admin — Editar partido</div>
+    ${woLabel}
+    <div style="margin-bottom:.65rem">
+  <div style="font-size:.78rem;font-weight:800;color:var(--primary);margin-bottom:.35rem">Sede y árbitros</div>
+  <div style="display:grid;gap:.35rem">
+    <input id="adSede" placeholder="Sede" value="${m.sede||''}" style="border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.4rem .6rem;font-size:.82rem;width:100%"/>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem">
+      <input id="adHorario" placeholder="Horario (ej: 09:00)" value="${m.horario||''}" style="border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.4rem .6rem;font-size:.82rem"/>
+      <input id="adR1" placeholder="Árbitro 1" value="${m.r1||''}" style="border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.4rem .6rem;font-size:.82rem"/>
+    </div>
+    <input id="adR2" placeholder="Árbitro 2" value="${m.r2||''}" style="border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.4rem .6rem;font-size:.82rem;width:100%"/>
+  </div>
+</div>
+    <div style="margin-top:.6rem">
+      <div style="font-size:.78rem;font-weight:800;color:var(--primary);margin-bottom:.35rem">Resultado</div>
+      <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+        <input type="number" id="adH" value="${m.scoreH??''}" placeholder="${m.home}" min="0" max="99"
+          style="width:62px;font-size:1.4rem;font-weight:900;text-align:center;border-radius:10px;border:2px solid rgba(0,75,141,.2);padding:.25rem;color:var(--primary)"/>
+        <span style="font-size:1.2rem;font-weight:900;color:var(--muted)">–</span>
+        <input type="number" id="adA" value="${m.scoreA??''}" placeholder="${m.away}" min="0" max="99"
+          style="width:62px;font-size:1.4rem;font-weight:900;text-align:center;border-radius:10px;border:2px solid rgba(0,75,141,.2);padding:.25rem;color:var(--primary)"/>
+        <span style="font-size:.75rem;color:var(--muted);margin-left:.3rem">Shoot:
+          <input type="number" id="adSH" value="${sh}" placeholder="—" min="0" max="10"
+            style="width:38px;text-align:center;border-radius:7px;border:1px solid rgba(0,0,0,.1);padding:.2rem;font-size:.85rem"/>
+          –
+          <input type="number" id="adSA" value="${sa}" placeholder="—" min="0" max="10"
+            style="width:38px;text-align:center;border-radius:7px;border:1px solid rgba(0,0,0,.1);padding:.2rem;font-size:.85rem"/>
+        </span>
+      </div>
+      <div style="margin-top:.5rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+        <label style="font-size:.75rem;font-weight:800;color:var(--primary)">Fase:</label>
+        <select id="adPhase" style="font-size:.82rem;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.3rem .5rem">
+          ${phaseOpts}
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="adminEdit()">💾 Guardar</button>
+        <span id="adMsg" class="msg" style="display:inline-block;padding:.25rem .6rem"></span>
+      </div>
+    </div>
+    <div style="margin-top:.75rem;padding-top:.65rem;border-top:1px solid rgba(200,100,0,.2)">
+      <div style="font-size:.78rem;font-weight:800;color:var(--red);margin-bottom:.4rem">⚠️ W.O. (5–0, sin stats de jugadoras)</div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+        <select id="woWinner" style="font-size:.82rem;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.3rem .5rem">
+          <option value="home">Ganó ${m.home}</option>
+          <option value="away">Ganó ${m.away}</option>
+        </select>
+        <button class="btn btn-sm" style="background:var(--red);color:#fff" onclick="declareWO()">🏳️ Declarar W.O.</button>
+        <span id="woMsg" class="msg" style="display:inline-block;padding:.25rem .6rem"></span>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function adminEdit(){
+  const h  = document.getElementById('adH')?.value;
+  const a  = document.getElementById('adA')?.value;
+  const sh = document.getElementById('adSH')?.value;
+  const sa = document.getElementById('adSA')?.value;
+  const phase = document.getElementById('adPhase')?.value;
+  const msg = document.getElementById('adMsg');
+  try{
+    const d = await api('POST', `/api/matches/${S.currentId}/admin-edit`,
+      { scoreH: h===''?null:Number(h), scoreA: a===''?null:Number(a),
+        shootoutH: sh===''?null:Number(sh), shootoutA: sa===''?null:Number(sa),
+        phase,
+        sede: document.getElementById('adSede')?.value||null,
+        horario: document.getElementById('adHorario')?.value||null,
+        r1: document.getElementById('adR1')?.value||null,
+        r2: document.getElementById('adR2')?.value||null,
+      });
+    if(d.ok){
+      S.matches[S.currentId]=d.match;
+      const m2=d.match;
+      document.getElementById('dpGroup').textContent=`Grupo ${m2.group}${m2.sede?' · '+m2.sede:''}${m2.horario?' · '+m2.horario:''}`;
+      msg.className='msg ok'; msg.textContent='✅ Guardado';
+      setTimeout(()=>{ msg.className='msg'; renderDetail(); },1000);
+    } else { msg.className='msg error'; msg.textContent=d.error||'Error'; }
+  }catch(e){ msg.className='msg error'; msg.textContent='Error de conexión'; }
+}
+
+async function declareWO(){
+  const winner = document.getElementById('woWinner')?.value;
+  const msg = document.getElementById('woMsg');
+  const m = S.matches[S.currentId];
+  const winnerName = winner==='home'?m.home:m.away;
+  if(!confirm(`¿Declarar W.O.? Ganó ${winnerName} por 5-0. Los goles NO se asignan a ninguna jugadora.`)) return;
+  try{
+    const d = await api('POST', `/api/matches/${S.currentId}/wo`, { winner });
+    if(d.ok){
+      S.matches[S.currentId]=d.match;
+      msg.className='msg ok'; msg.textContent='✅ W.O. declarado';
+      setTimeout(()=>{ msg.className='msg'; renderDetail(); },1000);
+    } else { msg.className='msg error'; msg.textContent=d.error||'Error'; }
+  }catch(e){ msg.className='msg error'; msg.textContent='Error de conexión'; }
+}
+
+// ── DONE ──
+function renderDoneSection(m){
+  const woLine = m.wo
+    ? `<div style="margin-top:.4rem;font-size:.82rem;font-weight:700;color:var(--red)">
+         🏳️ W.O. — Ganó ${m.wo_winner==='home'?m.home:m.away}
+       </div>` : '';
+  return `<div class="section">
+    <div class="sec-title">✅ Partido finalizado</div>
+    <div class="done-summary">
+      <div class="done-teams">${m.home}</div>
+      <div class="done-score">${m.scoreH} – ${m.scoreA}</div>
+      <div class="done-teams">${m.away}</div>
+      ${woLine}
+      ${!m.wo && m.shootoutH!==null&&m.shootoutH!==undefined
+        ?`<div style="margin-top:.4rem;font-size:.82rem;color:var(--muted)">Shootouts: ${m.shootoutH} – ${m.shootoutA}</div>`:''}
+      <div style="margin-top:.5rem;font-size:.75rem;color:var(--muted)">
+        ${m.submitted_at?new Date(m.submitted_at).toLocaleString('es-AR'):'—'}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── EVENTS ──
+const EV_ICONS = {gol:'⚽',pc:'🔵',ps:'🟠',amarilla:'🟡',roja:'🔴',verde:'🟢'};
+
+function renderAdminEventForm(m){
+  const playerOpts=teamName=>{
+    const pl=PLAYERS[teamName]||[];
+    return `<option value="">— Jugadora —</option>`
+      +pl.map(p=>`<option data-team="${teamName}">${p.nro!=='—'?'#'+p.nro+' ':''}${p.a} ${p.n}</option>`).join('');
+  };
+  return `<div class="section">
+    <div class="sec-title">⚽ Agregar evento (admin)</div>
+    <div class="post-event-form">
+      <div><label>Min.</label><input type="number" id="pMin" min="1" max="60" value="1" /></div>
+      <div><label>Tipo</label>
+        <select id="pType">${EV_TYPES.map(t=>`<option value="${t.v}">${t.icon} ${t.label}</option>`).join('')}</select>
+      </div>
+      <div><label>Equipo y jugadora</label>
+        <select id="pPlayer" style="width:100%">
+          <optgroup label="${m.home}">${playerOpts(m.home)}</optgroup>
+          <optgroup label="${m.away}">${playerOpts(m.away)}</optgroup>
+        </select>
+      </div>
+      <div><label>&nbsp;</label><button class="btn btn-primary btn-sm" onclick="addPostEvent()">+ Agregar</button></div>
+    </div>
+    <p style="font-size:.73rem;color:var(--muted);margin-top:.5rem">
+      💡 Al agregar o quitar goles el marcador se recalcula automáticamente.
+    </p>
+  </div>`;
+}
+
+function renderEventsSection(m, phase){
+  const evs=(m.events||[]);
+  const readonly=phase==='done' && !S.isAdmin;
+  const listHtml=evs.length
+    ? evs.map(ev=>`
+        <div class="ev-row">
+          <span class="ev-min">${EV_ICONS[ev.type]||'❓'} ${ev.quarter?ev.quarter+'T·':''}${ev.minuto}'</span>
+          <div class="ev-det"><strong>${ev.team}</strong> · ${ev.player||'—'}</div>
+          ${!readonly?`<button class="ev-del" onclick="delEvent('${ev.id}')">✕</button>`:''}
+        </div>`).join('')
+    : `<div class="no-events">Sin eventos registrados.</div>`;
+
+  return `<div class="section">
+    <div class="sec-title">📋 Eventos del partido (${evs.length})</div>
+    <div class="events-log" id="evLog">${listHtml}</div>
+  </div>`;
+}
+
+function refreshEventsLog(){
+  const m=S.matches[S.currentId];
+  if(!m) return;
+  const el=document.getElementById('evLog'); if(!el) return;
+  const readonly=m.phase==='done' && !S.isAdmin;
+  const evs=m.events||[];
+  el.innerHTML=evs.length
+    ? evs.map(ev=>`
+        <div class="ev-row">
+          <span class="ev-min">${EV_ICONS[ev.type]||'❓'} ${ev.quarter?ev.quarter+'T·':''}${ev.minuto}'</span>
+          <div class="ev-det"><strong>${ev.team}</strong> · ${ev.player||'—'}</div>
+          ${!readonly?`<button class="ev-del" onclick="delEvent('${ev.id}')">✕</button>`:''}
+        </div>`).join('')
+    : `<div class="no-events">Sin eventos registrados.</div>`;
+  // Scroll al último evento
+  el.scrollTop = el.scrollHeight;
+}
+
+function syncAdminInputs(m){
+  // Actualiza los inputs del panel admin con el score recalculado
+  const ih=document.getElementById('adH'); if(ih) ih.value=m.scoreH??'';
+  const ia=document.getElementById('adA'); if(ia) ia.value=m.scoreA??'';
+}
+
+async function delEvent(eid){
+  const m=S.matches[S.currentId];
+  try{
+    const d=await api('DELETE',`/api/matches/${S.currentId}/event/${eid}`);
+    if(d.ok){
+      m.events=(m.events||[]).filter(e=>e.id!==eid);
+      m.scoreH=d.scoreH; m.scoreA=d.scoreA;
+      updateScoreHeader();
+      refreshEventsLog();
+      syncAdminInputs(m);
+    }
+  }catch(e){ console.error(e); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  ADMIN PANEL
+// ═══════════════════════════════════════════════════════
+let adminPanelOpen = false;
+let adminPanelTab = 'fecha';
+
+function toggleAdminPanel(){
+  adminPanelOpen = !adminPanelOpen;
+  renderAdminPanel();
+}
+
+function showAdminPanelTab(tab){
+  adminPanelTab = tab;
+  renderAdminPanel();
+}
+
+function renderAdminPanel(){
+  const wrap = document.getElementById('adminPanelWrap');
+  if(!wrap) return;
+  if(!S.isAdmin || !adminPanelOpen){ wrap.innerHTML=''; return; }
+
+  const tabs = [
+    {id:'fecha', label:'📅 Fecha activa'},
+    {id:'planteles', label:'👥 Planteles'},
+  ];
+  const tabsHtml = tabs.map(t=>
+    `<button class="admin-panel-tab ${adminPanelTab===t.id?'active':''}" onclick="showAdminPanelTab('${t.id}')">${t.label}</button>`
+  ).join('');
+
+  let bodyHtml = '';
+  if(adminPanelTab === 'fecha'){
+    bodyHtml = renderAdminTabFecha();
+  } else if(adminPanelTab === 'planteles'){
+    bodyHtml = renderAdminTabPlanteles();
+  }
+
+  wrap.innerHTML = `<div class="admin-panel">
+    <div class="admin-panel-tabs">${tabsHtml}</div>
+    <div class="admin-panel-body">${bodyHtml}</div>
+  </div>`;
+}
+
+function renderAdminTabFecha(){
+  return `<div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem">
+      Fecha activa actual: <strong>Fecha ${FECHA_ACTIVA}</strong><br>
+      <span style="font-size:.75rem">Los equipos solo pueden acceder a su fecha activa. El admin ve todas.</span>
+    </div>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+      ${[1,2,3].map(f=>`
+        <button class="btn btn-sm ${FECHA_ACTIVA===f?'btn-primary':'btn-secondary'}" onclick="setFechaActiva(${f})">Fecha ${f}</button>
+      `).join('')}
+      <span id="fechaMsg" class="msg" style="display:inline-block;padding:.25rem .6rem"></span>
+    </div>
+  </div>`;
+}
+
+async function setFechaActiva(n){
+  try{
+    const d = await api('POST', '/api/admin/config', { fechaActiva: n });
+    if(d.ok){
+      FECHA_ACTIVA = d.fechaActiva;
+      renderAdminPanel();
+      renderFechaTabs();
+      renderMatchList();
+    }
+  }catch(e){ console.error(e); }
+}
+
+function renderAdminTabPlanteles(){
+  const teams = Object.keys(PLAYERS).sort();
+  if(!teams.length) return `<div style="color:var(--muted);font-size:.85rem">Cargando planteles...</div>`;
+
+  const selectedTeam = window._adminSelectedTeam || teams[0];
+  const players = PLAYERS[selectedTeam] || [];
+
+  const playerRows = players.map((p,i)=>`
+    <div class="plantel-edit-row">
+      <span style="color:var(--muted);font-weight:700;min-width:28px">${p.nro}</span>
+      <span style="flex:1">${p.a}, ${p.n}</span>
+      <button onclick="removePlayer('${encodeURIComponent(selectedTeam)}',${i})" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:.9rem;padding:0 .3rem">✕</button>
+    </div>`).join('');
+
+  return `<div>
+    <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap">
+      <select onchange="window._adminSelectedTeam=decodeURIComponent(this.value);renderAdminPanel()" style="border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.4rem .6rem;font-size:.85rem">
+        ${teams.map(t=>`<option value="${encodeURIComponent(t)}" ${t===selectedTeam?'selected':''}>${t}</option>`).join('')}
+      </select>
+      <span style="font-size:.78rem;color:var(--muted)">${players.length} jugadoras</span>
+    </div>
+    <div style="max-height:200px;overflow-y:auto;border:1px solid rgba(0,0,0,.07);border-radius:10px;margin-bottom:.7rem">
+      ${playerRows || '<div style="padding:.6rem;color:var(--muted);font-size:.82rem;font-style:italic">Sin jugadoras</div>'}
+    </div>
+    <div style="border-top:1px solid rgba(0,0,0,.06);padding-top:.6rem">
+      <div style="font-size:.75rem;font-weight:800;color:var(--primary);margin-bottom:.4rem">+ Agregar jugadora</div>
+      <div style="display:grid;grid-template-columns:60px 1fr 1fr auto;gap:.35rem;align-items:end">
+        <div><label style="font-size:.7rem;font-weight:700;color:var(--muted)">Nro</label>
+          <input id="newPNro" placeholder="—" style="width:100%;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.35rem .45rem;font-size:.82rem"/></div>
+        <div><label style="font-size:.7rem;font-weight:700;color:var(--muted)">Apellido</label>
+          <input id="newPAp" placeholder="Apellido" style="width:100%;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.35rem .45rem;font-size:.82rem"/></div>
+        <div><label style="font-size:.7rem;font-weight:700;color:var(--muted)">Nombre</label>
+          <input id="newPNom" placeholder="Nombre" style="width:100%;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.35rem .45rem;font-size:.82rem"/></div>
+        <div><label style="font-size:.7rem">&nbsp;</label>
+          <button class="btn btn-primary btn-sm" onclick="addPlayer('${encodeURIComponent(selectedTeam)}')">+ Agregar</button></div>
+      </div>
+      <span id="plantelMsg" class="msg" style="display:inline-block;margin-top:.4rem;padding:.25rem .6rem"></span>
+    </div>
+  </div>`;
+}
+
+async function addPlayer(encodedTeam){
+  const team = decodeURIComponent(encodedTeam);
+  const nro = document.getElementById('newPNro')?.value||'—';
+  const apellido = document.getElementById('newPAp')?.value?.trim();
+  const nombre = document.getElementById('newPNom')?.value?.trim()||'';
+  const msg = document.getElementById('plantelMsg');
+  if(!apellido){ if(msg){msg.className='msg error';msg.textContent='El apellido es obligatorio';} return; }
+  try{
+    const d = await api('POST', `/api/admin/teams/${encodedTeam}/player`, {nro, apellido, nombre});
+    if(d.ok){
+      PLAYERS[team] = d.players.map(p=>({nro:p.nro,a:p.apellido,n:p.nombre}));
+      renderAdminPanel();
+    } else if(msg){ msg.className='msg error'; msg.textContent=d.error||'Error'; }
+  }catch(e){ if(msg){msg.className='msg error';msg.textContent='Error de conexión';} }
+}
+
+async function removePlayer(encodedTeam, idx){
+  const team = decodeURIComponent(encodedTeam);
+  try{
+    const d = await api('DELETE', `/api/admin/teams/${encodedTeam}/player/${idx}`);
+    if(d.ok){
+      PLAYERS[team] = d.players.map(p=>({nro:p.nro,a:p.apellido,n:p.nombre}));
+      renderAdminPanel();
+    }
+  }catch(e){ console.error(e); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+(async function init(){
+  const token=sessionStorage.getItem('tm50_token');
+  const team=sessionStorage.getItem('tm50_team');
+  const group=sessionStorage.getItem('tm50_group');
+  if(token&&team){
+    S.token=token; S.team=team; S.group=group; S.isAdmin=group==='ADMIN';
+    try{ await enterApp(); }catch(e){ logout(); }
+  }
+})();
+</script>
+</body>
+</html>

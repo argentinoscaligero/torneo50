@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Planilla de Partido — Máster +50 Femenino 2026</title>
+  <style>
+    /* ── SCREEN ── */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:#e8edf3;color:#111;font-size:10px}
+
+    .print-bar{background:#1a3a6b;color:#fff;padding:.7rem 1.2rem;display:flex;
+      align-items:center;justify-content:space-between;gap:.8rem;
+      position:sticky;top:0;z-index:99}
+    .print-bar h2{font-size:.9rem;font-weight:700}
+    .print-bar .right{display:flex;gap:.6rem}
+    .btn-print{background:#f9b000;color:#000;border:none;border-radius:8px;
+      padding:.45rem 1.1rem;font-weight:800;font-size:.82rem;cursor:pointer}
+    .btn-back{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);
+      border-radius:8px;padding:.45rem 1rem;font-weight:600;font-size:.82rem;cursor:pointer;
+      text-decoration:none}
+    .page-wrap{max-width:800px;margin:1.2rem auto;background:#fff;
+      border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.12);overflow:hidden}
+    #noMatch{padding:2rem;text-align:center;color:#666;font-size:.95rem}
+
+    /* ── PLANILLA ── */
+    .planilla{padding:0}
+
+    /* Header */
+    .pl-header{background:#1a3a6b;color:#fff;padding:.7rem 1rem;
+      display:flex;align-items:center;gap:.8rem}
+    .pl-logo{width:44px;height:44px;background:rgba(255,255,255,.15);
+      border-radius:50%;display:flex;align-items:center;justify-content:center;
+      font-size:1.4rem;flex-shrink:0}
+    .pl-header-text{}
+    .pl-header-text h1{font-size:.95rem;font-weight:900;line-height:1.2}
+    .pl-header-text p{font-size:.72rem;opacity:.8;margin-top:.15rem}
+
+    /* Match info bar */
+    .pl-info{display:grid;grid-template-columns:repeat(4,1fr) 2fr;
+      border-bottom:2px solid #1a3a6b;font-size:.73rem}
+    .pl-info-cell{padding:.35rem .55rem;border-right:1px solid #d0d8e4}
+    .pl-info-cell:last-child{border-right:none}
+    .pl-info-cell .lbl{font-weight:800;color:#1a3a6b;display:block;margin-bottom:.1rem;text-transform:uppercase;font-size:.65rem}
+    .pl-info-cell .val{font-weight:600;color:#222}
+
+    /* Teams score */
+    .pl-teams{display:grid;grid-template-columns:1fr 120px 1fr;background:#f5f8fc}
+    .pl-team{padding:.65rem .8rem;text-align:center}
+    .pl-team-name{font-size:.92rem;font-weight:900;color:#1a3a6b;text-transform:uppercase}
+    .pl-team-role{font-size:.65rem;color:#888;margin-bottom:.2rem;text-transform:uppercase;font-weight:700}
+    .pl-score-box{display:flex;align-items:center;justify-content:center;gap:.3rem;padding:.5rem 0}
+    .pl-score-cell{width:44px;height:44px;border:2px solid #1a3a6b;border-radius:6px;
+      background:#fff;display:flex;align-items:center;justify-content:center;
+      font-size:1.6rem;font-weight:900;color:#1a3a6b}
+    .pl-score-sep{font-size:1.4rem;font-weight:900;color:#999}
+
+    /* Quarter goals */
+    .pl-quarters{border-top:1px solid #d0d8e4;border-bottom:1px solid #d0d8e4}
+    .pl-quarters table{width:100%;border-collapse:collapse;font-size:.72rem}
+    .pl-quarters th,.pl-quarters td{border:1px solid #d0d8e4;text-align:center;padding:.28rem .2rem}
+    .pl-quarters th{background:#1a3a6b;color:#fff;font-weight:800;font-size:.65rem}
+    .pl-quarters td.team-lbl{text-align:left;padding-left:.5rem;font-weight:700;
+      color:#1a3a6b;background:#f0f4fa;width:90px}
+    .pl-quarters td.score-cell{width:38px;background:#fff}
+
+    /* Roster */
+    .pl-roster{display:grid;grid-template-columns:1fr 4px 1fr}
+    .roster-divider{background:#1a3a6b}
+    .roster-side{font-size:.72rem}
+    .roster-side-header{background:#1a3a6b;color:#fff;padding:.3rem .5rem;
+      font-weight:800;font-size:.72rem;text-transform:uppercase;text-align:center}
+    .roster-table{width:100%;border-collapse:collapse}
+    .roster-table th{background:#eaf0f8;color:#1a3a6b;font-weight:800;
+      border:1px solid #d0d8e4;padding:.25rem .2rem;text-align:center;font-size:.65rem}
+    .roster-table th.name-col{text-align:left;padding-left:.35rem}
+    .roster-table td{border:1px solid #e8edf3;padding:.22rem .2rem;
+      text-align:center;height:16px;vertical-align:middle}
+    .roster-table td.nro{font-weight:700;color:#1a3a6b;background:#f8fafc;font-size:.68rem}
+    .roster-table td.name{text-align:left;padding-left:.35rem;font-size:.68rem;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+    .roster-table td.evt{width:20px;font-size:.65rem}
+    .roster-table tr:nth-child(even){background:#fafbfc}
+    .roster-table tr.empty-row td{background:#f5f8fc}
+
+    /* Shootout */
+    .pl-shootout{border-top:2px solid #1a3a6b;padding:.6rem .8rem}
+    .pl-shootout h3{font-size:.78rem;font-weight:900;color:#1a3a6b;
+      text-transform:uppercase;margin-bottom:.45rem;
+      display:flex;align-items:center;gap:.4rem}
+    .shootout-grid{display:grid;grid-template-columns:1fr 4px 1fr;gap:0}
+    .shootout-divider{background:#1a3a6b}
+    .shootout-side{}
+    .shootout-side-title{font-size:.68rem;font-weight:800;color:#1a3a6b;
+      text-transform:uppercase;padding:.2rem .4rem;background:#eaf0f8;
+      border:1px solid #d0d8e4;text-align:center}
+    .shootout-table{width:100%;border-collapse:collapse;font-size:.72rem}
+    .shootout-table th{background:#eaf0f8;color:#1a3a6b;font-weight:800;
+      border:1px solid #d0d8e4;padding:.25rem .35rem;text-align:center;font-size:.65rem}
+    .shootout-table th.name-col{text-align:left}
+    .shootout-table td{border:1px solid #e8edf3;padding:.22rem .3rem;height:22px;
+      text-align:center;vertical-align:middle}
+    .shootout-table td.order{background:#f8fafc;font-weight:700;color:#1a3a6b;
+      font-size:.68rem;width:22px}
+    .shootout-table td.name-td{text-align:left;font-size:.68rem}
+    .shootout-table td.chk{width:28px}
+    .chk-box{width:13px;height:13px;border:1.5px solid #555;display:inline-block;
+      border-radius:2px;margin:0 auto}
+
+    /* Officials */
+    .pl-officials{border-top:1px solid #d0d8e4;padding:.5rem .8rem;
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;font-size:.72rem}
+    .official-cell{}
+    .official-cell .lbl{font-weight:800;color:#1a3a6b;font-size:.65rem;
+      text-transform:uppercase;margin-bottom:.15rem}
+    .official-cell .val{border-bottom:1px solid #aaa;padding-bottom:.15rem;
+      min-height:18px;font-size:.72rem}
+
+    /* Observaciones */
+    .pl-obs{border-top:1px solid #d0d8e4;padding:.5rem .8rem}
+    .pl-obs .lbl{font-weight:800;color:#1a3a6b;font-size:.65rem;text-transform:uppercase;margin-bottom:.3rem}
+    .obs-box{border:1px solid #aaa;border-radius:4px;height:52px;width:100%}
+
+    /* Signatures */
+    .pl-sigs{border-top:1px solid #d0d8e4;padding:.55rem .8rem;
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;font-size:.72rem}
+    .sig-cell{}
+    .sig-line{border-bottom:1px solid #555;height:28px;margin-bottom:.2rem}
+    .sig-label{font-size:.65rem;text-align:center;color:#555;font-weight:700;text-transform:uppercase}
+
+    /* Footer */
+    .pl-footer{background:#f5f8fc;padding:.3rem .8rem;text-align:center;
+      font-size:.62rem;color:#999;border-top:1px solid #e0e6ee}
+
+    /* ── PRINT ── */
+    @media print {
+      @page{size:A4 portrait;margin:8mm}
+      body{background:#fff;font-size:9px}
+      .print-bar{display:none!important}
+      .page-wrap{box-shadow:none;border-radius:0;margin:0;max-width:100%}
+      .pl-teams .pl-team-name{font-size:.85rem}
+      .roster-table td.name{max-width:110px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="print-bar">
+  <div>
+    <h2>📋 Planilla de Partido — Máster +50 Femenino 2026</h2>
+  </div>
+  <div class="right">
+    <a href="index.html" class="btn-back">← Volver al fixture</a>
+    <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Descargar PDF</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div id="noMatch" style="display:none">⚠️ Partido no encontrado. Verificá el parámetro en la URL.</div>
+  <div id="planilla" class="planilla" style="display:none"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  DATOS DEL TORNEO (sincronizados con index.html)
+// ══════════════════════════════════════════════════════
+
+const FIXTURE = [
+  {
+    fecha: 1, date: "12 de abril 2026",
+    matches: [
+      { id:"f1m1", group:"A", home:"Black Velvet",       away:"Siamo Eterne",     sede:"Ferro",                    horario:"09:00", r1:"Garofolo, Gerardo",    r2:"Galvan, Matias"       },
+      { id:"f1m2", group:"A", home:"No tan Santas",      away:"Zanjeras",         sede:"TRC",                      horario:"08:30", r1:"Beltran, Mario",        r2:"Zambrano, David"      },
+      { id:"f1m3", group:"B", home:"Las Suricatas",      away:"Las Terrazas",     sede:"TRC",                      horario:"10:00", r1:"Beltran, Mario",        r2:"Zambrano, David"      },
+      { id:"f1m4", group:"B", home:"Viento Norte",       away:"NEA Irupe",        sede:"Circ. Fuerza Aérea",       horario:"11:30", r1:"Lopez, Hernan",         r2:"Gomez, Lucas Lautaro" },
+      { id:"f1m5", group:"C", home:"Eternas Guerreras",  away:"Las Inoxidables",  sede:"Ferro",                    horario:"10:30", r1:"Garofolo, Gerardo",    r2:"Galvan, Matias"       },
+      { id:"f1m6", group:"C", home:"San Fer",            away:"Deportivo Soraya", sede:"Circ. Fuerza Aérea",       horario:"08:30", r1:"Lopez, Hernan",         r2:"Gomez, Lucas Lautaro" },
+    ]
+  },
+  {
+    fecha: 2, date: "17 de mayo 2026",
+    matches: [
+      { id:"f2m1", group:"A", home:"Siamo Eterne",      away:"Zanjeras",            sede:null, horario:null, r1:null, r2:null },
+      { id:"f2m2", group:"A", home:"Black Velvet",      away:"No tan Santas",       sede:null, horario:null, r1:null, r2:null },
+      { id:"f2m3", group:"B", home:"Las Suricatas",     away:"NEA Irupe",           sede:null, horario:null, r1:null, r2:null },
+      { id:"f2m4", group:"B", home:"Viento Norte",      away:"Las Terrazas",        sede:null, horario:null, r1:null, r2:null },
+      { id:"f2m5", group:"C", home:"San Fer",           away:"Las Inoxidables",     sede:null, horario:null, r1:null, r2:null },
+      { id:"f2m6", group:"C", home:"Deportivo Soraya",  away:"Eternas Guerreras",   sede:null, horario:null, r1:null, r2:null },
+    ]
+  },
+  {
+    fecha: 3, date: "14 de junio 2026",
+    matches: [
+      { id:"f3m1", group:"A", home:"Black Velvet",       away:"Zanjeras",            sede:null, horario:null, r1:null, r2:null },
+      { id:"f3m2", group:"A", home:"No tan Santas",      away:"Siamo Eterne",        sede:null, horario:null, r1:null, r2:null },
+      { id:"f3m3", group:"B", home:"NEA Irupe",          away:"Las Terrazas",        sede:null, horario:null, r1:null, r2:null },
+      { id:"f3m4", group:"B", home:"Las Suricatas",      away:"Viento Norte",        sede:null, horario:null, r1:null, r2:null },
+      { id:"f3m5", group:"C", home:"San Fer",            away:"Deportivo Soraya",    sede:null, horario:null, r1:null, r2:null },
+      { id:"f3m6", group:"C", home:"Eternas Guerreras",  away:"Las Inoxidables",     sede:null, horario:null, r1:null, r2:null },
+    ]
+  }
+];
+
+const TEAMS = {
+  "Black Velvet": { players:[
+    {nro:"3",  a:"Arizabalo",       n:"Ariadna"},
+    {nro:"15", a:"Biotti",          n:"Julia"},
+    {nro:"8",  a:"Korolev",         n:"Barbara"},
+    {nro:"9",  a:"Etchegoyen",      n:"Monica"},
+    {nro:"5",  a:"Fagiani",         n:"Fernanda"},
+    {nro:"7",  a:"Garcia Girado",   n:"Silvina"},
+    {nro:"18", a:"García Munitis",  n:"Ana Maria"},
+    {nro:"1",  a:"Gil",             n:"María Cecilia"},
+    {nro:"4",  a:"Molinari",        n:"Maria Paula"},
+    {nro:"19", a:"Morales",         n:"Daniela"},
+    {nro:"6",  a:"Pettinari",       n:"Adriana"},
+    {nro:"22", a:"Torres",          n:"Laura"},
+    {nro:"10", a:"Pascual",         n:"Rosana"},
+    {nro:"14", a:"Quiroz",          n:"Laura"},
+    {nro:"61", a:"Geido",           n:"Eugenia"},
+    {nro:"11", a:"Monzón",          n:"Analia"},
+    {nro:"21", a:"Bortaro Tillard", n:"Constanza"},
+    {nro:"2",  a:"Centurion",       n:"Soledad"},
+    {nro:"16", a:"Lambertini",      n:"Laura"},
+    {nro:"12", a:"Rouger",          n:"Florencia"},
+  ]},
+  "Siamo Eterne": { players:[
+    {nro:"1",  a:"Sainz",          n:"Norma"},
+    {nro:"23", a:"Teler",          n:"Monica"},
+    {nro:"46", a:"Muchenik",       n:"Fernanda"},
+    {nro:"5",  a:"Tagliafico",     n:"Consuelo"},
+    {nro:"8",  a:"Tagliafico",     n:"Amparo"},
+    {nro:"20", a:"Duarte",         n:"Alejandra"},
+    {nro:"11", a:"Frascella",      n:"Fiorella"},
+    {nro:"9",  a:"Dinale",         n:"Jacqueline"},
+    {nro:"74", a:"Campos",         n:"Paola Yanina"},
+    {nro:"18", a:"Angeleri",       n:"Mariana"},
+    {nro:"22", a:"Bessopianetto",  n:"Natalia Lorena"},
+    {nro:"32", a:"Leonardi",       n:"Carolina"},
+    {nro:"29", a:"Ciappa",         n:"Alejandra"},
+  ]},
+  "No tan Santas": { players:[
+    {nro:"8",  a:"Barakat",        n:"Gabriela"},
+    {nro:"21", a:"Gonzales",       n:"Mariana"},
+    {nro:"18", a:"Padilla",        n:"Cecilia"},
+    {nro:"13", a:"Santoro",        n:"Paula"},
+    {nro:"1",  a:"Haluza",         n:"Wanda"},
+    {nro:"6",  a:"Lancestremere",  n:"Silvina"},
+    {nro:"5",  a:"Martinez Goya",  n:"Sylvia"},
+    {nro:"17", a:"Santambrogio",   n:"Maria Laura"},
+    {nro:"9",  a:"Onega",          n:"Ximena"},
+    {nro:"16", a:"Poracchia",      n:"Carla"},
+    {nro:"22", a:"Sienra",         n:"Marcela"},
+    {nro:"14", a:"Pintabona",      n:"Adriana"},
+    {nro:"15", a:"Tarquini",       n:"Carla"},
+    {nro:"20", a:"Olivieri",       n:"Ma. Graciana"},
+    {nro:"10", a:"Coluccio",       n:"Josefina"},
+    {nro:"11", a:"Guerrero",       n:"Victoria"},
+    {nro:"23", a:"Gutierrez",      n:"Mercedes"},
+    {nro:"2",  a:"Rabini",         n:"Marina"},
+    {nro:"32", a:"Rabini",         n:"Mercedes"},
+    {nro:"12", a:"Perticone",      n:"Paola"},
+    {nro:"7",  a:"Prada",          n:"Andrea"},
+  ]},
+  "Zanjeras": { players:[
+    {nro:"1",  a:"Bermudez",           n:"Maria Victoria"},
+    {nro:"15", a:"Bianchi",            n:"Florencia Ana"},
+    {nro:"8",  a:"Chevallier Boutell", n:"Jacinta"},
+    {nro:"7",  a:"Gamarra",            n:"Manuela"},
+    {nro:"3",  a:"Gamarra",            n:"Maria"},
+    {nro:"9",  a:"Gamarra",            n:"Sol"},
+    {nro:"24", a:"Gimenez Zapiola",    n:"Josefina"},
+    {nro:"31", a:"Graña",              n:"Laura"},
+    {nro:"27", a:"Jantus",             n:"Mariana"},
+    {nro:"11", a:"Lorenzo",            n:"Lucia"},
+    {nro:"6",  a:"Massa",              n:"Maria Eugenia"},
+    {nro:"19", a:"Morel Quirno",       n:"Ana"},
+    {nro:"17", a:"Perez Cobo",         n:"Ana"},
+    {nro:"13", a:"Radice",             n:"Marcela"},
+    {nro:"5",  a:"Rosato",             n:"Lucrecia"},
+    {nro:"20", a:"Salinas",            n:"Mariana"},
+    {nro:"12", a:"Tait",               n:"Vivian"},
+    {nro:"2",  a:"Vazquez Durrie",     n:"Luciana"},
+    {nro:"25", a:"Boselli",            n:"Luisa"},
+    {nro:"30", a:"Garat",              n:"Sofia Ines"},
+  ]},
+  "Las Suricatas": { players:[
+    {nro:"5",    a:"Alonso",           n:"Miriam"},
+    {nro:"3",    a:"Padilla",          n:"Paula"},
+    {nro:"17",   a:"Casiraghi",        n:"Virginia"},
+    {nro:"9",    a:"Brinnand",         n:"Moira"},
+    {nro:"11",   a:"Pearson",          n:"Moira"},
+    {nro:"14",   a:"Gonzalez Robles",  n:"Mercedes"},
+    {nro:"16",   a:"Bodmer",           n:"Alejandra"},
+    {nro:"31",   a:"Escobar",          n:"Alejandra T."},
+    {nro:"13",   a:"Morea",            n:"Gloria"},
+    {nro:"10",   a:"Palma",            n:"Mirta"},
+    {nro:"12",   a:"Sias",             n:"Adriana"},
+    {nro:"1",    a:"Ocampo",           n:"Ana"},
+    {nro:"6",    a:"Iraola",           n:"Soledad"},
+    {nro:"8",    a:"Iraola",           n:"Pilar"},
+    {nro:"7",    a:"Darritchon",       n:"Marcela"},
+    {nro:"23",   a:"Fernandez",        n:"Gabriela"},
+    {nro:"18",   a:"Gilligan",         n:"Rosario"},
+    {nro:"20",   a:"Cabrera Figueroa", n:"Maria Mercedes"},
+    {nro:"2",    a:"Benitez Cruz",     n:"Laura"},
+  ]},
+  "Las Terrazas": { players:[
+    {nro:"—", a:"Szeliga",     n:"Marina"},
+    {nro:"—", a:"Hussey",      n:"Ana Maria"},
+    {nro:"—", a:"Llobera",     n:"Laura"},
+    {nro:"—", a:"Sanchez",     n:"M. Alejandra"},
+    {nro:"—", a:"Mach",        n:"Zulma"},
+    {nro:"—", a:"Klag",        n:"Luciane"},
+    {nro:"—", a:"Rey Fortes",  n:"Valeria"},
+    {nro:"—", a:"Sampalione",  n:"Valeria"},
+    {nro:"—", a:"Sanguinetti", n:"Cristina"},
+    {nro:"—", a:"Hussey",      n:"Marcela"},
+    {nro:"—", a:"Bespresvany", n:"Jessica"},
+    {nro:"—", a:"Pinilla",     n:"Paola"},
+    {nro:"—", a:"Barayazarra", n:"Sara"},
+    {nro:"—", a:"Alvarez",     n:"Gabriela"},
+    {nro:"—", a:"Herfurth",    n:"Natalia"},
+    {nro:"—", a:"Rossi",       n:"Karina"},
+    {nro:"—", a:"Yaconianni",  n:"Teresa"},
+  ]},
+  "Viento Norte": { players:[
+    {nro:"9",  a:"Mooney",            n:"Ines"},
+    {nro:"10", a:"Molina Zavalia",   n:"Silvia Andrea"},
+    {nro:"3",  a:"Etchemaite",       n:"Ana Maria"},
+    {nro:"5",  a:"Pierrou",          n:"Maria Eugenia"},
+    {nro:"27", a:"Hernandez",        n:"Veronica"},
+    {nro:"24", a:"Trujillo Nieto",   n:"Tatiana Soledad"},
+    {nro:"19", a:"Giardelli",      n:"Maria Victoria"},
+    {nro:"4",  a:"Barrá",          n:"Paola"},
+    {nro:"6",  a:"Perez",          n:"Adriana"},
+    {nro:"1",  a:"Aberg Cobo",     n:"Marina"},
+    {nro:"17", a:"Devoto",         n:"Maria Teresita"},
+    {nro:"12", a:"Pastorino",      n:"Claudia"},
+    {nro:"2",  a:"Forchner",       n:"Corina"},
+    {nro:"8",  a:"Forchner",       n:"Gisela"},
+    {nro:"25", a:"Picciola",       n:"Silvina"},
+    {nro:"11", a:"Patiño",         n:"Mariana"},
+    {nro:"22", a:"Mac Culloch",    n:"Patricia"},
+  ]},
+  "NEA Irupe": { players:[
+    {nro:"—", a:"Meconi",         n:"Andrea"},
+    {nro:"—", a:"Lapacó",         n:"Paula"},
+    {nro:"—", a:"Silva",          n:"Paola"},
+    {nro:"—", a:"Mendoza",        n:"Cecilia"},
+    {nro:"—", a:"Miño",           n:"Susana"},
+    {nro:"—", a:"Germano",        n:"Paula"},
+    {nro:"—", a:"Schmoll",        n:"Nancy"},
+    {nro:"—", a:"Garcia",         n:"Patricia"},
+    {nro:"—", a:"Baroli",         n:"Gabriela"},
+    {nro:"—", a:"Lafata",         n:"Maria Natalia"},
+    {nro:"—", a:"Formoso",        n:"Marina"},
+    {nro:"—", a:"García Repáraz", n:"Florencia"},
+    {nro:"—", a:"Sánchez",        n:"Silvana Claudia"},
+    {nro:"—", a:"Maldonado",      n:"Fabiana"},
+    {nro:"—", a:"Alvarez",        n:"Carolina"},
+    {nro:"—", a:"Raffo",          n:"Alejandra"},
+  ]},
+  "San Fer": { players:[
+    {nro:"19",    a:"Batagliero",      n:"Viviana Andrea"},
+    {nro:"24",    a:"Colombo",         n:"María Belen"},
+    {nro:"5",     a:"Compagni",        n:"Nancy"},
+    {nro:"1",     a:"Dermgerd",        n:"Marcela Patricia"},
+    {nro:"27",    a:"Dubini",          n:"Cecilia Ines"},
+    {nro:"38",    a:"Elias",           n:"Maria"},
+    {nro:"16",    a:"Estramil Ozores", n:"Veronica"},
+    {nro:"15",    a:"Fumo",            n:"Romina Paola"},
+    {nro:"99",    a:"Gomez Autorino",  n:"María Paula"},
+    {nro:"11",    a:"Guedes",          n:"Claudia"},
+    {nro:"9",     a:"Poggi",           n:"María Virginia"},
+    {nro:"10",    a:"Rimoldi",         n:"Jorgelina"},
+    {nro:"17",    a:"Ripalda",         n:"Romina Liliana"},
+    {nro:"21",    a:"Santurio",        n:"Valeria Luciana"},
+    {nro:"7",     a:"Schuth",          n:"Julia Mariana"},
+    {nro:"29",    a:"Solari",          n:"Ana Ines"},
+    {nro:"22",    a:"Solari",          n:"Mariel Beatriz"},
+    {nro:"26",    a:"Solari",          n:"Maria Soledad"},
+    {nro:"6",     a:"Teruel",          n:"Amneris"},
+    {nro:"41",    a:"Toffanin",        n:"Melina"},
+  ]},
+  "Deportivo Soraya": { players:[
+    {nro:"—", a:"Recondo",                 n:"Ana Inés"},
+    {nro:"—", a:"Gutman",                  n:"Mariana"},
+    {nro:"—", a:"Malaspina",               n:"María Alejandra"},
+    {nro:"—", a:"Scapin",                  n:"Roxana"},
+    {nro:"—", a:"Diaz Offeney",            n:"Cristina"},
+    {nro:"—", a:"Francetich",              n:"María José"},
+    {nro:"—", a:"Escobar",                 n:"Carolina"},
+    {nro:"—", a:"Parodi",                  n:"María José"},
+    {nro:"—", a:"Siancha",                 n:"Adriana"},
+    {nro:"—", a:"Sueldo",                  n:"Maria Lorena"},
+    {nro:"—", a:"Calabria",                n:"Carola"},
+    {nro:"1", a:"Canepa",                  n:"Paola"},
+    {nro:"—", a:"Castello",                n:"Flor"},
+    {nro:"—", a:"D'aprile",                n:"Gabriela"},
+    {nro:"—", a:"Gil",                     n:"María Celina"},
+    {nro:"—", a:"Acosta",                  n:"Huerto"},
+    {nro:"—", a:"Pascualli",               n:"Guillermina"},
+    {nro:"—", a:"Spraggon Perciavalle",    n:"Verónica"},
+  ]},
+  "Eternas Guerreras": { players:[
+    {nro:"—", a:"Bianchi",       n:"Alejandra Margarita"},
+    {nro:"—", a:"Castro",        n:"Silvia"},
+    {nro:"—", a:"Descalzo",      n:"Maria Pia"},
+    {nro:"—", a:"Descalzo",      n:"Adriana Maria"},
+    {nro:"—", a:"Duarte",        n:"Raquel"},
+    {nro:"—", a:"Fauez",         n:"Marisa"},
+    {nro:"—", a:"Guglieri",      n:"Marta"},
+    {nro:"—", a:"Moore",         n:"Roxana Alejandra"},
+    {nro:"—", a:"Orezzoli",      n:"Alejandra Paula"},
+    {nro:"—", a:"Ottaviani",     n:"Sonia Elizabeth"},
+    {nro:"—", a:"Pierdominici",  n:"Sandra Marisa"},
+    {nro:"—", a:"Santi",         n:"Mónica Alejandra"},
+    {nro:"—", a:"Sosa Mayo",     n:"Claudia"},
+    {nro:"—", a:"Speroni",       n:"Cecilia"},
+    {nro:"—", a:"Suarez",        n:"Maria Eduarda"},
+    {nro:"—", a:"Arias",         n:"Alejandra Vanesa"},
+    {nro:"—", a:"Barcena",       n:"Adriana"},
+    {nro:"—", a:"Sanfilippo",    n:"Claudia"},
+  ]},
+  "Las Inoxidables": { players:[
+    {nro:"—", a:"Tihista",    n:"Sabina"},
+    {nro:"—", a:"Marani",     n:"Luciana"},
+    {nro:"—", a:"Parodi",     n:"Graciela Beatriz"},
+    {nro:"—", a:"Casella",    n:"Mariela Gabriela"},
+    {nro:"—", a:"Negrini",    n:"Laura"},
+    {nro:"—", a:"Zone",       n:"Judith"},
+    {nro:"—", a:"Hurtado",    n:"Viviana"},
+    {nro:"—", a:"Manduti",    n:"Cecilia Laura"},
+    {nro:"—", a:"Vinue",      n:"Ana Maria"},
+    {nro:"—", a:"Alfaro",     n:"Maria Laura"},
+    {nro:"—", a:"Amarilla",   n:"Evelin"},
+    {nro:"—", a:"Castilla",   n:"Maria Victoria"},
+    {nro:"—", a:"Sereboves",  n:"Gabriela Elizabeth"},
+  ]},
+};
+
+// ══════════════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════════════
+
+function chk(){ return `<div class="chk-box"></div>`; }
+
+function rosterRows(teamName, side, minRows=22){
+  const players = (TEAMS[teamName]||{}).players || [];
+  const rows = [];
+  players.forEach(p => {
+    const key = `${p.nro}-${p.a}`;
+    rows.push(`<tr data-key="${key}" data-side="${side}">
+      <td class="nro">${p.nro}</td>
+      <td class="name">${p.a}, ${p.n}</td>
+      <td class="evt" data-col="T">${chk()}</td>
+      <td class="evt" data-col="S">${chk()}</td>
+      <td class="evt" data-col="G"></td>
+      <td class="evt" data-col="TAm"></td>
+      <td class="evt" data-col="TVe"></td>
+      <td class="evt" data-col="TRo"></td>
+    </tr>`);
+  });
+  const total = Math.max(minRows, players.length + 2);
+  for(let i=players.length; i<total; i++){
+    rows.push(`<tr class="empty-row">
+      <td class="nro"></td><td class="name"></td>
+      <td class="evt"></td><td class="evt"></td>
+      <td class="evt"></td><td class="evt"></td>
+      <td class="evt"></td><td class="evt"></td>
+    </tr>`);
+  }
+  return rows.join('');
+}
+
+function shootoutRows(n=5){
+  return Array.from({length:n},(_,i)=>`<tr>
+    <td class="order">${i+1}</td>
+    <td class="name-td"></td>
+    <td class="chk">${chk()}</td>
+    <td class="chk">${chk()}</td>
+  </tr>`).join('');
+}
+
+function render(match){
+  const f = FIXTURE.flatMap(f=>f.matches).find(m=>m.id===match);
+  if(!f){ document.getElementById('noMatch').style.display=''; return; }
+
+  const fecha = FIXTURE.find(f=>f.matches.some(m=>m.id===match));
+
+  document.title = `Planilla ${f.home} vs ${f.away} — ${fecha.date}`;
+
+  const html = `
+  <div class="pl-header">
+    <div class="pl-logo"><img src="assets/logo-torneo-master-50.png" alt="Logo" style="width:40px;height:40px;object-fit:contain;border-radius:50%"/></div>
+    <div class="pl-header-text" style="flex:1">
+      <h1>Campeonato Máster +50 Femenino 2026 — Torneo Apertura</h1>
+      <p>Confederación Argentina de Hockey · Planilla Oficial de Partido</p>
+    </div>
+    <div id="liveBadge" style="font-size:.7rem;font-weight:800;color:#fff;background:#888;
+      padding:.25rem .7rem;border-radius:999px;white-space:nowrap;align-self:center"></div>
+  </div>
+
+  <div class="pl-info">
+    <div class="pl-info-cell">
+      <span class="lbl">Fecha</span>
+      <span class="val">F${fecha.fecha} · ${fecha.date}</span>
+    </div>
+    <div class="pl-info-cell">
+      <span class="lbl">Grupo</span>
+      <span class="val">Grupo ${f.group}</span>
+    </div>
+    <div class="pl-info-cell">
+      <span class="lbl">Sede</span>
+      <span class="val">${f.sede||'A confirmar'}</span>
+    </div>
+    <div class="pl-info-cell">
+      <span class="lbl">Horario</span>
+      <span class="val">${f.horario||'—'}</span>
+    </div>
+    <div class="pl-info-cell">
+      <span class="lbl">Árbitros</span>
+      <span class="val">${f.r1||'—'}${f.r2?' / '+f.r2:''}</span>
+    </div>
+  </div>
+
+  <div class="pl-teams">
+    <div class="pl-team">
+      <div class="pl-team-role">Local</div>
+      <div class="pl-team-name">${f.home}</div>
+    </div>
+    <div>
+      <div class="pl-score-box">
+        <div class="pl-score-cell" id="liveScoreH"></div>
+        <div class="pl-score-sep">–</div>
+        <div class="pl-score-cell" id="liveScoreA"></div>
+      </div>
+    </div>
+    <div class="pl-team">
+      <div class="pl-team-role">Visitante</div>
+      <div class="pl-team-name">${f.away}</div>
+    </div>
+  </div>
+
+  <div class="pl-quarters">
+    <table>
+      <thead><tr>
+        <th style="text-align:left;padding-left:.5rem">Equipo</th>
+        <th>1° T</th><th>2° T</th><th>3° T</th><th>4° T</th>
+        <th>PC</th><th>Total</th>
+      </tr></thead>
+      <tbody>
+        <tr id="qtrHome">
+          <td class="team-lbl">${f.home}</td>
+          <td class="score-cell" id="qH1"></td><td class="score-cell" id="qH2"></td>
+          <td class="score-cell" id="qH3"></td><td class="score-cell" id="qH4"></td>
+          <td class="score-cell" id="qHpc"></td><td class="score-cell" id="qHtot"></td>
+        </tr>
+        <tr id="qtrAway">
+          <td class="team-lbl">${f.away}</td>
+          <td class="score-cell" id="qA1"></td><td class="score-cell" id="qA2"></td>
+          <td class="score-cell" id="qA3"></td><td class="score-cell" id="qA4"></td>
+          <td class="score-cell" id="qApc"></td><td class="score-cell" id="qAtot"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pl-roster">
+    <div class="roster-side">
+      <div class="roster-side-header">Local — ${f.home}</div>
+      <table class="roster-table">
+        <thead><tr>
+          <th style="width:22px">Nº</th>
+          <th class="name-col">Apellido, Nombre</th>
+          <th title="Titular">T</th>
+          <th title="Suplente">S</th>
+          <th title="Goles">G</th>
+          <th title="Tarjeta Amarilla">TAm</th>
+          <th title="Tarjeta Verde">TVe</th>
+          <th title="Tarjeta Roja">TRo</th>
+        </tr></thead>
+        <tbody>${rosterRows(f.home,'home')}</tbody>
+      </table>
+    </div>
+    <div class="roster-divider"></div>
+    <div class="roster-side">
+      <div class="roster-side-header">Visitante — ${f.away}</div>
+      <table class="roster-table">
+        <thead><tr>
+          <th style="width:22px">Nº</th>
+          <th class="name-col">Apellido, Nombre</th>
+          <th title="Titular">T</th>
+          <th title="Suplente">S</th>
+          <th title="Goles">G</th>
+          <th title="Tarjeta Amarilla">TAm</th>
+          <th title="Tarjeta Verde">TVe</th>
+          <th title="Tarjeta Roja">TRo</th>
+        </tr></thead>
+        <tbody>${rosterRows(f.away,'away')}</tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="pl-shootout">
+    <h3>🎯 Shootout (en caso de empate)
+      <span id="shootoutScore" style="margin-left:.7rem;font-size:.82rem;font-weight:900;color:#d32f2f;display:none"></span>
+    </h3>
+    <div class="shootout-grid">
+      <div class="shootout-side">
+        <div class="shootout-side-title">${f.home}</div>
+        <table class="shootout-table">
+          <thead><tr>
+            <th>#</th>
+            <th class="name-col">Nº Jugadora</th>
+            <th>⬜ Convirtió</th>
+            <th>⬜ No convirtió</th>
+          </tr></thead>
+          <tbody id="shootoutBodyH">${shootoutRows(5)}</tbody>
+        </table>
+      </div>
+      <div class="shootout-divider"></div>
+      <div class="shootout-side">
+        <div class="shootout-side-title">${f.away}</div>
+        <table class="shootout-table">
+          <thead><tr>
+            <th>#</th>
+            <th class="name-col">Nº Jugadora</th>
+            <th>⬜ Convirtió</th>
+            <th>⬜ No convirtió</th>
+          </tr></thead>
+          <tbody id="shootoutBodyA">${shootoutRows(5)}</tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="pl-officials">
+    <div class="official-cell">
+      <div class="lbl">Árbitro 1</div>
+      <div class="val">${f.r1||''}</div>
+    </div>
+    <div class="official-cell">
+      <div class="lbl">Árbitro 2</div>
+      <div class="val">${f.r2||''}</div>
+    </div>
+    <div class="official-cell">
+      <div class="lbl">Juez de mesa</div>
+      <div class="val"></div>
+    </div>
+  </div>
+
+  <div class="pl-obs">
+    <div class="lbl">Observaciones</div>
+    <div class="obs-box"></div>
+  </div>
+
+  <div class="pl-sigs">
+    <div class="sig-cell">
+      <div class="sig-line"></div>
+      <div class="sig-label">Firma DT / Capitana — ${f.home}</div>
+    </div>
+    <div class="sig-cell">
+      <div class="sig-line"></div>
+      <div class="sig-label">Firma DT / Capitana — ${f.away}</div>
+    </div>
+    <div class="sig-cell">
+      <div class="sig-line"></div>
+      <div class="sig-label">Firma Árbitro</div>
+    </div>
+  </div>
+
+  <div class="pl-footer">
+    Campeonato Máster +50 Femenino 2026 — Torneo Apertura · Generado por argmastershockey.com.ar
+  </div>`;
+
+  document.getElementById('planilla').innerHTML = html;
+  document.getElementById('planilla').style.display = '';
+}
+
+// ── LIVE DATA OVERLAY ──────────────────────────────────
+function mark(side, key, col, val){
+  const row = document.querySelector(`tr[data-side="${side}"][data-key="${key}"]`);
+  if(row){ const td = row.querySelector(`[data-col="${col}"]`); if(td) td.textContent = val; }
+}
+
+function applyLiveData(live, homeTeam, awayTeam){
+  // Score total
+  if(live.scoreH !== null){ document.getElementById('liveScoreH').textContent = live.scoreH; }
+  if(live.scoreA !== null){ document.getElementById('liveScoreA').textContent = live.scoreA; }
+
+  // Titulares / Suplentes
+  (live.lineup_home||[]).forEach(k => mark('home', k, 'T', '✓'));
+  (live.subs_home||[]).forEach(k   => mark('home', k, 'S', '✓'));
+  (live.lineup_away||[]).forEach(k => mark('away', k, 'T', '✓'));
+  (live.subs_away||[]).forEach(k   => mark('away', k, 'S', '✓'));
+
+  // Eventos → goles por cuarto y stats por jugadora
+  const GOAL_TYPES = ['gol','pc','ps'];
+  const qH={1:0,2:0,3:0,4:0}, qA={1:0,2:0,3:0,4:0};
+  const playerStats = {};  // key → {G,TAm,TVe,TRo}
+
+  (live.events||[]).forEach(ev => {
+    const side = ev.team === homeTeam ? 'home' : 'away';
+    const q    = ev.quarter || 1;
+
+    if(GOAL_TYPES.includes(ev.type)){
+      if(side==='home') qH[q]=(qH[q]||0)+1;
+      else              qA[q]=(qA[q]||0)+1;
+    }
+
+    // match player string to roster key by apellido
+    if(ev.player){
+      const rows = document.querySelectorAll(`tr[data-side="${side}"]`);
+      rows.forEach(row => {
+        const key = row.dataset.key || '';
+        const ap  = key.split('-').slice(1).join('-').toLowerCase();
+        if(ev.player.toLowerCase().includes(ap) && ap.length > 2){
+          if(!playerStats[side+'|'+key]) playerStats[side+'|'+key]={G:0,TAm:0,TVe:0,TRo:0};
+          const s = playerStats[side+'|'+key];
+          if(GOAL_TYPES.includes(ev.type))   s.G++;
+          if(ev.type==='amarilla')           s.TAm++;
+          if(ev.type==='verde')              s.TVe++;
+          if(ev.type==='roja')               s.TRo++;
+        }
+      });
+    }
+  });
+
+  // Rellenar cuartos
+  [1,2,3,4].forEach(q => {
+    const h = document.getElementById(`qH${q}`); if(h && qH[q]) h.textContent = qH[q];
+    const a = document.getElementById(`qA${q}`); if(a && qA[q]) a.textContent = qA[q];
+  });
+  const totH = document.getElementById('qHtot'); if(totH && live.scoreH!==null) totH.textContent = live.scoreH;
+  const totA = document.getElementById('qAtot'); if(totA && live.scoreA!==null) totA.textContent = live.scoreA;
+
+  // Stats por jugadora
+  Object.entries(playerStats).forEach(([sk, s]) => {
+    const [side, key] = sk.split('|');
+    if(s.G)   mark(side, key, 'G',   s.G);
+    if(s.TAm) mark(side, key, 'TAm', '●'.repeat(s.TAm));
+    if(s.TVe) mark(side, key, 'TVe', '●'.repeat(s.TVe));
+    if(s.TRo) mark(side, key, 'TRo', '●'.repeat(s.TRo));
+  });
+
+  // Shootout
+  const sh = live.shootoutH, sa = live.shootoutA;
+  if(sh !== null && sh !== undefined && sa !== null && sa !== undefined){
+    const scoreEl = document.getElementById('shootoutScore');
+    if(scoreEl){
+      scoreEl.textContent = `Resultado: ${sh} – ${sa}`;
+      scoreEl.style.display = '';
+    }
+    // Marcar filas de conversión: las primeras N filas = "Convirtió"
+    ['H','A'].forEach(side => {
+      const total = side==='H' ? sh : sa;
+      const tbody = document.getElementById(`shootoutBody${side}`);
+      if(!tbody) return;
+      tbody.querySelectorAll('tr').forEach((row, i) => {
+        const cells = row.querySelectorAll('td.chk');
+        if(!cells.length) return;
+        if(i < total){
+          cells[0].textContent = '✓'; // Convirtió
+          cells[0].style.fontWeight = '900';
+          cells[0].style.color = '#2e7d32';
+        } else if(i < 5){
+          cells[1].textContent = '✗'; // No convirtió
+          cells[1].style.color = '#c62828';
+        }
+      });
+    });
+  }
+
+  // Badge de estado
+  const badge = document.getElementById('liveBadge');
+  if(badge){
+    const labels = {pre:'Sin iniciar', lineup_sent:'Formación enviada', partido:'En curso', done:'Finalizado'};
+    const colors = {pre:'#888', lineup_sent:'#f9b000', partido:'#d32f2f', done:'#2e7d32'};
+    const ph = live.phase||'pre';
+    badge.textContent = labels[ph]||ph;
+    badge.style.background = colors[ph]||'#888';
+  }
+}
+
+// Init
+const params = new URLSearchParams(location.search);
+const matchId = params.get('match');
+if(matchId){
+  render(matchId);
+  // Fetch live data from backend
+  fetch(`/api/matches/${matchId}/public`)
+    .then(r => r.ok ? r.json() : null)
+    .then(live => {
+      if(!live) return;
+      const f = FIXTURE.flatMap(f=>f.matches).find(m=>m.id===matchId);
+      if(f) applyLiveData(live, f.home, f.away);
+    })
+    .catch(()=>{}); // offline — planilla estática igual funciona
+}
+else{
+  // show all matches as links
+  document.getElementById('planilla').innerHTML = `
+    <div style="padding:1.2rem">
+      <h3 style="color:#1a3a6b;font-size:1rem;margin-bottom:1rem">Seleccioná un partido:</h3>
+      ${FIXTURE.map(f=>`
+        <div style="margin-bottom:.8rem">
+          <div style="font-weight:800;color:#1a3a6b;font-size:.82rem;margin-bottom:.35rem">
+            📅 Fecha ${f.fecha} — ${f.date}
+          </div>
+          ${f.matches.map(m=>`
+            <a href="?match=${m.id}" style="display:inline-block;margin:.2rem .3rem .2rem 0;
+              background:#f0f4fa;border:1px solid #d0d8e4;border-radius:6px;
+              padding:.3rem .7rem;font-size:.78rem;color:#1a3a6b;text-decoration:none;font-weight:600">
+              ${m.home} vs ${m.away} (Gr.${m.group})
+            </a>
+          `).join('')}
+        </div>
+      `).join('')}
+    </div>`;
+  document.getElementById('planilla').style.display='';
+}
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Campeonato Máster +50 Femenino 2026</title>
+  <title>Campeonato Máster +50 Femenino 2026 · Torneo Apertura</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -15,775 +15,222 @@
       --muted: #666;
       --radius-lg: 18px;
       --shadow-soft: 0 8px 24px rgba(0,0,0,0.06);
-
       --q-direct-bg: rgba(249,176,0,0.18);
       --q-direct-border: rgba(249,176,0,0.55);
-      --q-playoff-bg: rgba(0,133,199,0.14);
-      --q-playoff-border: rgba(0,133,199,0.45);
       --row-hover: rgba(0,75,141,0.05);
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
-    a { color: inherit; text-decoration: none; }
-    html { scroll-behavior: smooth; }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(10px);
-      background: rgba(245,247,251,0.9);
-      border-bottom: 1px solid rgba(0,0,0,0.03);
-    }
-
-    .nav {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0.6rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .nav-left img {
-      height: 40px;
-      width: auto;
-      border-radius: 999px;
-    }
-
-    .nav-title {
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--primary);
-    }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      font-size: 0.9rem;
-    }
-
-    .nav-links a {
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      color: var(--muted);
-    }
-
-    .nav-links a:hover {
-      background: rgba(0,75,141,0.08);
-      color: var(--primary);
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1.5rem;
-      padding-bottom: 3rem;
-    }
-
-    /* Hero */
-    .hero {
-      margin-top: 1.5rem;
-      background: radial-gradient(circle at top left, rgba(0,133,199,0.16), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(249,176,0,0.16), transparent 55%),
-                  #ffffff;
-      border-radius: 26px;
-      box-shadow: var(--shadow-soft);
-      padding: 2rem 2rem 2.5rem;
-      display: grid;
-      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.2fr);
-      gap: 2rem;
-      align-items: center;
-    }
-
-    .hero-title {
-      font-size: 2.3rem;
-      font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 0.75rem;
-    }
-
-    .hero-subtitle {
-      font-size: 1.05rem;
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-      max-width: 32rem;
-    }
-
-    .hero-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .tag {
-      font-size: 0.8rem;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      background: rgba(0,75,141,0.08);
-      color: var(--primary);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-      padding: 0.7rem 1.3rem;
-      border-radius: 999px;
-      border: none;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 8px 18px rgba(0,75,141,0.3);
-    }
-
-    .btn-secondary {
-      background: rgba(0,75,141,0.06);
-      color: var(--primary);
-      padding: 0.7rem 1.1rem;
-      border-radius: 999px;
-      border: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .hero-right { text-align: center; }
-
-    .hero-right img {
-      max-width: 220px;
-      width: 100%;
-      border-radius: 24px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.2);
-      background: #fff;
-    }
-
-    .hero-caption {
-      margin-top: 0.6rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    section { margin-top: 2.5rem; }
-
-    .section-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 0.4rem;
-    }
-
-    .section-subtitle {
-      font-size: 0.95rem;
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius-lg);
-      padding: 1.3rem 1.4rem;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .card h3 {
-      font-size: 1.05rem;
-      margin-bottom: 0.5rem;
-      color: var(--primary);
-    }
-
-    .card ul {
-      list-style: none;
-      padding-left: 0;
-      margin: 0.4rem 0 0;
-      font-size: 0.92rem;
-      color: var(--muted);
-    }
-
-    .card ul li {
-      margin-bottom: 0.25rem;
-      padding-left: 1rem;
-      position: relative;
-    }
-
-    .card ul li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: var(--accent);
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1.3rem;
-    }
-
-    /* Forms (NEW) */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.9rem;
-      margin-top: 0.7rem;
-    }
-
-    .field {
-      display: grid;
-      gap: 0.25rem;
-    }
-
-    label {
-      font-size: 0.82rem;
-      font-weight: 800;
-      color: var(--primary);
-      letter-spacing: 0.02em;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid rgba(0,0,0,0.10);
-      padding: 0.65rem 0.8rem;
-      background: #fff;
-      font-size: 0.95rem;
-      outline: none;
-    }
-
-    textarea { min-height: 110px; resize: vertical; }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: rgba(0,133,199,0.55);
-      box-shadow: 0 0 0 4px rgba(0,133,199,0.14);
-    }
-
-    .form-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.7rem;
-      align-items: center;
-      margin-top: 0.9rem;
-    }
-
-    .btn-ghost {
-      border: 1px solid rgba(0,0,0,0.08);
-      background: #fff;
-      color: var(--primary);
-      font-weight: 800;
-      padding: 0.65rem 0.9rem;
-      border-radius: 999px;
-      cursor: pointer;
-      box-shadow: var(--shadow-soft);
-    }
-    .btn-ghost:hover { background: rgba(0,75,141,0.06); }
-
-    .helper {
-      margin-top: 0.7rem;
-      font-size: 0.86rem;
-      color: var(--muted);
-    }
-
-    .note {
-      margin-top: 0.7rem;
-      padding: 0.9rem 1rem;
-      border-radius: 16px;
-      border: 1px solid rgba(0,0,0,0.06);
-      background: radial-gradient(circle at top left, rgba(0,133,199,0.10), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(249,176,0,0.12), transparent 55%),
-                  rgba(0,0,0,0.01);
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .small-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 0.6rem;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .small-links a {
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      color: var(--secondary);
-      font-weight: 800;
-    }
-
-    /* Schedule controls & schedule (same as before) */
-    .schedule-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .pill-btn {
-      border: 1px solid rgba(0,0,0,0.08);
-      background: #fff;
-      color: var(--primary);
-      font-weight: 800;
-      padding: 0.45rem 0.75rem;
-      border-radius: 999px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      box-shadow: var(--shadow-soft);
-      transition: transform 120ms ease, background 120ms ease;
-    }
-
-    .pill-btn:hover { transform: translateY(-1px); }
-
-    .pill-btn.active {
-      background: rgba(0,75,141,0.08);
-      border-color: rgba(0,75,141,0.18);
-    }
-
-    .team-filter-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.35rem 0.6rem;
-      border-radius: 999px;
-      border: 1px solid rgba(0,0,0,0.08);
-      background: rgba(249,176,0,0.14);
-      box-shadow: var(--shadow-soft);
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: var(--primary);
-    }
-
-    .team-filter-chip img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-      background: #fff;
-      border-radius: 7px;
-      border: 1px solid rgba(0,0,0,0.08);
-      padding: 2px;
-    }
-
-    .team-filter-clear {
-      border: none;
-      background: rgba(0,0,0,0.05);
-      padding: 0.15rem 0.45rem;
-      border-radius: 999px;
-      cursor: pointer;
-      font-weight: 900;
-      color: var(--muted);
-    }
-
-    .round-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1.3rem;
-      margin-top: 1rem;
-    }
-
-    .round-card {
-      background: #fff;
-      border-radius: var(--radius-lg);
-      padding: 1rem 1.1rem;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .round-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.8rem;
-      align-items: baseline;
-      margin-bottom: 0.75rem;
-    }
-
-    .round-title { font-weight: 900; color: var(--primary); font-size: 1.05rem; }
-    .round-date { font-weight: 800; color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
-
-    .matches { display: grid; gap: 0.55rem; margin-top: 0.4rem; }
-
-    .match {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.7rem;
-      padding: 0.55rem 0.7rem;
-      border-radius: 12px;
-      background: rgba(0,0,0,0.02);
-      border: 1px solid rgba(0,0,0,0.05);
-      font-size: 0.92rem;
-    }
-
-    .match .left, .match .right {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      min-width: 0;
-    }
-
-    .team-badge {
-      width: 30px;
-      height: 30px;
-      border-radius: 10px;
-      background: #fff;
-      border: 1px solid rgba(0,0,0,0.08);
-      overflow: hidden;
-      flex: 0 0 auto;
-      display: grid;
-      place-items: center;
-    }
-
-    .team-badge img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
-
-    .team-name {
-      font-weight: 900;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 240px;
-    }
-
-    .score-pill {
-      font-weight: 900;
-      color: var(--primary);
-      background: rgba(0,75,141,0.06);
-      border: 1px solid rgba(0,75,141,0.10);
-      padding: 0.18rem 0.5rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      min-width: 56px;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    /* Standings */
-    .standings-wrap {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1.3rem;
-      margin-top: 1.2rem;
-    }
-
-    .standings-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      align-items: center;
-      margin-top: 0.9rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .legend-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 999px;
-      background: #fff;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .legend-dot { width: 10px; height: 10px; border-radius: 999px; }
-    .dot-direct { background: var(--accent); }
-    .dot-playoff { background: var(--secondary); }
-
-    table.standings {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      overflow: hidden;
-      border-radius: 14px;
-      font-size: 0.92rem;
-    }
-
-    table.standings thead th {
-      text-align: left;
-      padding: 0.7rem 0.65rem;
-      background: rgba(0,75,141,0.06);
-      color: var(--primary);
-      font-weight: 900;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      position: sticky;
-      top: 0;
-    }
-
-    table.standings tbody td {
-      padding: 0.62rem 0.65rem;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      color: var(--text);
-      vertical-align: middle;
-    }
-
-    table.standings tbody tr:hover { background: var(--row-hover); }
-
-    .pos { width: 42px; font-weight: 900; color: var(--primary); }
-    .muted { color: var(--muted); font-weight: 700; }
-
-    tr.rank-1 { background: var(--q-direct-bg); outline: 2px solid var(--q-direct-border); outline-offset: -2px; }
-    tr.rank-2, tr.rank-3, tr.rank-4 { background: var(--q-playoff-bg); outline: 2px solid var(--q-playoff-border); outline-offset: -2px; }
-
-    .team-cell-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      min-width: 0;
-      padding: 0.15rem 0.35rem;
-      border-radius: 12px;
-      transition: transform 120ms ease, background 120ms ease;
-    }
-
-    .team-cell-link:hover { background: rgba(0,75,141,0.06); transform: translateY(-1px); }
-    .team-cell-link:focus { outline: 2px solid rgba(0,133,199,0.45); outline-offset: 2px; }
-
-    .team-cell-link .team-badge { width: 26px; height: 26px; border-radius: 8px; }
-
-    .team-name-standings {
-      font-weight: 950;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 240px;
-    }
-
-    /* Franchises */
-    .franchises-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1.1rem;
-      margin-top: 1.2rem;
-    }
-
-    .franchise-card {
-      background: #ffffff;
-      border-radius: var(--radius-lg);
-      padding: 1rem;
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 0.5rem;
-    }
-
-    .franchise-logo {
-      width: 70px;
-      height: 70px;
-      border-radius: 999px;
-      background: #f0f0f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .franchise-logo img { width: 100%; height: 100%; object-fit: contain; }
-
-    .franchise-name { font-size: 0.95rem; font-weight: 800; color: var(--primary); }
-    .franchise-tagline { font-size: 0.8rem; color: var(--muted); min-height: 2.2em; }
-
-    .franchise-link {
-      margin-top: 0.3rem;
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: var(--secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .franchise-link:hover { text-decoration: underline; }
-
-    .franchise-detail {
-      margin-top: 1.8rem;
-      padding: 1.4rem 1.6rem;
-      border-radius: var(--radius-lg);
-      background: #ffffff;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .franchise-detail-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 0.7rem;
-    }
-
-    .franchise-detail-logo {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      background: #f5f5f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .franchise-detail-logo img { width: 100%; height: 100%; object-fit: contain; }
-
-    .franchise-detail h3 { font-size: 1.1rem; margin: 0; color: var(--primary); }
-    .franchise-detail small { font-size: 0.8rem; color: var(--muted); }
-
-    .franchise-detail-columns {
-      display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-      gap: 1rem;
-      margin-top: 0.7rem;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .chip {
-      display: inline-block;
-      padding: 0.15rem 0.45rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      margin-right: 0.25rem;
-      margin-bottom: 0.2rem;
-      background: rgba(0,75,141,0.06);
-      color: var(--primary);
-      font-weight: 800;
-    }
-
-    /* Mini widget */
-    .mini-widget {
-      margin-top: 1rem;
-      padding: 0.9rem 1rem;
-      border-radius: 16px;
-      background: radial-gradient(circle at top left, rgba(0,133,199,0.10), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(249,176,0,0.12), transparent 55%),
-                  rgba(0,0,0,0.01);
-      border: 1px solid rgba(0,0,0,0.06);
-      display: grid;
-      gap: 0.7rem;
-    }
-
-    .mini-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .mini-kpis {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .kpi {
-      background: #fff;
-      border: 1px solid rgba(0,0,0,0.07);
-      box-shadow: var(--shadow-soft);
-      border-radius: 999px;
-      padding: 0.25rem 0.6rem;
-      font-weight: 900;
-      font-size: 0.85rem;
-      color: var(--primary);
-    }
-
-    .kpi small { color: var(--muted); font-weight: 900; margin-right: 0.35rem; }
-
-    .mini-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-
-    .mini-btn {
-      border: 1px solid rgba(0,0,0,0.08);
-      background: #fff;
-      color: var(--primary);
-      font-weight: 900;
-      padding: 0.4rem 0.7rem;
-      border-radius: 999px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      box-shadow: var(--shadow-soft);
-    }
-    .mini-btn:hover { background: rgba(0,75,141,0.06); }
-
-    .mini-matchline {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.7rem;
-      align-items: center;
-      padding: 0.55rem 0.65rem;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.75);
-      border: 1px solid rgba(0,0,0,0.06);
-    }
-
-    .mini-matchline .label {
-      color: var(--muted);
-      font-weight: 900;
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-    }
-
-    .mini-matchline .value {
-      font-weight: 950;
-      color: var(--text);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    footer {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1rem 1.5rem 2rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    @media (max-width: 960px) {
-      .hero { grid-template-columns: minmax(0, 1fr); }
-      .hero-right { order: -1; }
-      .franchises-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .grid-2 { grid-template-columns: minmax(0, 1fr); }
-      .standings-wrap { grid-template-columns: minmax(0, 1fr); }
-      .round-grid { grid-template-columns: minmax(0, 1fr); }
-      .team-name { max-width: 200px; }
-      .team-name-standings { max-width: 220px; }
-      .form-grid { grid-template-columns: minmax(0,1fr); }
-    }
-
-    @media (max-width: 640px) {
-      .nav { flex-direction: column; align-items: flex-start; }
-      main { padding: 1rem; }
-      .hero { padding: 1.4rem; }
-      .hero-title { font-size: 1.6rem; }
-      .franchises-grid { grid-template-columns: minmax(0, 1fr); }
-      .team-name { max-width: 170px; }
-      .team-name-standings { max-width: 180px; }
-      .franchise-detail-columns { grid-template-columns: minmax(0,1fr); }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    a{color:inherit;text-decoration:none}
+    html{scroll-behavior:smooth}
+
+    /* ── HEADER ── */
+    header{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(245,247,251,0.93);border-bottom:1px solid rgba(0,0,0,0.06)}
+    .nav{max-width:1200px;margin:0 auto;padding:.5rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+    .nav-left{display:flex;align-items:center;gap:.75rem}
+    .nav-left img{height:42px;width:auto;border-radius:999px}
+    .nav-title{font-weight:800;font-size:.95rem;text-transform:uppercase;letter-spacing:.07em;color:var(--primary);line-height:1.2}
+    .nav-sub{font-size:.78rem;color:var(--muted)}
+    .nav-links{display:flex;flex-wrap:wrap;gap:.4rem;font-size:.88rem}
+    .nav-links a{padding:.3rem .65rem;border-radius:999px;color:var(--muted);transition:background .15s,color .15s}
+    .nav-links a:hover{background:rgba(0,75,141,0.08);color:var(--primary)}
+    .nav-login{background:var(--primary);color:#fff!important;border-radius:999px;padding:.3rem .9rem!important;font-weight:700;font-size:.85rem!important}
+    .nav-login:hover{background:var(--secondary)!important;color:#fff!important}
+
+    /* ── LAYOUT ── */
+    main{max-width:1200px;margin:0 auto;padding:1.5rem;padding-bottom:4rem}
+    section{margin-top:2.5rem}
+    .section-title{font-size:1.4rem;font-weight:800;color:var(--primary);margin-bottom:.35rem}
+    .section-subtitle{font-size:.93rem;color:var(--muted);margin-bottom:1.4rem}
+
+    /* ── HERO ── */
+    .hero{margin-top:1.5rem;background:radial-gradient(circle at top left,rgba(0,133,199,.16),transparent 55%),radial-gradient(circle at bottom right,rgba(249,176,0,.18),transparent 55%),#fff;border-radius:26px;box-shadow:var(--shadow-soft);padding:2rem 2rem 2.5rem;display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.1fr);gap:2rem;align-items:center}
+    .hero-title{font-size:2.1rem;font-weight:900;color:var(--primary);margin-bottom:.6rem;line-height:1.15}
+    .hero-subtitle{font-size:1rem;color:var(--muted);margin-bottom:1.3rem;max-width:30rem}
+    .hero-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.3rem}
+    .tag{font-size:.78rem;padding:.28rem .65rem;border-radius:999px;background:rgba(0,75,141,.08);color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+    .tag-accent{background:rgba(249,176,0,.2);color:#8a6000}
+    .hero-dates{display:grid;gap:.45rem;margin-bottom:1.4rem}
+    .hero-date-row{display:flex;align-items:center;gap:.7rem;font-size:.9rem}
+    .date-num{background:var(--accent);color:#fff;font-weight:900;border-radius:10px;padding:.18rem .5rem;font-size:.82rem;min-width:40px;text-align:center}
+    .date-info{color:var(--text);font-weight:600}
+    .date-sub{color:var(--muted);font-size:.82rem}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
+    .btn-primary{background:var(--primary);color:#fff;padding:.65rem 1.2rem;border-radius:999px;border:none;font-size:.93rem;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(0,75,141,.28);transition:background .15s}
+    .btn-primary:hover{background:var(--secondary)}
+    .btn-secondary{background:rgba(0,75,141,.07);color:var(--primary);padding:.65rem 1rem;border-radius:999px;border:none;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .15s}
+    .btn-secondary:hover{background:rgba(0,75,141,.13)}
+    .hero-right{text-align:center}
+    .hero-right img{max-width:200px;width:100%;border-radius:22px;box-shadow:0 16px 36px rgba(0,0,0,.18)}
+    .hero-caption{margin-top:.5rem;font-size:.78rem;color:var(--muted)}
+
+    /* ── CARDS ── */
+    .card{background:var(--card-bg);border-radius:var(--radius-lg);padding:1.2rem 1.4rem;box-shadow:var(--shadow-soft)}
+    .card h3{font-size:1rem;margin-bottom:.5rem;color:var(--primary)}
+    .card ul{list-style:none;padding:0;margin:.3rem 0 0;font-size:.9rem;color:var(--muted)}
+    .card ul li{margin-bottom:.22rem;padding-left:1rem;position:relative}
+    .card ul li::before{content:"•";position:absolute;left:0;color:var(--accent)}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2rem}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem}
+
+    /* ── TABS ── */
+    .tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.2rem}
+    .tab-btn{border:1px solid rgba(0,0,0,.08);background:#fff;color:var(--primary);font-weight:700;padding:.42rem .85rem;border-radius:999px;cursor:pointer;font-size:.87rem;box-shadow:var(--shadow-soft);transition:all .15s}
+    .tab-btn:hover{background:rgba(0,75,141,.07)}
+    .tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* ── FIXTURE ── */
+    .fixture-grid{display:grid;gap:1rem}
+    .grupo-header{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:.4rem 0 .25rem;border-bottom:2px solid rgba(0,75,141,.1);margin-top:.5rem;margin-bottom:.6rem}
+    .match-card{background:#fff;border-radius:16px;padding:1rem 1.1rem;box-shadow:var(--shadow-soft);display:grid;gap:.55rem}
+    .match-top{display:flex;align-items:center;justify-content:space-between;gap:.7rem}
+    .match-teams{display:flex;align-items:center;gap:.7rem;flex:1;min-width:0}
+    .team-name-fix{font-weight:800;color:var(--text);font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .vs-pill{font-size:.78rem;font-weight:900;color:var(--muted);background:rgba(0,0,0,.04);padding:.15rem .45rem;border-radius:999px;flex-shrink:0}
+    .score-display{font-size:1.2rem;font-weight:900;color:var(--primary);background:rgba(0,75,141,.06);border:1px solid rgba(0,75,141,.1);padding:.25rem .7rem;border-radius:12px;min-width:64px;text-align:center;white-space:nowrap}
+    .score-pending{color:var(--muted);font-size:.85rem;font-weight:700}
+    .match-meta{display:flex;flex-wrap:wrap;gap:.5rem;font-size:.8rem}
+    .meta-pill{background:rgba(0,75,141,.06);color:var(--primary);padding:.18rem .5rem;border-radius:999px;font-weight:700;display:flex;align-items:center;gap:.3rem}
+    .meta-pill.sede{background:rgba(249,176,0,.15);color:#8a6000}
+    .match-refs{font-size:.78rem;color:var(--muted);padding:.35rem .6rem;background:rgba(0,0,0,.025);border-radius:10px}
+    .match-refs span{font-weight:700;color:var(--text)}
+    .no-refs{color:var(--muted);font-style:italic}
+    .fecha-pending-notice{text-align:center;padding:2rem;color:var(--muted);font-size:.95rem;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft)}
+
+    /* ── STANDINGS ── */
+    .standings-wrap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem;margin-top:1.2rem}
+    .standings-group{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);overflow:hidden}
+    .standings-group-title{padding:.7rem 1rem;background:var(--primary);color:#fff;font-weight:800;font-size:.9rem;display:flex;align-items:center;justify-content:space-between}
+    table.standings{width:100%;border-collapse:collapse;font-size:.85rem}
+    table.standings thead th{text-align:center;padding:.55rem .4rem;background:rgba(0,75,141,.06);color:var(--primary);font-weight:800;border-bottom:1px solid rgba(0,0,0,.06);white-space:nowrap}
+    table.standings thead th:first-child{text-align:left;padding-left:.7rem}
+    table.standings tbody td{padding:.5rem .4rem;border-bottom:1px solid rgba(0,0,0,.05);color:var(--text);text-align:center;vertical-align:middle}
+    table.standings tbody td:first-child{text-align:left;padding-left:.7rem;font-weight:700;font-size:.82rem}
+    table.standings tbody tr:hover{background:var(--row-hover)}
+    tr.rank-1{background:var(--q-direct-bg)}
+
+    /* ── STATS ── */
+    .stats-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem}
+    .stats-card{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);overflow:hidden}
+    .stats-card-title{padding:.65rem 1rem;background:var(--primary);color:#fff;font-weight:800;font-size:.88rem}
+    .stats-list{padding:.3rem 0}
+    .stats-row{display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:.4rem;padding:.42rem .9rem;border-bottom:1px solid rgba(0,0,0,.04);font-size:.83rem}
+    .stats-row:last-child{border-bottom:none}
+    .stats-row:hover{background:var(--row-hover)}
+    .stats-pos{font-weight:900;color:var(--muted);font-size:.75rem;text-align:right}
+    .stats-name{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .stats-team{font-size:.72rem;color:var(--muted);font-weight:400}
+    .stats-val{font-weight:900;color:var(--primary);font-size:.9rem;white-space:nowrap}
+    .stats-empty{padding:1.2rem;text-align:center;color:var(--muted);font-size:.85rem;font-style:italic}
+    @media(max-width:640px){.stats-wrap{grid-template-columns:1fr}}
+
+    /* ── EQUIPOS ── */
+    .equipos-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.2rem}
+    .equipo-card{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s}
+    .equipo-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.1)}
+    .equipo-card-header{padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem}
+    .equipo-badge{width:44px;height:44px;border-radius:12px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;flex-shrink:0}
+    .equipo-info{min-width:0}
+    .equipo-name{font-weight:800;color:var(--primary);font-size:.95rem;line-height:1.2}
+    .equipo-group{font-size:.76rem;color:var(--muted);font-weight:600}
+    .equipo-count{font-size:.78rem;color:var(--muted);margin-top:.1rem}
+    .equipo-body{display:none;padding:0 1rem 1rem}
+    .equipo-body.open{display:block}
+    .plantel-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:.5rem}
+    .plantel-table thead th{text-align:left;padding:.35rem .4rem;background:rgba(0,75,141,.05);color:var(--primary);font-weight:800;border-bottom:1px solid rgba(0,0,0,.06)}
+    .plantel-table tbody td{padding:.32rem .4rem;border-bottom:1px solid rgba(0,0,0,.04);color:var(--text)}
+    .plantel-table tbody td:first-child{color:var(--muted);font-weight:700;width:28px;text-align:center}
+    .no-plantel{color:var(--muted);font-size:.85rem;padding:.5rem 0;font-style:italic}
+    .uniforme-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.7rem}
+    .uniforme-pill{padding:.2rem .6rem;border-radius:999px;font-size:.75rem;font-weight:700;background:rgba(0,75,141,.07);color:var(--primary)}
+    .toggle-icon{margin-left:auto;font-size:1.1rem;color:var(--muted);flex-shrink:0}
+
+    /* ── REGLAMENTO ── */
+    .reg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2rem;margin-top:1.2rem}
+    .reg-card{background:#fff;border-radius:var(--radius-lg);padding:1.1rem 1.3rem;box-shadow:var(--shadow-soft)}
+    .reg-num{font-size:1.5rem;font-weight:900;color:rgba(0,75,141,.15);line-height:1;margin-bottom:.3rem}
+    .reg-title{font-size:.95rem;font-weight:800;color:var(--primary);margin-bottom:.4rem}
+    .reg-body{font-size:.86rem;color:var(--muted);line-height:1.55}
+    .reg-table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:.5rem}
+    .reg-table th{text-align:left;padding:.35rem .5rem;background:rgba(0,75,141,.05);color:var(--primary);font-weight:800;border-bottom:1px solid rgba(0,0,0,.06)}
+    .reg-table td{padding:.35rem .5rem;border-bottom:1px solid rgba(0,0,0,.04);color:var(--text)}
+    .reg-pdf-link{display:inline-flex;align-items:center;gap:.4rem;margin-top:.7rem;font-size:.82rem;font-weight:700;color:var(--secondary)}
+    .reg-pdf-link:hover{text-decoration:underline}
+
+    /* ── ACCESO EQUIPOS ── */
+    .login-wrap{max-width:420px;margin:0 auto}
+    .login-card{background:#fff;border-radius:var(--radius-lg);padding:1.8rem;box-shadow:var(--shadow-soft)}
+    .login-card h3{color:var(--primary);font-size:1.1rem;margin-bottom:1rem}
+    .field{display:grid;gap:.25rem;margin-bottom:.85rem}
+    label{font-size:.82rem;font-weight:800;color:var(--primary)}
+    input,select{width:100%;border-radius:12px;border:1px solid rgba(0,0,0,.1);padding:.6rem .8rem;background:#fff;font-size:.93rem;outline:none;transition:border-color .15s,box-shadow .15s}
+    input:focus,select:focus{border-color:rgba(0,133,199,.5);box-shadow:0 0 0 3px rgba(0,133,199,.13)}
+    .login-msg{margin-top:.7rem;font-size:.85rem;padding:.6rem .9rem;border-radius:10px;display:none}
+    .login-msg.error{background:rgba(200,0,0,.07);color:#c00;border:1px solid rgba(200,0,0,.15);display:block}
+    .login-msg.ok{background:rgba(0,160,70,.07);color:#006020;border:1px solid rgba(0,160,70,.15);display:block}
+    .login-hint{margin-top:.8rem;font-size:.8rem;color:var(--muted);text-align:center}
+    .login-hint a{color:var(--secondary);font-weight:700}
+
+    /* ── FOOTER ── */
+    footer{max-width:1200px;margin:2rem auto 0;padding:1.2rem 1.5rem 2.5rem;font-size:.8rem;color:var(--muted);text-align:center;border-top:1px solid rgba(0,0,0,.06)}
+    footer a{color:var(--secondary);font-weight:700}
+    footer a:hover{text-decoration:underline}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:960px){
+      .hero{grid-template-columns:minmax(0,1fr)}
+      .hero-right{order:-1;text-align:left}
+      .hero-right img{max-width:120px}
+      .standings-wrap{grid-template-columns:minmax(0,1fr)}
+      .equipos-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid-2,.grid-3,.reg-grid{grid-template-columns:minmax(0,1fr)}
+    }
+    @media(max-width:640px){
+      /* Nav */
+      .nav{padding:.5rem 1rem;gap:.5rem}
+      .nav-left img{height:32px}
+      .nav-sub{display:none}
+      .nav-links{gap:.2rem;overflow-x:auto;flex-wrap:nowrap;padding-bottom:.1rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+      .nav-links::-webkit-scrollbar{display:none}
+      .nav-links a{white-space:nowrap;font-size:.8rem;padding:.25rem .55rem;flex-shrink:0}
+      /* Layout */
+      main{padding:.85rem}
+      /* Hero */
+      .hero{padding:1.1rem;gap:1rem}
+      .hero-title{font-size:1.45rem}
+      .hero-subtitle{font-size:.85rem}
+      .hero-right{display:none}
+      .hero-tags{gap:.3rem}
+      .tag{font-size:.7rem;padding:.18rem .45rem}
+      .hero-actions{gap:.5rem}
+      .btn-primary,.btn-secondary{font-size:.85rem;padding:.55rem 1rem}
+      /* Section */
+      .section-title{font-size:1.15rem}
+      .section-subtitle{font-size:.82rem}
+      /* Fixture tabs — scroll horizontal en vez de wrap */
+      .tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:.3rem;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:.35rem}
+      .tabs::-webkit-scrollbar{display:none}
+      .tab-btn{white-space:nowrap;flex-shrink:0;font-size:.8rem;padding:.35rem .7rem}
+      /* Match cards */
+      .match-card{padding:.8rem .9rem}
+      .team-name-fix{font-size:.82rem}
+      .vs-pill{font-size:.72rem;padding:.1rem .35rem}
+      .score-display{font-size:1rem;min-width:52px;padding:.2rem .5rem}
+      .meta-pill{font-size:.7rem;padding:.14rem .4rem}
+      .match-refs{font-size:.72rem}
+      /* Standings */
+      .standings-wrap{grid-template-columns:minmax(0,1fr)}
+      table.standings{font-size:.78rem}
+      table.standings thead th,table.standings tbody td{padding:.4rem .2rem}
+      table.standings tbody td:first-child{padding-left:.5rem}
+      /* Equipos */
+      .equipos-grid{grid-template-columns:minmax(0,1fr)}
+      /* Stats */
+      .stats-wrap{grid-template-columns:1fr}
+      /* Footer */
+      footer{padding:1rem .85rem 3rem}
     }
   </style>
 </head>
@@ -792,1160 +239,969 @@
 <header>
   <div class="nav">
     <div class="nav-left">
-      <img src="assets/logo-asociacion.png" alt="Asociación Master y Grand Master" />
+      <img src="assets/logo-asociacion.png" alt="Asociación Master" />
       <div>
-        <div class="nav-title">Asociación Master &amp; Grand Master</div>
-        <div style="font-size:0.8rem;color:var(--muted);">
-          Torneo Máster +50 Femenino 2026
-        </div>
+        <div class="nav-title">Campeonato Máster +50 Femenino</div>
+        <div class="nav-sub">Torneo Apertura 2026 · Argentina</div>
       </div>
     </div>
     <nav class="nav-links">
-      <a href="#torneo">El Torneo</a>
-      <a href="#formato">Formato</a>
-      <a href="#inscripcion-franquicia">Inscripción Franquicia</a>
-      <a href="#inscripcion-jugadora">Jugadora Libre</a>
-      <a href="#calendario">Calendario</a>
+      <a href="#fixture">Fixture</a>
       <a href="#posiciones">Posiciones</a>
-      <a href="#playoffs">Playoffs</a>
-      <a href="#copa-nacional">Copa Nacional</a>
-      <a href="#franquicias">Franquicias</a>
+      <a href="#stats">Goleadoras</a>
+      <a href="#equipos">Equipos</a>
+      <a href="#reglamento">Reglamento</a>
+      <a href="planilla.html" class="nav-login">🔐 Acceso Equipos</a>
     </nav>
   </div>
 </header>
 
 <main>
+
   <!-- HERO -->
   <section class="hero" id="torneo">
     <div>
-      <div class="hero-title">Campeonato Máster +50 Femenino 2026</div>
-      <div class="hero-subtitle">
-        Competencia anual de franquicias para jugadoras +50 de la región AMBA,
-        con formato profesional, calendario propio y evento Final Four.
-      </div>
+      <div class="hero-title">Campeonato Máster +50<br>Femenino 2026</div>
+      <div class="hero-subtitle">Torneo Apertura · 12 equipos · 3 grupos · Hockey sobre césped</div>
       <div class="hero-tags">
         <span class="tag">Domingos · 9 a 13 hs</span>
-        <span class="tag">16 franquicias</span>
-        <span class="tag">Playoffs &amp; Final Four</span>
+        <span class="tag">12 equipos · 3 zonas</span>
+        <span class="tag tag-accent">+50 años</span>
+        <span class="tag">Árbitros oficiales</span>
       </div>
+      <div class="hero-dates" id="heroFechas"></div>
       <div class="hero-actions">
-        <a href="#franquicias"><button class="btn-primary">Ver franquicias</button></a>
-        <a href="#inscripcion-franquicia"><button class="btn-secondary">Inscribir franquicia</button></a>
+        <a href="#fixture"><button class="btn-primary">Ver fixture</button></a>
+        <a href="#posiciones"><button class="btn-secondary">Posiciones</button></a>
       </div>
     </div>
     <div class="hero-right">
       <img src="assets/logo-torneo-master-50.png" alt="Logo Campeonato Máster +50" />
-      <div class="hero-caption">Imagen oficial del Torneo Máster +50 Femenino 2026.</div>
+      <div class="hero-caption">Campeonato Máster +50 Femenino · 2026</div>
     </div>
   </section>
 
-  <!-- FORMATO -->
-  <section id="formato">
-    <h2 class="section-title">Formato deportivo</h2>
-    <p class="section-subtitle">
-      El torneo está diseñado para respetar las características físicas y deportivas
-      de la categoría +50, con un sistema de franquicias, draft y estructura de playoff
-      que garantiza equilibrio competitivo.
-    </p>
-    <div class="grid-2">
-      <div class="card">
-        <h3>Estructura general</h3>
-        <ul>
-          <li>16 franquicias en total.</li>
-          <li>2 zonas de 8 equipos (ida y vuelta).</li>
-          <li>Partidos los domingos entre las 9 y las 13 hs.</li>
-          <li>Máximo 2 fechas por mes.</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Franquicias &amp; Draft</h3>
-        <ul>
-          <li>Equipos con identidad propia: nombre, escudo, colores y uniforme.</li>
-          <li>Un club o grupo puede tomar una franquicia.</li>
-          <li>Jugadoras sin equipo ingresan al Draft.</li>
-          <li>Hasta 3 jugadoras no federadas por franquicia.</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- NUEVO: INSCRIPCIÓN FRANQUICIA -->
-  <section id="inscripcion-franquicia">
-    <h2 class="section-title">Inscripción de Franquicia</h2>
-    <p class="section-subtitle">
-      Si representás un club, grupo o proyecto deportivo, podés solicitar una franquicia para participar del torneo.
-      Completá el formulario y te contactamos con los pasos (documentación, cupos y confirmación).
-    </p>
-
-    <div class="grid-2">
-      <div class="card">
-        <h3>Requisitos base</h3>
-        <ul>
-          <li>Responsable a cargo (contacto principal).</li>
-          <li>Confirmación de sede/club de referencia (si aplica).</li>
-          <li>Compromiso de inscripción y logística de fechas.</li>
-          <li>Aceptación del reglamento y del sistema de transferencias.</li>
-        </ul>
-
-        <div class="note">
-          Tip: si todavía no tenés plantel completo, podés inscribirte igual y completar cupos vía Draft.
-        </div>
-
-        <div class="small-links">
-          <a href="#reglamento">Ver reglamento</a>
-          <a href="#franquicias">Ver franquicias</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Formulario (Franquicia)</h3>
-        <form id="formFranchise">
-          <div class="form-grid">
-            <div class="field">
-              <label for="f_org">Club / Grupo</label>
-              <input id="f_org" name="org" placeholder="Ej: Club Italiano / Equipo X" required />
-            </div>
-            <div class="field">
-              <label for="f_contact">Responsable</label>
-              <input id="f_contact" name="contact" placeholder="Nombre y apellido" required />
-            </div>
-            <div class="field">
-              <label for="f_phone">WhatsApp</label>
-              <input id="f_phone" name="phone" placeholder="+54 9 ..." required />
-            </div>
-            <div class="field">
-              <label for="f_email">Email</label>
-              <input id="f_email" name="email" type="email" placeholder="email@dominio.com" required />
-            </div>
-            <div class="field">
-              <label for="f_pref">Franquicia preferida</label>
-              <select id="f_pref" name="pref" required>
-                <option value="" selected disabled>Elegí una opción</option>
-                <option>Ceibas HC</option><option>Jacarandá HC</option><option>Criollas HC</option><option>Yaguareté HC</option>
-                <option>Tero Real HC</option><option>Caldenes HC</option><option>Guanacos HC</option><option>Laguna del Plata HC</option>
-                <option>Horneras HC</option><option>Sauces del Sur HC</option><option>Ñandubay HC</option><option>Tucanes HC</option>
-                <option>Cardenales HC</option><option>Pampas HC</option><option>Chañares HC</option><option>Calandrias HC</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="f_alt">Alternativa</label>
-              <input id="f_alt" name="alt" placeholder="Si no hay cupo en la preferida..." />
-            </div>
-          </div>
-
-          <div class="field" style="margin-top:0.9rem;">
-            <label for="f_notes">Comentarios</label>
-            <textarea id="f_notes" name="notes" placeholder="Contanos: cantidad estimada de jugadoras, sede habitual, disponibilidad, etc."></textarea>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-primary" id="btnFranchiseWA">Enviar por WhatsApp</button>
-            <button type="button" class="btn-ghost" id="btnFranchiseMail">Enviar por Email</button>
-            <button type="button" class="btn-ghost" id="btnFranchiseCopy">Copiar texto</button>
-          </div>
-
-          <div class="helper">
-            * Esto envía el texto al canal que elijas (WhatsApp / Email). Luego lo conectamos al backend cuando esté listo.
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- NUEVO: INSCRIPCIÓN JUGADORA LIBRE -->
-  <section id="inscripcion-jugadora">
-    <h2 class="section-title">Inscripción de Jugadora Libre (Draft)</h2>
-    <p class="section-subtitle">
-      Si sos jugadora +50 y no tenés franquicia confirmada, podés inscribirte como <strong>jugadora libre</strong>.
-      Vas a ingresar al Draft y te vamos a contactar cuando haya asignación o necesidad de refuerzos.
-    </p>
-
-    <div class="grid-2">
-      <div class="card">
-        <h3>¿Qué significa “jugadora libre”?</h3>
-        <ul>
-          <li>Te anotás sin franquicia asignada.</li>
-          <li>El Draft distribuye jugadoras para equilibrar zonas.</li>
-          <li>Podés indicar preferencia (zona / cercanía / amigas) y se considera.</li>
-          <li>Recibís confirmación cuando una franquicia te selecciona.</li>
-        </ul>
-
-        <div class="note">
-          Recomendación: completá tu posición y experiencia (arquera, defensora, volante, delantera) para acelerar asignación.
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Formulario (Jugadora Libre)</h3>
-        <form id="formPlayer">
-          <div class="form-grid">
-            <div class="field">
-              <label for="p_name">Nombre y apellido</label>
-              <input id="p_name" name="name" required placeholder="Nombre completo" />
-            </div>
-            <div class="field">
-              <label for="p_dni">DNI</label>
-              <input id="p_dni" name="dni" required placeholder="Solo números" />
-            </div>
-            <div class="field">
-              <label for="p_birth">Fecha de nacimiento</label>
-              <input id="p_birth" name="birth" type="date" required />
-            </div>
-            <div class="field">
-              <label for="p_city">Zona / Ciudad</label>
-              <input id="p_city" name="city" required placeholder="Ej: CABA / Tigre / La Plata..." />
-            </div>
-            <div class="field">
-              <label for="p_phone">WhatsApp</label>
-              <input id="p_phone" name="phone" required placeholder="+54 9 ..." />
-            </div>
-            <div class="field">
-              <label for="p_email">Email</label>
-              <input id="p_email" name="email" type="email" required placeholder="email@dominio.com" />
-            </div>
-            <div class="field">
-              <label for="p_pos">Posición</label>
-              <select id="p_pos" name="pos" required>
-                <option value="" selected disabled>Elegí</option>
-                <option>Arquera</option>
-                <option>Defensora</option>
-                <option>Volante</option>
-                <option>Delantera</option>
-                <option>Multi-posición</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="p_exp">Experiencia</label>
-              <select id="p_exp" name="exp" required>
-                <option value="" selected disabled>Elegí</option>
-                <option>Recreativa</option>
-                <option>Competitiva</option>
-                <option>Selección / Alto rendimiento</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="field" style="margin-top:0.9rem;">
-            <label for="p_pref">Preferencias</label>
-            <textarea id="p_pref" name="pref" placeholder="Ej: Preferencia Zona Norte / jugar con amigas / disponibilidad / lesiones, etc."></textarea>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-primary" id="btnPlayerWA">Enviar por WhatsApp</button>
-            <button type="button" class="btn-ghost" id="btnPlayerMail">Enviar por Email</button>
-            <button type="button" class="btn-ghost" id="btnPlayerCopy">Copiar texto</button>
-          </div>
-
-          <div class="helper">
-            * La inscripción de jugadora libre se valida con un mensaje (WhatsApp/Email). Luego lo automatizamos con backend.
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- CALENDARIO -->
-  <section id="calendario">
-    <h2 class="section-title">Calendario 2026</h2>
-    <p class="section-subtitle">
-      Fase regular (14 fechas): marzo a noviembre, con receso invernal. Fixture por fecha y por zona.
-    </p>
-
-    <div class="grid-2">
-      <div class="card">
-        <h3>Fechas oficiales</h3>
-        <ul>
-          <li>8 y 22 de marzo</li>
-          <li>12 y 26 de abril</li>
-          <li>10 y 24 de mayo</li>
-          <li>7 y 14 de junio</li>
-          <li>6 y 20 de septiembre</li>
-          <li>4, 18 y 25 de octubre</li>
-          <li>8 de noviembre</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Playoffs</h3>
-        <ul>
-          <li>Cuartos / Repechajes: 15 y 29 de noviembre</li>
-          <li>Final Four: fin de semana del 8 de diciembre</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:1.3rem;">
-      <h3>Fixture completo (Fase regular)</h3>
-
-      <div class="schedule-controls">
-        <button class="pill-btn active" data-filter="all">Ver todo</button>
-        <button class="pill-btn" data-filter="A">Solo Zona A</button>
-        <button class="pill-btn" data-filter="B">Solo Zona B</button>
-
-        <span id="teamFilterChip" style="display:none;"></span>
-      </div>
-
-      <div id="scheduleContainer" class="round-grid"></div>
-      <div style="margin-top:0.8rem;font-size:0.85rem;color:var(--muted);">
-        Nota: horarios y sedes se publicarán en la semana previa a cada fecha.
-      </div>
-    </div>
+  <!-- FIXTURE -->
+  <section id="fixture">
+    <h2 class="section-title">Fixture</h2>
+    <p class="section-subtitle">3 fechas de fase de grupos + finales a confirmar.</p>
+    <div class="tabs" id="fixtureTabs"></div>
+    <div id="fixtureContent"></div>
   </section>
 
   <!-- POSICIONES -->
   <section id="posiciones">
-    <h2 class="section-title">Tablas de posiciones</h2>
-    <p class="section-subtitle">
-      Click en un equipo para ver su fixture filtrado. Resaltado: 1° directo Final Four / 2°–4° repechajes.
-    </p>
+    <h2 class="section-title">Tabla de Posiciones</h2>
+    <p class="section-subtitle">Se actualiza con cada resultado cargado. Victoria 3 pts · Empate 1 pt · Shootout: +1 pt.</p>
+    <div class="standings-wrap" id="standingsWrap"></div>
+  </section>
 
-    <div class="standings-legend">
-      <span class="legend-pill"><span class="legend-dot dot-direct"></span> 1° de zona: directo a Final Four</span>
-      <span class="legend-pill"><span class="legend-dot dot-playoff"></span> 2° a 4°: zona de playoffs/repechaje</span>
-    </div>
-
-    <div class="standings-wrap">
-      <div class="card">
-        <h3>Zona A</h3>
-        <div style="overflow:auto;">
-          <table class="standings">
-            <thead>
-              <tr>
-                <th class="pos">#</th>
-                <th>Equipo</th>
-                <th class="muted">PJ</th>
-                <th class="muted">PG</th>
-                <th class="muted">PE</th>
-                <th class="muted">PP</th>
-                <th class="muted">GF</th>
-                <th class="muted">GC</th>
-                <th class="muted">DG</th>
-                <th>Pts</th>
-              </tr>
-            </thead>
-            <tbody id="bodyA"></tbody>
-          </table>
-        </div>
+  <!-- GOLEADORAS & TARJETAS -->
+  <section id="stats">
+    <h2 class="section-title">Goleadoras &amp; Tarjetas</h2>
+    <p class="section-subtitle">Se actualiza en tiempo real con los eventos cargados.</p>
+    <div class="stats-wrap">
+      <div class="stats-card">
+        <div class="stats-card-title">⚽ Goleadoras</div>
+        <div class="stats-list" id="statsScorers"><div class="stats-empty">Sin goles registrados aún.</div></div>
       </div>
-
-      <div class="card">
-        <h3>Zona B</h3>
-        <div style="overflow:auto;">
-          <table class="standings">
-            <thead>
-              <tr>
-                <th class="pos">#</th>
-                <th>Equipo</th>
-                <th class="muted">PJ</th>
-                <th class="muted">PG</th>
-                <th class="muted">PE</th>
-                <th class="muted">PP</th>
-                <th class="muted">GF</th>
-                <th class="muted">GC</th>
-                <th class="muted">DG</th>
-                <th>Pts</th>
-              </tr>
-            </thead>
-            <tbody id="bodyB"></tbody>
-          </table>
-        </div>
+      <div class="stats-card">
+        <div class="stats-card-title">🟡 Tarjetas</div>
+        <div class="stats-list" id="statsCards"><div class="stats-empty">Sin tarjetas registradas aún.</div></div>
       </div>
     </div>
   </section>
 
-  <!-- PLAYOFFS -->
-  <section id="playoffs">
-    <h2 class="section-title">Playoffs &amp; Final Four</h2>
-    <p class="section-subtitle">
-      Definición con clasificación directa por posiciones de zona + repechajes.
-    </p>
-
-    <div class="card">
-      <h3>Esquema</h3>
-      <ul>
-        <li>1° de Zona A y 1° de Zona B → clasificados directos al Final Four.</li>
-        <li>3° vs 4° de cada zona → Repechaje 1.</li>
-        <li>2° de cada zona vs ganadores del Repechaje 1 → Repechaje 2.</li>
-        <li>Ganadoras del Repechaje 2 completan el Final Four.</li>
-      </ul>
-      <br />
-      <h3>Fechas</h3>
-      <ul>
-        <li>Cuartos / Repechajes: 15 y 29 de noviembre</li>
-        <li>Final Four: fin de semana cercano al 8 de diciembre</li>
-      </ul>
+  <!-- EQUIPOS -->
+  <section id="equipos">
+    <h2 class="section-title">Equipos &amp; Planteles</h2>
+    <p class="section-subtitle">Hacé clic en un equipo para ver el plantel completo.</p>
+    <div class="tabs" id="equiposTabs">
+      <button class="tab-btn active" data-group="ALL" onclick="filterEquipos('ALL',this)">Todos</button>
+      <button class="tab-btn" data-group="A" onclick="filterEquipos('A',this)">Grupo A</button>
+      <button class="tab-btn" data-group="B" onclick="filterEquipos('B',this)">Grupo B</button>
+      <button class="tab-btn" data-group="C" onclick="filterEquipos('C',this)">Grupo C</button>
     </div>
-  </section>
-
-  <!-- COPA NACIONAL -->
-  <section id="copa-nacional">
-    <h2 class="section-title">Copa Nacional de Clubes +50</h2>
-    <p class="section-subtitle">
-      Competencia complementaria durante el receso.
-    </p>
-    <div class="card">
-      <h3>Formato</h3>
-      <ul>
-        <li>12 equipos: 4 de Buenos Aires (franquicias) + 8 invitados.</li>
-        <li>4 grupos de 3 equipos (jueves y viernes).</li>
-        <li>Semifinales y finales (sábado y domingo).</li>
-        <li>Cruces para definir posiciones del 5° al 12° puesto.</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- FRANQUICIAS -->
-  <section id="franquicias">
-    <h2 class="section-title">Franquicias participantes</h2>
-    <p class="section-subtitle">
-      16 franquicias con identidad propia.
-    </p>
-
-    <div class="franchises-grid">
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/ceibas.png" alt="Ceibas HC" /></div>
-        <div class="franchise-name">Ceibas Hockey Club</div>
-        <div class="franchise-tagline">Flores de ceibo · rojo y verde</div>
-        <a href="#franquicia-ceibas" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/jacaranda.png" alt="Jacarandá HC" /></div>
-        <div class="franchise-name">Jacarandá Hockey Club</div>
-        <div class="franchise-tagline">Violeta y celeste jacarandá</div>
-        <a href="#franquicia-jacaranda" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/criollas.png" alt="Criollas HC" /></div>
-        <div class="franchise-name">Criollas Hockey Club</div>
-        <div class="franchise-tagline">Tradición y sol criollo</div>
-        <a href="#franquicia-criollas" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/yaguarete.png" alt="Yaguareté HC" /></div>
-        <div class="franchise-name">Yaguareté Hockey Club</div>
-        <div class="franchise-tagline">Fuerza y garra del litoral</div>
-        <a href="#franquicia-yaguarete" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/tero-real.png" alt="Tero Real HC" /></div>
-        <div class="franchise-name">Tero Real Hockey Club</div>
-        <div class="franchise-tagline">Vigilancia y territorio</div>
-        <a href="#franquicia-tero" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/caldenes.png" alt="Caldenes HC" /></div>
-        <div class="franchise-name">Caldenes Hockey Club</div>
-        <div class="franchise-tagline">Pampa, raíces y viento</div>
-        <a href="#franquicia-caldenes" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/guanacos.png" alt="Guanacos HC" /></div>
-        <div class="franchise-name">Guanacos Hockey Club</div>
-        <div class="franchise-tagline">Resistencia y altura</div>
-        <a href="#franquicia-guanacos" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/laguna-del-plata.png" alt="Laguna del Plata HC" /></div>
-        <div class="franchise-name">Laguna del Plata HC</div>
-        <div class="franchise-tagline">Agua, calma y control</div>
-        <a href="#franquicia-laguna" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/horneras.png" alt="Horneras HC" /></div>
-        <div class="franchise-name">Horneras Hockey Club</div>
-        <div class="franchise-tagline">Trabajo en equipo</div>
-        <a href="#franquicia-horneras" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/sauces-del-sur.png" alt="Sauces del Sur HC" /></div>
-        <div class="franchise-name">Sauces del Sur HC</div>
-        <div class="franchise-tagline">Sur, viento y temple</div>
-        <a href="#franquicia-sauces" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/nandubay.png" alt="Ñandubay HC" /></div>
-        <div class="franchise-name">Ñandubay Hockey Club</div>
-        <div class="franchise-tagline">Bosque y raíces profundas</div>
-        <a href="#franquicia-nandubay" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/tucanes.png" alt="Tucanes HC" /></div>
-        <div class="franchise-name">Tucanes Hockey Club</div>
-        <div class="franchise-tagline">Color, alegría y ataque</div>
-        <a href="#franquicia-tucanes" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/cardenales.png" alt="Cardenales HC" /></div>
-        <div class="franchise-name">Cardenales Hockey Club</div>
-        <div class="franchise-tagline">Canto fuerte y presencia</div>
-        <a href="#franquicia-cardenales" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/pampas.png" alt="Pampas HC" /></div>
-        <div class="franchise-name">Pampas Hockey Club</div>
-        <div class="franchise-tagline">Caballos, llanura y velocidad</div>
-        <a href="#franquicia-pampas" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/chaniares.png" alt="Chañares HC" /></div>
-        <div class="franchise-name">Chañares Hockey Club</div>
-        <div class="franchise-tagline">Monte y resiliencia</div>
-        <a href="#franquicia-chaniares" class="franchise-link">Ver detalle</a>
-      </div>
-
-      <div class="franchise-card">
-        <div class="franchise-logo"><img src="assets/franquicias/calandrias.png" alt="Calandrias HC" /></div>
-        <div class="franchise-name">Calandrias Hockey Club</div>
-        <div class="franchise-tagline">Juego, ritmo y creatividad</div>
-        <a href="#franquicia-calandrias" class="franchise-link">Ver detalle</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- DETALLE FRANQUICIAS (dejé igual que antes, podés duplicar) -->
-  <section id="detalle-franquicias" style="margin-top:2.5rem;">
-    <h2 class="section-title">Detalle de franquicias</h2>
-    <p class="section-subtitle">
-      Cada franquicia contará con su espacio propio para publicar plantel, cuerpo técnico,
-      fixture, resultados y contenidos multimedia.
-    </p>
-
-    <article id="franquicia-ceibas" class="franchise-detail" data-team="Ceibas HC">
-      <div class="franchise-detail-header">
-        <div class="franchise-detail-logo"><img src="assets/franquicias/ceibas.png" alt="Ceibas HC" /></div>
-        <div>
-          <h3>Ceibas Hockey Club</h3>
-          <small>Identidad basada en el ceibo, flor nacional argentina.</small>
-        </div>
-      </div>
-      <div class="mini-widget" data-widget></div>
-      <div class="franchise-detail-columns">
-        <div>
-          <strong>Colores oficiales</strong><br />
-          <span class="chip">Rojo ceibo</span><span class="chip">Verde hoja</span><span class="chip">Blanco</span>
-          <br /><br />
-          <strong>Descripción</strong><br />
-          Equipo que representa la fuerza simbólica del ceibo, con un estilo de juego intenso.
-        </div>
-        <div>
-          <strong>Espacio reservado</strong><br />
-          – Plantel actualizado<br />
-          – Cuerpo técnico<br />
-          – Fixture y resultados<br />
-          – Fotos y videos<br />
-          – Noticias de la franquicia
-        </div>
-      </div>
-    </article>
-
-    <article id="franquicia-jacaranda" class="franchise-detail" data-team="Jacarandá HC">
-      <div class="franchise-detail-header">
-        <div class="franchise-detail-logo"><img src="assets/franquicias/jacaranda.png" alt="Jacarandá HC" /></div>
-        <div>
-          <h3>Jacarandá Hockey Club</h3>
-          <small>Inspirado en los jacarandás en flor de la ciudad.</small>
-        </div>
-      </div>
-      <div class="mini-widget" data-widget></div>
-      <div class="franchise-detail-columns">
-        <div>
-          <strong>Colores oficiales</strong><br />
-          <span class="chip">Violeta jacarandá</span><span class="chip">Celeste</span><span class="chip">Blanco</span>
-          <br /><br />
-          <strong>Descripción</strong><br />
-          Franquicia con identidad urbana, juego asociado y mucha proyección por bandas.
-        </div>
-        <div>
-          <strong>Espacio reservado</strong><br />
-          – Listado de jugadoras<br />
-          – Staff técnico<br />
-          – Fixture y tabla parcial<br />
-          – Material gráfico y comunicados
-        </div>
-      </div>
-    </article>
-
-    <article id="franquicia-criollas" class="franchise-detail" data-team="Criollas HC">
-      <div class="franchise-detail-header">
-        <div class="franchise-detail-logo"><img src="assets/franquicias/criollas.png" alt="Criollas HC" /></div>
-        <div>
-          <h3>Criollas Hockey Club</h3>
-          <small>Tradición, historia y hockey bien argentino.</small>
-        </div>
-      </div>
-      <div class="mini-widget" data-widget></div>
-      <div class="franchise-detail-columns">
-        <div>
-          <strong>Colores oficiales</strong><br />
-          <span class="chip">Ocre</span><span class="chip">Rojo vino</span><span class="chip">Blanco</span>
-          <br /><br />
-          <strong>Descripción</strong><br />
-          Equipo de carácter fuerte, con estilo criollo y mucha lectura del juego.
-        </div>
-        <div>
-          <strong>Espacio reservado</strong><br />
-          Personalizá esta sección con el detalle que quieras para la franquicia.
-        </div>
-      </div>
-    </article>
+    <div class="equipos-grid" id="equiposGrid"></div>
   </section>
 
   <!-- REGLAMENTO -->
-  <section id="reglamento" style="margin-top:2.5rem;">
-    <h2 class="section-title">Reglamento del torneo</h2>
-    <p class="section-subtitle">
-      El torneo se rige por el reglamento FIH vigente, con adaptaciones específicas
-      para la categoría +50 y el sistema de franquicias.
-    </p>
-    <div class="card">
-      <h3>Aspectos principales</h3>
-      <ul>
-        <li>Formato de juego: 4 tiempos de 15 minutos.</li>
-        <li>Puntuación: 3 puntos victoria, 1 punto empate.</li>
-        <li>Sistema disciplinario con Fair Play (verde, amarilla, roja).</li>
-        <li>Ventanas de transferencia definidas y reguladas.</li>
-        <li>Playoffs y Final Four según reglamento oficial.</li>
-      </ul>
-      <br />
-      <a href="docs/Reglamento_Torneo_Master_50_2026_FULL.pdf" class="franchise-link" target="_blank">
-        Descargar reglamento completo (PDF)
-      </a>
+  <section id="reglamento">
+    <h2 class="section-title">Reglamento</h2>
+    <p class="section-subtitle">Puntos clave del reglamento oficial 2026. <a href="docs/Reglamento_Torneo_Master_50_2026_FULL.pdf" target="_blank" style="color:var(--secondary);font-weight:700">Descargar PDF completo →</a></p>
+    <div class="reg-grid" id="regGrid"></div>
+  </section>
+
+  <!-- ACCESO EQUIPOS -->
+  <section id="acceso">
+    <h2 class="section-title">Acceso Equipos</h2>
+    <p class="section-subtitle">Cada equipo puede ingresar para cargar resultados, formaciones, goles y tarjetas.</p>
+    <div class="login-wrap">
+      <div class="login-card">
+        <h3>🔐 Iniciar sesión</h3>
+        <div class="field">
+          <label for="loginUser">Equipo</label>
+          <select id="loginUser">
+            <option value="">— Seleccioná tu equipo —</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="loginPass">Contraseña</label>
+          <input type="password" id="loginPass" placeholder="Contraseña del equipo" />
+        </div>
+        <button class="btn-primary" style="width:100%" onclick="doLogin()">Ingresar</button>
+        <div id="loginMsg" class="login-msg"></div>
+        <div class="login-hint">¿Olvidaste tu contraseña? Contactá al organizador<br>📧 <a href="mailto:campeonato@argmastershockey.com.ar">campeonato@argmastershockey.com.ar</a></div>
+      </div>
     </div>
   </section>
+
 </main>
 
 <footer>
-  <div>© 2026 Asociación Master &amp; Grand Master – Torneo Máster +50 Femenino.</div>
+  Campeonato Máster +50 Femenino 2026 · Asociación Argentina de Hockey Masters &amp; Gran Masters
+  · <a href="mailto:campeonato@argmastershockey.com.ar">campeonato@argmastershockey.com.ar</a>
+  · <a href="https://instagram.com/asociaciondehockey" target="_blank">@asociaciondehockey</a>
 </footer>
 
 <script>
-  // =========================
-  // Helpers (NEW: message builders)
-  // =========================
-  function sanitize(s) { return (s || "").toString().trim(); }
+// ═══════════════════════════════════════════════════════
+//  DATOS DEL TORNEO
+// ═══════════════════════════════════════════════════════
 
-  function buildFranchiseMessage() {
-    const org = sanitize(document.getElementById("f_org").value);
-    const contact = sanitize(document.getElementById("f_contact").value);
-    const phone = sanitize(document.getElementById("f_phone").value);
-    const email = sanitize(document.getElementById("f_email").value);
-    const pref = sanitize(document.getElementById("f_pref").value);
-    const alt = sanitize(document.getElementById("f_alt").value);
-    const notes = sanitize(document.getElementById("f_notes").value);
+const FECHAS_TORNEO = [
+  { num: 1, date: "12 de abril 2026",   label: "Fecha 1",   status: "en_curso" },
+  { num: 2, date: "17 de mayo 2026",    label: "Fecha 2",   status: "pendiente" },
+  { num: 3, date: "14 de junio 2026",   label: "Fecha 3",   status: "pendiente" },
+  { num: 4, date: "A confirmar",        label: "Finales",   status: "finales" },
+];
 
-    return `INSCRIPCIÓN FRANQUICIA – Torneo Máster +50 Femenino 2026
-Club/Grupo: ${org}
-Responsable: ${contact}
-WhatsApp: ${phone}
-Email: ${email}
-Franquicia preferida: ${pref}
-Alternativa: ${alt || "-"}
-Comentarios: ${notes || "-"}
-`;
+const FIXTURE = [
+  {
+    fecha: 1, date: "12 de abril 2026",
+    matches: [
+      { id:"f1m1", group:"A", home:"Black Velvet",       away:"Siamo Eterne",     sede:"Ferro",                    horario:"09:00", r1:"Garofolo, Gerardo",    r2:"Galvan, Matias",          scoreH:null, scoreA:null },
+      { id:"f1m2", group:"A", home:"No tan Santas",      away:"Zanjeras",         sede:"TRC",                      horario:"08:30", r1:"Beltran, Mario",        r2:"Zambrano, David",         scoreH:null, scoreA:null },
+      { id:"f1m3", group:"B", home:"Las Suricatas",      away:"Las Terrazas",     sede:"TRC",                      horario:"10:00", r1:"Beltran, Mario",        r2:"Zambrano, David",         scoreH:null, scoreA:null },
+      { id:"f1m4", group:"B", home:"Viento Norte",       away:"NEA Irupe",        sede:"Circ. Fuerza Aérea",       horario:"11:30", r1:"Lopez, Hernan",         r2:"Gomez, Lucas Lautaro",    scoreH:null, scoreA:null },
+      { id:"f1m5", group:"C", home:"Eternas Guerreras",  away:"Las Inoxidables",  sede:"Ferro",                    horario:"10:30", r1:"Garofolo, Gerardo",    r2:"Galvan, Matias",          scoreH:null, scoreA:null },
+      { id:"f1m6", group:"C", home:"San Fer",            away:"Deportivo Soraya", sede:"Circ. Fuerza Aérea",       horario:"08:30", r1:"Lopez, Hernan",         r2:"Gomez, Lucas Lautaro",    scoreH:null, scoreA:null },
+    ]
+  },
+  {
+    fecha: 2, date: "17 de mayo 2026",
+    matches: [
+      { id:"f2m1", group:"A", home:"Siamo Eterne",      away:"Zanjeras",            sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+      { id:"f2m2", group:"A", home:"Black Velvet",      away:"No tan Santas",       sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+      { id:"f2m3", group:"B", home:"Las Suricatas",     away:"NEA Irupe",           sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+      { id:"f2m4", group:"B", home:"Viento Norte",      away:"Las Terrazas",        sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+      { id:"f2m5", group:"C", home:"San Fer",           away:"Las Inoxidables",     sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+      { id:"f2m6", group:"C", home:"Deportivo Soraya",  away:"Eternas Guerreras",   sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+    ]
+  },
+  {
+    fecha: 3, date: "14 de junio 2026",
+    matches: [
+      { id:"f3m1", group:"A", home:"Black Velvet",        away:"Zanjeras",            sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+      { id:"f3m2", group:"A", home:"No tan Santas",       away:"Siamo Eterne",        sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+      { id:"f3m3", group:"B", home:"NEA Irupe",           away:"Las Terrazas",        sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+      { id:"f3m4", group:"B", home:"Las Suricatas",       away:"Viento Norte",        sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+      { id:"f3m5", group:"C", home:"San Fer",             away:"Deportivo Soraya",    sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+      { id:"f3m6", group:"C", home:"Eternas Guerreras",   away:"Las Inoxidables",     sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
+    ]
   }
+];
 
-  function buildPlayerMessage() {
-    const name = sanitize(document.getElementById("p_name").value);
-    const dni = sanitize(document.getElementById("p_dni").value);
-    const birth = sanitize(document.getElementById("p_birth").value);
-    const city = sanitize(document.getElementById("p_city").value);
-    const phone = sanitize(document.getElementById("p_phone").value);
-    const email = sanitize(document.getElementById("p_email").value);
-    const pos = sanitize(document.getElementById("p_pos").value);
-    const exp = sanitize(document.getElementById("p_exp").value);
-    const pref = sanitize(document.getElementById("p_pref").value);
+const GROUPS = { A: [], B: [], C: [] };
 
-    return `INSCRIPCIÓN JUGADORA LIBRE (DRAFT) – Torneo Máster +50 Femenino 2026
-Nombre: ${name}
-DNI: ${dni}
-Nacimiento: ${birth}
-Zona/Ciudad: ${city}
-WhatsApp: ${phone}
-Email: ${email}
-Posición: ${pos}
-Experiencia: ${exp}
-Preferencias: ${pref || "-"}
-`;
-  }
+const TEAMS = {
+  "Black Velvet": {
+    group:"A", abbr:"BV", color:"#1a1a2e",
+    uniformeOf:["Remera: Negra","Pollera: Negra","Medias: Negras"],
+    uniformeAlt:["Remera: Blanca","Pollera: Negra","Medias: Rosa"],
+    referente:"Daniela Morales · 11 6562-0091",
+    players:[
+      {nro:"3",  apellido:"Arizabalo",      nombre:"Ariadna",    nacimiento:"18/02/1967"},
+      {nro:"15", apellido:"Biotti",         nombre:"Julia",      nacimiento:"19/10/1966"},
+      {nro:"8",  apellido:"Korolev",         nombre:"Barbara",    nacimiento:"16/08/1976"},
+      {nro:"9",  apellido:"Etchegoyen",     nombre:"Monica",     nacimiento:"06/08/1969"},
+      {nro:"5",  apellido:"Fagiani",        nombre:"Fernanda",   nacimiento:"31/07/1977"},
+      {nro:"7",  apellido:"Garcia Girado",  nombre:"Silvina",    nacimiento:"15/11/1968"},
+      {nro:"18", apellido:"García Munitis", nombre:"Ana Maria",  nacimiento:"14/11/1964"},
+      {nro:"1",  apellido:"Gil",            nombre:"María Cecilia",nacimiento:"06/03/1964"},
+      {nro:"4",  apellido:"Molinari",       nombre:"Maria Paula",nacimiento:"04/08/1966"},
+      {nro:"19", apellido:"Morales",        nombre:"Daniela",    nacimiento:"10/10/1963"},
+      {nro:"6",  apellido:"Pettinari",      nombre:"Adriana",    nacimiento:"05/04/1963"},
+      {nro:"22", apellido:"Torres",         nombre:"Laura",      nacimiento:"02/02/1969"},
+      {nro:"10", apellido:"Pascual",        nombre:"Rosana",     nacimiento:"21/11/1962"},
+      {nro:"14", apellido:"Quiroz",         nombre:"Laura",      nacimiento:"28/12/1963"},
+      {nro:"61", apellido:"Geido",          nombre:"Eugenia",    nacimiento:"13/04/1978"},
+      {nro:"11", apellido:"Monzón",         nombre:"Analia",     nacimiento:"12/11/1968"},
+      {nro:"21", apellido:"Bortaro Tillard",nombre:"Constanza",  nacimiento:"30/01/1978"},
+      {nro:"2",  apellido:"Centurion",      nombre:"Soledad",    nacimiento:"30/05/1980"},
+      {nro:"16", apellido:"Lambertini",     nombre:"Laura",      nacimiento:"30/07/1969"},
+      {nro:"12", apellido:"Rouger",         nombre:"Florencia",  nacimiento:"24/11/1972"},
+    ]
+  },
+  "Siamo Eterne": {
+    group:"A", abbr:"SE", color:"#6a0dad",
+    uniformeOf:["Remera: Blanca","Pollera: Negra","Medias: Azules"],
+    uniformeAlt:["Remera: Negra","Pollera: Negra","Medias: Blancas"],
+    referente:"Consuelo Tagliafico · +11 5992-5660",
+    players:[
+      {nro:"1",  apellido:"Sainz",          nombre:"Norma",         nacimiento:"23/01/1959"},
+      {nro:"23", apellido:"Teler",          nombre:"Monica",        nacimiento:"23/01/1970"},
+      {nro:"46", apellido:"Muchenik",       nombre:"Fernanda",      nacimiento:"19/06/1976"},
+      {nro:"5",  apellido:"Tagliafico",     nombre:"Consuelo",      nacimiento:"25/10/1969"},
+      {nro:"8",  apellido:"Tagliafico",     nombre:"Amparo",        nacimiento:"14/12/1972"},
+      {nro:"20", apellido:"Duarte",         nombre:"Alejandra",     nacimiento:"14/07/1966"},
+      {nro:"11", apellido:"Frascella",      nombre:"Fiorella",      nacimiento:"11/10/1978"},
+      {nro:"9",  apellido:"Dinale",         nombre:"Jacqueline",    nacimiento:"15/03/1970"},
+      {nro:"74", apellido:"Campos",         nombre:"Paola Yanina",  nacimiento:"02/10/1974"},
+      {nro:"18", apellido:"Angeleri",       nombre:"Mariana",       nacimiento:"08/01/1970"},
+      {nro:"22", apellido:"Bessopianetto",  nombre:"Natalia Lorena",nacimiento:"22/07/1980"},
+      {nro:"32", apellido:"Leonardi",       nombre:"Carolina",      nacimiento:"24/01/1970"},
+      {nro:"29", apellido:"Ciappa",         nombre:"Alejandra",     nacimiento:"22/06/1971"},
+    ]
+  },
+  "No tan Santas": {
+    group:"A", abbr:"NS", color:"#c2185b",
+    uniformeOf:["Remera: Rosa","Pollera: Negra","Medias: Rosas"],
+    uniformeAlt:["Remera: Blanca","Pollera: Negra","Medias: Negras"],
+    referente:"Adriana Pintabona · 11 3799-1399",
+    players:[
+      {nro:"8",  apellido:"Barakat",        nombre:"Gabriela",      nacimiento:"28/10/1967"},
+      {nro:"21", apellido:"Gonzales",       nombre:"Mariana",       nacimiento:"04/09/1959"},
+      {nro:"18", apellido:"Padilla",        nombre:"Cecilia",       nacimiento:"12/03/1961"},
+      {nro:"13", apellido:"Santoro",        nombre:"Paula",         nacimiento:"06/05/1968"},
+      {nro:"1",  apellido:"Haluza",         nombre:"Wanda",         nacimiento:"10/10/1968"},
+      {nro:"6",  apellido:"Lancestremere",  nombre:"Silvina",       nacimiento:"16/04/1968"},
+      {nro:"5",  apellido:"Martinez Goya",  nombre:"Sylvia",        nacimiento:"28/08/1971"},
+      {nro:"17", apellido:"Santambrogio",   nombre:"Maria Laura",   nacimiento:"06/02/1967"},
+      {nro:"9",  apellido:"Onega",          nombre:"Ximena",        nacimiento:"17/06/1971"},
+      {nro:"16", apellido:"Poracchia",      nombre:"Carla",         nacimiento:"31/03/1974"},
+      {nro:"22", apellido:"Sienra",         nombre:"Marcela",       nacimiento:"23/06/1971"},
+      {nro:"14", apellido:"Pintabona",      nombre:"Adriana",       nacimiento:"07/10/1966"},
+      {nro:"15", apellido:"Tarquini",       nombre:"Carla",         nacimiento:"26/10/1968"},
+      {nro:"22", apellido:"Collazo",        nombre:"Maria Laura",   nacimiento:"13/01/1964"},
+      {nro:"20", apellido:"Olivieri",       nombre:"Ma. Graciana",  nacimiento:"16/08/1969"},
+      {nro:"10", apellido:"Coluccio",       nombre:"Josefina",      nacimiento:"15/01/1980"},
+      {nro:"11", apellido:"Guerrero",       nombre:"Victoria",      nacimiento:"10/12/1966"},
+      {nro:"23", apellido:"Gutierrez",      nombre:"Mercedes",      nacimiento:"23/01/1978"},
+      {nro:"2",  apellido:"Rabini",         nombre:"Marina",        nacimiento:"14/10/1976"},
+      {nro:"32", apellido:"Rabini",         nombre:"Mercedes",      nacimiento:"18/04/1975"},
+      {nro:"12", apellido:"Perticone",      nombre:"Paola",         nacimiento:"28/02/1968"},
+      {nro:"7",  apellido:"Prada",          nombre:"Andrea",        nacimiento:"30/10/1966"},
+    ]
+  },
+  "Zanjeras": {
+    group:"A", abbr:"ZA", color:"#0d47a1",
+    uniformeOf:["Remera: Rayada blanco/celeste/negro","Pollera: Negra","Medias: Azul Francia"],
+    uniformeAlt:["Remera: Fuxia","Pollera: Negra","Medias: Fuxia"],
+    referente:"Lucrecia Rosato · 011 3681-2384",
+    players:[
+      {nro:"1",  apellido:"Bermudez",          nombre:"Maria Victoria",  nacimiento:"20/06/1963"},
+      {nro:"15", apellido:"Bianchi",           nombre:"Florencia Ana",   nacimiento:"29/11/1969"},
+      {nro:"8",  apellido:"Chevallier Boutell",nombre:"Jacinta",         nacimiento:"06/02/1970"},
+      {nro:"7",  apellido:"Gamarra",           nombre:"Manuela",         nacimiento:"02/03/1972"},
+      {nro:"3",  apellido:"Gamarra",           nombre:"Maria",           nacimiento:"03/06/1977"},
+      {nro:"9",  apellido:"Gamarra",           nombre:"Sol",             nacimiento:"07/11/1974"},
+      {nro:"24", apellido:"Gimenez Zapiola",   nombre:"Josefina",        nacimiento:"18/01/1977"},
+      {nro:"31", apellido:"Graña",             nombre:"Laura",           nacimiento:"31/07/1976"},
+      {nro:"27", apellido:"Jantus",            nombre:"Mariana",         nacimiento:"03/03/1964"},
+      {nro:"11", apellido:"Lorenzo",           nombre:"Lucia",           nacimiento:"29/07/1981"},
+      {nro:"6",  apellido:"Massa",             nombre:"Maria Eugenia",   nacimiento:"22/07/1961"},
+      {nro:"19", apellido:"Morel Quirno",      nombre:"Ana",             nacimiento:"02/01/1963"},
+      {nro:"17", apellido:"Perez Cobo",        nombre:"Ana",             nacimiento:"24/10/1964"},
+      {nro:"13", apellido:"Radice",            nombre:"Marcela",         nacimiento:"23/06/1966"},
+      {nro:"5",  apellido:"Rosato",            nombre:"Lucrecia",        nacimiento:"12/05/1963"},
+      {nro:"20", apellido:"Salinas",           nombre:"Mariana",         nacimiento:"30/12/1961"},
+      {nro:"12", apellido:"Tait",              nombre:"Vivian",          nacimiento:"08/11/1966"},
+      {nro:"2",  apellido:"Vazquez Durrie",    nombre:"Luciana",         nacimiento:"28/08/1976"},
+      {nro:"25", apellido:"Boselli",           nombre:"Luisa",           nacimiento:"26/12/1975"},
+      {nro:"30", apellido:"Garat",             nombre:"Sofia Ines",      nacimiento:"01/12/1978"},
+    ]
+  },
+  "Las Suricatas": {
+    group:"B", abbr:"LS", color:"#2e7d32",
+    uniformeOf:["Remera: Verde Fluor","Pollera: Negra","Medias: Verde Fluor"],
+    uniformeAlt:["Remera: Negra","Pollera: Negra","Medias: Verde Fluor"],
+    referente:"Miriam Alonso · +54 11 6500-6344",
+    players:[
+      {nro:"5",     apellido:"Alonso",           nombre:"Miriam",          nacimiento:"09/07/1959"},
+      {nro:"3",     apellido:"Padilla",          nombre:"Paula",           nacimiento:"16/11/1959"},
+      {nro:"17",    apellido:"Casiraghi",        nombre:"Virginia",        nacimiento:"09/08/1967"},
+      {nro:"9/19",  apellido:"Brinnand",         nombre:"Moira",           nacimiento:"10/05/1962"},
+      {nro:"11",    apellido:"Pearson",          nombre:"Moira",           nacimiento:"27/05/1966"},
+      {nro:"14",    apellido:"Gonzalez Robles",  nombre:"Mercedes",        nacimiento:"28/04/1968"},
+      {nro:"16",    apellido:"Bodmer",           nombre:"Alejandra",       nacimiento:"09/02/1968"},
+      {nro:"31",    apellido:"Escobar",          nombre:"Alejandra T.",    nacimiento:"14/09/1967"},
+      {nro:"13",    apellido:"Morea",            nombre:"Gloria",          nacimiento:"13/01/1968"},
+      {nro:"10",    apellido:"Palma",            nombre:"Mirta",           nacimiento:"24/11/1959"},
+      {nro:"12",    apellido:"Sias",             nombre:"Adriana",         nacimiento:"12/11/1959"},
+      {nro:"1",     apellido:"Ocampo",           nombre:"Ana",             nacimiento:"05/11/1972"},
+      {nro:"6",     apellido:"Iraola",           nombre:"Soledad",         nacimiento:"09/01/1979"},
+      {nro:"8",     apellido:"Iraola",           nombre:"Pilar",           nacimiento:"01/01/1973"},
+      {nro:"7",     apellido:"Darritchon",       nombre:"Marcela",         nacimiento:"29/11/1967"},
+      {nro:"23",    apellido:"Fernandez",        nombre:"Gabriela",        nacimiento:"17/09/1964"},
+      {nro:"18",    apellido:"Gilligan",         nombre:"Rosario",         nacimiento:"25/10/1975"},
+      {nro:"20",    apellido:"Cabrera Figueroa", nombre:"Maria Mercedes",  nacimiento:"05/09/1971"},
+      {nro:"2",     apellido:"Benitez Cruz",     nombre:"Laura",           nacimiento:"09/11/1968"},
+    ]
+  },
+  "Las Terrazas": {
+    group:"B", abbr:"LT", color:"#e91e8c",
+    uniformeOf:["Remera: Rosa","Pollera: Blanco","Medias: Blanco"],
+    uniformeAlt:["Remera: Azul","Pollera: Negro","Medias: Negro"],
+    referente:"Marcela Inés Hussey · 11-4949-1490",
+    players:[
+      {nro:"—", apellido:"Szeliga",     nombre:"Marina",         nacimiento:"18/03/1969"},
+      {nro:"—", apellido:"Hussey",      nombre:"Ana Maria",      nacimiento:"21/02/1969"},
+      {nro:"—", apellido:"Llobera",     nombre:"Laura",          nacimiento:"29/03/1969"},
+      {nro:"—", apellido:"Sanchez",     nombre:"M. Alejandra",   nacimiento:"06/01/1967"},
+      {nro:"—", apellido:"Mach",        nombre:"Zulma",          nacimiento:"21/11/1971"},
+      {nro:"—", apellido:"Klag",        nombre:"Luciane",        nacimiento:"20/08/1976"},
+      {nro:"—", apellido:"Rey Fortes",  nombre:"Valeria",        nacimiento:"03/12/1971"},
+      {nro:"—", apellido:"Sampalione",  nombre:"Valeria",        nacimiento:"09/04/1969"},
+      {nro:"—", apellido:"Sanguinetti", nombre:"Cristina",       nacimiento:"17/07/1968"},
+      {nro:"—", apellido:"Hussey",      nombre:"Marcela",        nacimiento:"24/04/1967"},
+      {nro:"—", apellido:"Bespresvany", nombre:"Jessica",        nacimiento:"18/07/1970"},
+      {nro:"—", apellido:"Pinilla",     nombre:"Paola",          nacimiento:"12/07/1968"},
+      {nro:"—", apellido:"Barayazarra", nombre:"Sara",           nacimiento:"23/06/1970"},
+      {nro:"—", apellido:"Alvarez",     nombre:"Gabriela",       nacimiento:"08/04/1970"},
+      {nro:"—", apellido:"Herfurth",    nombre:"Natalia",        nacimiento:"17/10/1971"},
+      {nro:"—", apellido:"Rossi",       nombre:"Karina",         nacimiento:"03/01/1967"},
+      {nro:"—", apellido:"Yaconianni",  nombre:"Teresa",         nacimiento:"03/10/1971"},
+    ]
+  },
+  "Viento Norte": {
+    group:"B", abbr:"VN", color:"#00695c",
+    uniformeOf:["Remera: Verde","Pollera: Negra","Medias: Negras"],
+    uniformeAlt:["—"],
+    referente:"Inés Mooney · 11-5004-1616",
+    players:[
+      {nro:"9",  apellido:"Mooney",            nombre:"Ines",            nacimiento:"24/10/1969"},
+      {nro:"10", apellido:"Molina Zavalia",  nombre:"Silvia Andrea",   nacimiento:"18/02/1971"},
+      {nro:"3",  apellido:"Etchemaite",      nombre:"Ana Maria",       nacimiento:"23/03/1964"},
+      {nro:"5",  apellido:"Pierrou",         nombre:"Maria Eugenia",   nacimiento:"16/05/1966"},
+      {nro:"27", apellido:"Hernandez",       nombre:"Veronica",        nacimiento:"27/09/1970"},
+      {nro:"24", apellido:"Trujillo Nieto",  nombre:"Tatiana Soledad", nacimiento:"24/07/1981"},
+      {nro:"19", apellido:"Giardelli",       nombre:"Maria Victoria",  nacimiento:"10/03/1966"},
+      {nro:"4",  apellido:"Barrá",           nombre:"Paola",           nacimiento:"28/12/1973"},
+      {nro:"6",  apellido:"Perez",           nombre:"Adriana",         nacimiento:"27/05/1964"},
+      {nro:"1",  apellido:"Aberg Cobo",      nombre:"Marina",          nacimiento:"13/12/1969"},
+      {nro:"17", apellido:"Devoto",          nombre:"Maria Teresita",  nacimiento:"23/06/1967"},
+      {nro:"12", apellido:"Pastorino",       nombre:"Claudia",         nacimiento:"19/02/1967"},
+      {nro:"2",  apellido:"Forchner",        nombre:"Corina",          nacimiento:"09/09/1969"},
+      {nro:"8",  apellido:"Forchner",        nombre:"Gisela",          nacimiento:"16/10/1971"},
+      {nro:"25", apellido:"Picciola",        nombre:"Silvina",         nacimiento:"22/11/1969"},
+      {nro:"11", apellido:"Patiño",          nombre:"Mariana",         nacimiento:"27/02/1975"},
+      {nro:"22", apellido:"Mac Culloch",     nombre:"Patricia",        nacimiento:"29/12/1967"},
+    ]
+  },
+  "NEA Irupe": {
+    group:"B", abbr:"NI", color:"#1565c0",
+    uniformeOf:["Remera: Variedad de azules","Pollera: Azul","Medias: Variedad de azules"],
+    uniformeAlt:["Remera: Rosa","Pollera: Azul","Medias: Rosas"],
+    referente:"Paula Lapacó · 11 6269-2916",
+    players:[
+      {nro:"—", apellido:"Meconi",        nombre:"Andrea",           nacimiento:"15/07/1970"},
+      {nro:"—", apellido:"Lapacó",        nombre:"Paula",            nacimiento:"04/01/1969"},
+      {nro:"—", apellido:"Silva",         nombre:"Paola",            nacimiento:"24/03/1976"},
+      {nro:"—", apellido:"Mendoza",       nombre:"Cecilia",          nacimiento:"10/07/1975"},
+      {nro:"—", apellido:"Miño",          nombre:"Susana",           nacimiento:"07/01/1973"},
+      {nro:"—", apellido:"Germano",       nombre:"Paula",            nacimiento:"10/09/1969"},
+      {nro:"—", apellido:"Schmoll",       nombre:"Nancy",            nacimiento:"19/10/1973"},
+      {nro:"—", apellido:"Garcia",        nombre:"Patricia",         nacimiento:"07/11/1971"},
+      {nro:"—", apellido:"Baroli",        nombre:"Gabriela",         nacimiento:"14/06/1969"},
+      {nro:"—", apellido:"Lafata",        nombre:"Maria Natalia",    nacimiento:"06/05/1976"},
+      {nro:"—", apellido:"Formoso",       nombre:"Marina",           nacimiento:"09/12/1974"},
+      {nro:"—", apellido:"García Repáraz",nombre:"Florencia",        nacimiento:"24/11/1970"},
+      {nro:"—", apellido:"Sánchez",       nombre:"Silvana Claudia",  nacimiento:"24/01/1973"},
+      {nro:"—", apellido:"Maldonado",     nombre:"Fabiana",          nacimiento:"19/12/1973"},
+      {nro:"—", apellido:"Alvarez",       nombre:"Carolina",         nacimiento:"05/02/1981"},
+      {nro:"—", apellido:"Raffo",         nombre:"Alejandra",        nacimiento:"02/05/1981"},
+    ]
+  },
+  "San Fer": {
+    group:"C", abbr:"SF", color:"#1b5e20",
+    uniformeOf:["Remera: Blanca","Pollera: Azul","Medias: Verdes"],
+    uniformeAlt:["Remera: Lila","Pollera: Azul","Medias: Azul"],
+    referente:"María Virginia Poggi · 11 3514-5006",
+    players:[
+      {nro:"19",    apellido:"Batagliero",      nombre:"Viviana Andrea",    nacimiento:"17/10/1972"},
+      {nro:"24",    apellido:"Colombo",         nombre:"María Belen",       nacimiento:"24/07/1978"},
+      {nro:"5",     apellido:"Compagni",        nombre:"Nancy",             nacimiento:"28/06/1974"},
+      {nro:"1/12",  apellido:"Dermgerd",        nombre:"Marcela Patricia",  nacimiento:"13/04/1968"},
+      {nro:"27",    apellido:"Dubini",          nombre:"Cecilia Ines",      nacimiento:"27/03/1972"},
+      {nro:"38/97", apellido:"Elias",           nombre:"Maria",             nacimiento:"24/11/1975"},
+      {nro:"16",    apellido:"Estramil Ozores", nombre:"Veronica",          nacimiento:"14/06/1978"},
+      {nro:"15",    apellido:"Fumo",            nombre:"Romina Paola",      nacimiento:"27/10/1977"},
+      {nro:"99",    apellido:"Gomez Autorino",  nombre:"María Paula",       nacimiento:"25/05/1977"},
+      {nro:"11",    apellido:"Guedes",          nombre:"Claudia",           nacimiento:"18/12/1972"},
+      {nro:"9",     apellido:"Poggi",           nombre:"María Virginia",    nacimiento:"01/08/1971"},
+      {nro:"10",    apellido:"Rimoldi",         nombre:"Jorgelina",         nacimiento:"06/10/1971"},
+      {nro:"17",    apellido:"Ripalda",         nombre:"Romina Liliana",    nacimiento:"06/05/1978"},
+      {nro:"21",    apellido:"Santurio",        nombre:"Valeria Luciana",   nacimiento:"21/11/1970"},
+      {nro:"7",     apellido:"Schuth",          nombre:"Julia Mariana",     nacimiento:"18/11/1960"},
+      {nro:"29",    apellido:"Solari",          nombre:"Ana Ines",          nacimiento:"27/02/1969"},
+      {nro:"22",    apellido:"Solari",          nombre:"Mariel Beatriz",    nacimiento:"11/09/1967"},
+      {nro:"26",    apellido:"Solari",          nombre:"Maria Soledad",     nacimiento:"26/04/1972"},
+      {nro:"6",     apellido:"Teruel",          nombre:"Amneris",           nacimiento:"11/05/1967"},
+      {nro:"41",    apellido:"Toffanin",        nombre:"Melina",            nacimiento:"09/02/1978"},
+    ]
+  },
+  "Deportivo Soraya": {
+    group:"C", abbr:"DS", color:"#2e7d32",
+    uniformeOf:["Remera: Verde agua","Pollera: Negra","Medias: Negras"],
+    uniformeAlt:["Remera: Rosa","Pollera: Negra","Medias: Blancas"],
+    referente:"Ana Inés Recondo · 15 3273-6975",
+    players:[
+      {nro:"—", apellido:"Recondo",      nombre:"Ana Inés",         nacimiento:"05/10/1969"},
+      {nro:"—", apellido:"Gutman",       nombre:"Mariana",          nacimiento:"19/08/1967"},
+      {nro:"—", apellido:"Malaspina",    nombre:"María Alejandra",  nacimiento:"27/04/1971"},
+      {nro:"—", apellido:"Scapin",       nombre:"Roxana",           nacimiento:"05/03/1969"},
+      {nro:"—", apellido:"Diaz Offeney",nombre:"Cristina",          nacimiento:"23/07/1970"},
+      {nro:"—", apellido:"Francetich",   nombre:"María José",       nacimiento:"26/04/1969"},
+      {nro:"—", apellido:"Escobar",      nombre:"Carolina",         nacimiento:"28/07/1971"},
+      {nro:"—", apellido:"Parodi",       nombre:"María José",       nacimiento:"18/05/1973"},
+      {nro:"—", apellido:"Siancha",      nombre:"Adriana",          nacimiento:"02/09/1974"},
+      {nro:"—", apellido:"Sueldo",       nombre:"Maria Lorena",     nacimiento:"27/06/1971"},
+      {nro:"—", apellido:"Calabria",     nombre:"Carola",           nacimiento:"05/11/1971"},
+      {nro:"1", apellido:"Canepa",       nombre:"Paola",            nacimiento:"01/11/1972"},
+      {nro:"—", apellido:"Castello",     nombre:"Flor",             nacimiento:"06/08/1968"},
+      {nro:"—", apellido:"D'aprile",     nombre:"Gabriela",         nacimiento:"28/10/1968"},
+      {nro:"—", apellido:"Gil",          nombre:"María Celina",     nacimiento:"14/04/1970"},
+      {nro:"—", apellido:"Acosta",                  nombre:"Huerto",        nacimiento:"27/03/1972"},
+      {nro:"—", apellido:"Pascualli",               nombre:"Guillermina",   nacimiento:"29/03/1969"},
+      {nro:"—", apellido:"Spraggon Perciavalle",    nombre:"Verónica",      nacimiento:"05/12/1969"},
+    ]
+  },
+  "Eternas Guerreras": {
+    group:"C", abbr:"EG", color:"#1565c0",
+    uniformeOf:["Remera: Azul","Pollera: Azul","Medias: Rayadas"],
+    uniformeAlt:["Remera: Negro","Pollera: Negro","Medias: Rayadas"],
+    referente:"Mónica Santi / Marta Guglieri",
+    players:[
+      {nro:"—", apellido:"Bianchi",      nombre:"Alejandra Margarita", nacimiento:"07/01/1964"},
+      {nro:"—", apellido:"Castro",       nombre:"Silvia",              nacimiento:"22/10/1965"},
+      {nro:"—", apellido:"Descalzo",     nombre:"Maria Pia",           nacimiento:"17/09/1977"},
+      {nro:"—", apellido:"Descalzo",     nombre:"Adriana Maria",       nacimiento:"05/08/1964"},
+      {nro:"—", apellido:"Duarte",       nombre:"Raquel",              nacimiento:"18/05/1963"},
+      {nro:"—", apellido:"Fauez",        nombre:"Marisa",              nacimiento:"16/07/1966"},
+      {nro:"—", apellido:"Guglieri",     nombre:"Marta",               nacimiento:"12/09/1962"},
+      {nro:"—", apellido:"Moore",        nombre:"Roxana Alejandra",    nacimiento:"19/05/1963"},
+      {nro:"—", apellido:"Orezzoli",     nombre:"Alejandra Paula",     nacimiento:"04/08/1964"},
+      {nro:"—", apellido:"Ottaviani",    nombre:"Sonia Elizabeth",     nacimiento:"23/12/1968"},
+      {nro:"—", apellido:"Pierdominici",nombre:"Sandra Marisa",        nacimiento:"15/09/1962"},
+      {nro:"—", apellido:"Santi",        nombre:"Mónica Alejandra",    nacimiento:"09/02/1963"},
+      {nro:"—", apellido:"Sosa Mayo",    nombre:"Claudia",             nacimiento:"07/11/1965"},
+      {nro:"—", apellido:"Speroni",      nombre:"Cecilia",             nacimiento:"19/11/1965"},
+      {nro:"—", apellido:"Suarez",       nombre:"Maria Eduarda",       nacimiento:"19/11/1966"},
+      {nro:"—", apellido:"Arias",        nombre:"Alejandra Vanesa",    nacimiento:"19/10/1976"},
+      {nro:"—", apellido:"Barcena",      nombre:"Adriana",             nacimiento:"27/09/1964"},
+      {nro:"—", apellido:"Sanfilippo",   nombre:"Claudia",             nacimiento:"16/09/1960"},
+    ]
+  },
+  "Las Inoxidables": {
+    group:"C", abbr:"LI", color:"#546e7a",
+    uniformeOf:["Remera: Gris","Pollera: Negra","Medias: Negras"],
+    uniformeAlt:["Remera: Negro","Pollera: Negro","Medias: Negras"],
+    referente:"Cecilia Laura Manduti · +54 9 3874 12-2719",
+    players:[
+      {nro:"—", apellido:"Tihista",  nombre:"Sabina",           nacimiento:"19/09/1971"},
+      {nro:"—", apellido:"Marani",   nombre:"Luciana",          nacimiento:"11/04/1977"},
+      {nro:"—", apellido:"Parodi",   nombre:"Graciela Beatriz", nacimiento:"29/10/1965"},
+      {nro:"—", apellido:"Casella",  nombre:"Mariela Gabriela", nacimiento:"29/08/1974"},
+      {nro:"—", apellido:"Negrini",  nombre:"Laura",            nacimiento:"22/06/1974"},
+      {nro:"—", apellido:"Zone",     nombre:"Judith",           nacimiento:"09/10/1968"},
+      {nro:"—", apellido:"Hurtado",  nombre:"Viviana",          nacimiento:"28/08/1970"},
+      {nro:"—", apellido:"Manduti",  nombre:"Cecilia Laura",    nacimiento:"10/02/1975"},
+      {nro:"—", apellido:"Vinue",    nombre:"Ana Maria",        nacimiento:"22/08/1952"},
+      {nro:"—", apellido:"Alfaro",   nombre:"Maria Laura",      nacimiento:"16/11/1972"},
+      {nro:"—", apellido:"Amarilla", nombre:"Evelin",           nacimiento:"24/09/1977"},
+      {nro:"—", apellido:"Castilla",   nombre:"Maria Victoria",       nacimiento:"17/07/1975"},
+      {nro:"—", apellido:"Sereboves", nombre:"Gabriela Elizabeth",   nacimiento:"14/04/1971"},
+    ]
+  },
+};
 
-  async function copyText(text) {
-    try {
-      await navigator.clipboard.writeText(text);
-      alert("Copiado ✅");
-    } catch (e) {
-      alert("No pude copiar automáticamente. Copialo manualmente:\n\n" + text);
+// ═══════════════════════════════════════════════════════
+//  REGLAMENTO (puntos clave)
+// ═══════════════════════════════════════════════════════
+
+const REGLAMENTO = [
+  {
+    num:"1", title:"Planteles",
+    body:"Cada equipo puede inscribir hasta 25 jugadoras (mín. 15). Máx. 3 jugadoras no federadas. Hasta 3 jugadoras +45 simultáneamente en cancha, identificadas con cinta visible."
+  },
+  {
+    num:"2", title:"Duración de los partidos",
+    body:"Los partidos se rigen por el reglamento FIH vigente. Se juegan en 4 tiempos de 15 minutos cada uno."
+  },
+  {
+    num:"3", title:"Sistema de puntuación",
+    body:null,
+    table:[
+      ["Resultado","Puntos"],
+      ["Victoria","3 puntos"],
+      ["Empate","1 punto c/u"],
+      ["Shootouts (2 intentos c/u)","1 punto extra"],
+      ["Sin ganador en shootouts","Sin punto extra"],
+    ]
+  },
+  {
+    num:"4", title:"Criterios de desempate",
+    body:"Entre 2 equipos: resultado entre ambos → diferencia de gol → goles a favor → Fair Play → sorteo. Entre 3 o más: partidos ganados → diferencia de gol → goles a favor → Fair Play → sorteo."
+  },
+  {
+    num:"5", title:"Tarjetas & Fair Play",
+    body:null,
+    table:[
+      ["Tarjeta","Puntos Fair Play"],
+      ["🟢 Verde (jugadora)","-5 pts"],
+      ["🟡 Amarilla (jugadora)","-10 pts"],
+      ["🔴 Roja (jugadora)","-50 pts"],
+      ["🟡 Amarilla (cuerpo técnico)","-50 pts"],
+      ["🔴 Roja (cuerpo técnico)","-100 pts"],
+    ]
+  },
+  {
+    num:"6", title:"Árbitros & Juez de Mesa",
+    body:"El arbitraje es provisto por la Asociación. Cada sede tiene árbitros designados oficialmente. Cada equipo debe designar un responsable de planillas. Se puede usar la app o planilla en papel."
+  },
+  {
+    num:"7", title:"Playoffs 2026",
+    body:"Fecha a confirmar. Detalles del formato se comunicarán una vez finalizada la fase de grupos."
+  },
+  {
+    num:"8", title:"Tribunal de Disciplina",
+    body:"Funciona según las normas vigentes de la Asociación Master y Grand Master. Situaciones no previstas son resueltas por el Comité Ejecutivo, cuya decisión es inapelable."
+  },
+];
+
+// Apache hace proxy de /api/ → http://localhost:3000/api/
+// así el frontend siempre usa rutas relativas (mismo origen, mismo protocolo)
+const API_BASE = '';
+
+// ═══════════════════════════════════════════════════════
+//  ESTADO LOCAL (scores desde localStorage)
+// ═══════════════════════════════════════════════════════
+
+function getScores(){
+  try{ return JSON.parse(localStorage.getItem('tm50_scores')||'{}'); }
+  catch(e){ return {}; }
+}
+
+function mergeScores(){
+  const saved = getScores();
+  FIXTURE.forEach(f => f.matches.forEach(m => {
+    if(saved[m.id]){
+      m.scoreH    = saved[m.id].h;
+      m.scoreA    = saved[m.id].a;
+      m.shootoutH = saved[m.id].sh ?? null;
+      m.shootoutA = saved[m.id].sa ?? null;
+      m.wo        = saved[m.id].wo || false;
     }
-  }
-
-  // CONFIG: cambiá estos 2 valores por los reales
-  const CONTACT_WHATSAPP_NUMBER_INTERNATIONAL = "5491100000000"; // TODO: tu número (sin +, sin espacios)
-  const CONTACT_EMAIL = "inscripciones@tudominio.com";           // TODO: tu email real
-
-  function openWhatsApp(text) {
-    const url = `https://wa.me/${CONTACT_WHATSAPP_NUMBER_INTERNATIONAL}?text=${encodeURIComponent(text)}`;
-    window.open(url, "_blank");
-  }
-
-  function openMail(subject, text) {
-    const url = `mailto:${encodeURIComponent(CONTACT_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
-    window.location.href = url;
-  }
-
-  // Handlers: franquicia
-  document.getElementById("btnFranchiseWA").addEventListener("click", () => {
-    const msg = buildFranchiseMessage();
-    openWhatsApp(msg);
-  });
-  document.getElementById("btnFranchiseMail").addEventListener("click", () => {
-    const msg = buildFranchiseMessage();
-    openMail("Inscripción Franquicia – Torneo Máster +50 2026", msg);
-  });
-  document.getElementById("btnFranchiseCopy").addEventListener("click", () => {
-    copyText(buildFranchiseMessage());
-  });
-
-  // Handlers: jugadora
-  document.getElementById("btnPlayerWA").addEventListener("click", () => {
-    const msg = buildPlayerMessage();
-    openWhatsApp(msg);
-  });
-  document.getElementById("btnPlayerMail").addEventListener("click", () => {
-    const msg = buildPlayerMessage();
-    openMail("Inscripción Jugadora Libre (Draft) – Torneo Máster +50 2026", msg);
-  });
-  document.getElementById("btnPlayerCopy").addEventListener("click", () => {
-    copyText(buildPlayerMessage());
-  });
-
-  // =========================
-  // ZONAS
-  // =========================
-  const ZONA_A = [
-    "Ceibas HC","Jacarandá HC","Criollas HC","Yaguareté HC",
-    "Tero Real HC","Caldenes HC","Guanacos HC","Laguna del Plata HC"
-  ];
-
-  const ZONA_B = [
-    "Horneras HC","Sauces del Sur HC","Ñandubay HC","Tucanes HC",
-    "Cardenales HC","Pampas HC","Chañares HC","Calandrias HC"
-  ];
-
-  // LOGOS
-  const TEAM_LOGOS = {
-    "Ceibas HC": "assets/franquicias/ceibas.png",
-    "Jacarandá HC": "assets/franquicias/jacaranda.png",
-    "Criollas HC": "assets/franquicias/criollas.png",
-    "Yaguareté HC": "assets/franquicias/yaguarete.png",
-    "Tero Real HC": "assets/franquicias/tero-real.png",
-    "Caldenes HC": "assets/franquicias/caldenes.png",
-    "Guanacos HC": "assets/franquicias/guanacos.png",
-    "Laguna del Plata HC": "assets/franquicias/laguna-del-plata.png",
-
-    "Horneras HC": "assets/franquicias/horneras.png",
-    "Sauces del Sur HC": "assets/franquicias/sauces-del-sur.png",
-    "Ñandubay HC": "assets/franquicias/nandubay.png",
-    "Tucanes HC": "assets/franquicias/tucanes.png",
-    "Cardenales HC": "assets/franquicias/cardenales.png",
-    "Pampas HC": "assets/franquicias/pampas.png",
-    "Chañares HC": "assets/franquicias/chaniares.png",
-    "Calandrias HC": "assets/franquicias/calandrias.png"
-  };
-  const logoOf = (team) => TEAM_LOGOS[team] || "assets/franquicias/placeholder.png";
-
-  // RESULTADOS (placeholder para backend)
-  const RESULTS = {};
-  const keyOf = (round, zone, home, away) => `${round}|${zone}|${home}|${away}`;
-  const resultOf = (round, zone, home, away) => RESULTS[keyOf(round, zone, home, away)] || null;
-
-  // FECHAS (14 rounds)
-  const dates = [
-    { round: 1, label: "Fecha 1", date: "8 de marzo" },
-    { round: 2, label: "Fecha 2", date: "22 de marzo" },
-    { round: 3, label: "Fecha 3", date: "12 de abril" },
-    { round: 4, label: "Fecha 4", date: "26 de abril" },
-    { round: 5, label: "Fecha 5", date: "10 de mayo" },
-    { round: 6, label: "Fecha 6", date: "24 de mayo" },
-    { round: 7, label: "Fecha 7", date: "7 de junio" },
-    { round: 8, label: "Fecha 8", date: "14 de junio" },
-    { round: 9, label: "Fecha 9", date: "6 de septiembre" },
-    { round: 10, label: "Fecha 10", date: "20 de septiembre" },
-    { round: 11, label: "Fecha 11", date: "4 de octubre" },
-    { round: 12, label: "Fecha 12", date: "18 de octubre" },
-    { round: 13, label: "Fecha 13", date: "25 de octubre" },
-    { round: 14, label: "Fecha 14", date: "8 de noviembre" }
-  ];
-
-  // Round-robin pairings (8)
-  const RR = [
-    [[0,7],[1,6],[2,5],[3,4]],
-    [[6,0],[5,7],[4,1],[3,2]],
-    [[0,5],[6,4],[7,3],[1,2]],
-    [[4,0],[3,5],[2,6],[1,7]],
-    [[0,3],[4,2],[5,1],[6,7]],
-    [[2,0],[1,3],[7,4],[6,5]],
-    [[0,1],[2,7],[3,6],[4,5]],
-    [[7,0],[6,1],[5,2],[4,3]],
-    [[0,6],[7,5],[1,4],[2,3]],
-    [[5,0],[4,6],[3,7],[2,1]],
-    [[0,4],[5,3],[6,2],[7,1]],
-    [[3,0],[2,4],[1,5],[7,6]],
-    [[0,2],[3,1],[4,7],[5,6]],
-    [[1,0],[7,2],[6,3],[5,4]]
-  ];
-
-  const buildMatches = (teams, rrRound) => rrRound.map(([h,a]) => [teams[h], teams[a]]);
-  const schedule = dates.map((d, idx) => ({
-    ...d,
-    A: buildMatches(ZONA_A, RR[idx]),
-    B: buildMatches(ZONA_B, RR[idx])
   }));
+}
 
-  // UI STATE
-  let zoneFilter = "all";
-  let teamFilter = null;
+// ═══════════════════════════════════════════════════════
+//  STANDINGS CALCULATION
+// ═══════════════════════════════════════════════════════
 
-  const scheduleContainer = document.getElementById("scheduleContainer");
-  const buttons = document.querySelectorAll(".pill-btn");
-  const chipHost = document.getElementById("teamFilterChip");
-
-  function setTeamFilter(team) {
-    teamFilter = team;
-    renderTeamChip();
-    renderSchedule();
-  }
-
-  function clearTeamFilter() {
-    teamFilter = null;
-    renderTeamChip();
-    renderSchedule();
-  }
-
-  function renderTeamChip() {
-    if (!teamFilter) {
-      chipHost.style.display = "none";
-      chipHost.innerHTML = "";
-      return;
+function calcStandings(){
+  const stats = {};
+  Object.keys(TEAMS).forEach(t => {
+    stats[t] = { pj:0, pg:0, pe:0, pp:0, gf:0, gc:0, pts:0 };
+  });
+  FIXTURE.forEach(f => f.matches.forEach(m => {
+    if(m.scoreH === null || m.scoreA === null) return;
+    const h = m.scoreH, a = m.scoreA;
+    const sh = stats[m.home], sa = stats[m.away];
+    if(!sh || !sa) return;
+    sh.pj++; sa.pj++;
+    sh.gf += h; sh.gc += a;
+    sa.gf += a; sa.gc += h;
+    if(h > a){ sh.pg++; sh.pts+=3; sa.pp++; }
+    else if(a > h){ sa.pg++; sa.pts+=3; sh.pp++; }
+    else { sh.pe++; sa.pe++; sh.pts+=1; sa.pts+=1; }
+    // Punto extra por shootout (empate en tiempo reglamentario)
+    if(h === a && m.shootoutH !== null && m.shootoutA !== null){
+      if(m.shootoutH > m.shootoutA) sh.pts+=1;
+      else if(m.shootoutA > m.shootoutH) sa.pts+=1;
     }
-    chipHost.style.display = "inline-flex";
-    chipHost.innerHTML = `
-      <span class="team-filter-chip" title="Fixture filtrado por equipo">
-        <img src="${logoOf(teamFilter)}" alt="${teamFilter}" />
-        ${teamFilter}
-        <button class="team-filter-clear" title="Limpiar filtro">×</button>
-      </span>
-    `;
-    chipHost.querySelector(".team-filter-clear").addEventListener("click", (e) => {
-      e.preventDefault();
-      clearTeamFilter();
-    });
-  }
+  }));
+  return stats;
+}
 
-  function matchInTeamFilter(home, away) {
-    if (!teamFilter) return true;
-    return home === teamFilter || away === teamFilter;
-  }
+// ═══════════════════════════════════════════════════════
+//  RENDER HERO DATES
+// ═══════════════════════════════════════════════════════
 
-  function renderSchedule() {
-    scheduleContainer.innerHTML = "";
+function renderHeroFechas(){
+  const el = document.getElementById('heroFechas');
+  el.innerHTML = FECHAS_TORNEO.map(f => `
+    <div class="hero-date-row">
+      <span class="date-num">F${f.num}</span>
+      <div>
+        <div class="date-info">${f.date}</div>
+        <div class="date-sub">${f.status === 'en_curso' ? '🟢 En curso' : f.status === 'finales' ? '🏆 Finales' : '⏳ Pendiente'}</div>
+      </div>
+    </div>
+  `).join('');
+}
 
-    schedule.forEach(r => {
-      const zonesToRender = [];
-      if (zoneFilter === "all" || zoneFilter === "A") zonesToRender.push(["A", r.A]);
-      if (zoneFilter === "all" || zoneFilter === "B") zonesToRender.push(["B", r.B]);
+// ═══════════════════════════════════════════════════════
+//  RENDER FIXTURE
+// ═══════════════════════════════════════════════════════
 
-      const filteredZones = zonesToRender
-        .map(([z, matches]) => [z, matches.filter(([h,a]) => matchInTeamFilter(h,a))])
-        .filter(([_, matches]) => matches.length > 0);
+let currentFecha = 1;
 
-      if (filteredZones.length === 0) return;
+function renderFixtureTabs(){
+  const tabs = document.getElementById('fixtureTabs');
+  tabs.innerHTML = FIXTURE.map(f => `
+    <button class="tab-btn ${f.fecha===1?'active':''}" onclick="showFecha(${f.fecha},this)">
+      Fecha ${f.fecha} · ${f.date.split(' ').slice(0,3).join(' ')}
+    </button>
+  `).join('');
+}
 
-      const card = document.createElement("div");
-      card.className = "round-card";
+function showFecha(n, btn){
+  currentFecha = n;
+  document.querySelectorAll('#fixtureTabs .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFixtureContent();
+}
 
-      const meta = document.createElement("div");
-      meta.className = "round-meta";
-      meta.innerHTML = `<div class="round-title">${r.label}</div><div class="round-date">${r.date}</div>`;
-      card.appendChild(meta);
+function renderFixtureContent(){
+  const container = document.getElementById('fixtureContent');
+  const fd = FIXTURE.find(f => f.fecha === currentFecha);
+  if(!fd){ container.innerHTML=''; return; }
 
-      const wrap = document.createElement("div");
-      wrap.className = "round-grid";
-      wrap.style.gridTemplateColumns = "1fr";
-      wrap.style.gap = "0.9rem";
+  const groups = ['A','B','C'];
+  let html = '<div class="fixture-grid">';
 
-      const makeZoneBlock = (zoneName, matches) => {
-        const zone = document.createElement("div");
-        zone.className = "card";
-        zone.style.boxShadow = "none";
-        zone.style.padding = "0.9rem";
-        zone.style.borderRadius = "14px";
-        zone.style.background = "rgba(0,0,0,0.01)";
-        zone.innerHTML = `<h3 style="margin-bottom:0.6rem;">Zona ${zoneName}</h3>`;
+  groups.forEach(g => {
+    const gMatches = fd.matches.filter(m => m.group === g);
+    if(!gMatches.length) return;
+    html += `<div class="grupo-header">Grupo ${g}</div>`;
+    gMatches.forEach(m => {
+      const hasScore = m.scoreH !== null && m.scoreA !== null;
+      const scoreHtml = hasScore
+        ? `<div class="score-display">${m.scoreH} – ${m.scoreA}${m.wo?'<span style="font-size:.65rem;font-weight:800;color:var(--red);margin-left:.4rem">W.O.</span>':''}</div>`
+        : `<div class="score-display score-pending">– vs –</div>`;
 
-        const list = document.createElement("div");
-        list.className = "matches";
+      const metaHtml = (m.sede || m.horario) ? `
+        <div class="match-meta">
+          ${m.sede ? `<span class="meta-pill sede">📍 ${m.sede}</span>` : ''}
+          ${m.horario ? `<span class="meta-pill">🕐 ${m.horario}</span>` : ''}
+        </div>` : `<div class="match-meta"><span class="meta-pill" style="background:rgba(0,0,0,.04);color:var(--muted)">Sede y horario a confirmar</span></div>`;
 
-        matches.forEach(([home, away]) => {
-          const res = resultOf(r.round, zoneName, home, away);
-          const scoreText = res ? `${res.home}–${res.away}` : "vs";
+      const refsHtml = (m.r1 || m.r2) ? `
+        <div class="match-refs">
+          🏳️ Árbitros: <span>${m.r1||'—'}</span>${m.r2 ? ` / <span>${m.r2}</span>` : ''}
+        </div>` : `<div class="match-refs no-refs">Árbitros: a confirmar</div>`;
 
-          const row = document.createElement("div");
-          row.className = "match";
-          row.innerHTML = `
-            <div class="left">
-              <div class="team-badge" title="${home}">
-                <img src="${logoOf(home)}" alt="${home}" />
-              </div>
-              <div class="team-name" title="${home}">${home}</div>
+      html += `
+        <div class="match-card" data-match-id="${m.id}">
+          <div class="match-top">
+            <div class="match-teams">
+              <div class="team-name-fix">${m.home}</div>
+              <div class="vs-pill">vs</div>
+              <div class="team-name-fix">${m.away}</div>
             </div>
-
-            <div class="score-pill" title="${res ? "Resultado" : "Partido"}">${scoreText}</div>
-
-            <div class="right">
-              <div class="team-name" style="text-align:right;" title="${away}">${away}</div>
-              <div class="team-badge" title="${away}">
-                <img src="${logoOf(away)}" alt="${away}" />
-              </div>
-            </div>
-          `;
-          list.appendChild(row);
-        });
-
-        zone.appendChild(list);
-        return zone;
-      };
-
-      filteredZones.forEach(([z, matches]) => wrap.appendChild(makeZoneBlock(z, matches)));
-
-      card.appendChild(wrap);
-      scheduleContainer.appendChild(card);
-    });
-  }
-
-  buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      buttons.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      zoneFilter = btn.dataset.filter;
-      renderSchedule();
+            ${scoreHtml}
+          </div>
+          ${metaHtml}
+          ${refsHtml}
+          <div style="display:flex;justify-content:flex-end">
+            <a href="planilla-print.html?match=${m.id}" target="_blank"
+              style="font-size:.72rem;font-weight:700;color:#1a3a6b;background:rgba(0,75,141,.07);
+              border:1px solid rgba(0,75,141,.15);border-radius:8px;padding:.22rem .65rem;
+              text-decoration:none;display:inline-flex;align-items:center;gap:.3rem">
+              📄 Planilla
+            </a>
+          </div>
+        </div>`;
     });
   });
 
-  renderTeamChip();
-  renderSchedule();
+  html += '</div>';
+  container.innerHTML = html;
+}
 
-  // STANDINGS
-  function initTable(teams) {
-    const base = {};
-    teams.forEach(t => base[t] = { team: t, PJ:0, PG:0, PE:0, PP:0, GF:0, GC:0, Pts:0 });
-    return base;
-  }
+// ═══════════════════════════════════════════════════════
+//  RENDER STANDINGS
+// ═══════════════════════════════════════════════════════
 
-  function applyMatch(stats, home, away, res) {
-    if (!res) return;
-    stats[home].PJ++; stats[away].PJ++;
-    stats[home].GF += res.home; stats[home].GC += res.away;
-    stats[away].GF += res.away; stats[away].GC += res.home;
+function renderStandings(){
+  const stats = calcStandings();
+  const wrap = document.getElementById('standingsWrap');
 
-    if (res.home > res.away) { stats[home].PG++; stats[away].PP++; stats[home].Pts += 3; }
-    else if (res.home < res.away) { stats[away].PG++; stats[home].PP++; stats[away].Pts += 3; }
-    else { stats[home].PE++; stats[away].PE++; stats[home].Pts++; stats[away].Pts++; }
-  }
-
-  function computeStandingsForZone(zoneName, teams) {
-    const stats = initTable(teams);
-
-    schedule.forEach(r => {
-      const matches = (zoneName === "A") ? r.A : r.B;
-      matches.forEach(([home, away]) => {
-        const res = resultOf(r.round, zoneName, home, away);
-        applyMatch(stats, home, away, res);
-      });
+  wrap.innerHTML = ['A','B','C'].map(g => {
+    const teams = Object.keys(TEAMS).filter(t => TEAMS[t].group === g);
+    const sorted = teams.sort((a,b) => {
+      const sa = stats[a], sb = stats[b];
+      if(sb.pts !== sa.pts) return sb.pts - sa.pts;
+      const da = sa.gf - sa.gc, db = sb.gf - sb.gc;
+      if(db !== da) return db - da;
+      return sb.gf - sa.gf;
     });
 
-    const arr = Object.values(stats);
-    arr.sort((a,b) => {
-      const dga = a.GF - a.GC, dgb = b.GF - b.GC;
-      if (b.Pts !== a.Pts) return b.Pts - a.Pts;
-      if (dgb !== dga) return dgb - dga;
-      if (b.GF !== a.GF) return b.GF - a.GF;
-      return a.team.localeCompare(b.team, "es");
-    });
-    return arr;
-  }
+    const rows = sorted.map((t, i) => {
+      const s = stats[t];
+      const cls = i===0 ? 'rank-1' : '';
+      const dif = s.gf - s.gc;
+      return `<tr class="${cls}">
+        <td><strong>${i+1}.</strong> ${t}</td>
+        <td>${s.pj}</td><td>${s.pg}</td><td>${s.pe}</td><td>${s.pp}</td>
+        <td>${s.gf}</td><td>${s.gc}</td>
+        <td>${dif >= 0 ? '+'+dif : dif}</td>
+        <td><strong>${s.pts}</strong></td>
+      </tr>`;
+    }).join('');
 
-  function renderStandings(bodyId, zoneName, teams) {
-    const body = document.getElementById(bodyId);
-    body.innerHTML = "";
+    return `
+      <div class="standings-group">
+        <div class="standings-group-title">Grupo ${g}</div>
+        <table class="standings">
+          <thead><tr>
+            <th>Equipo</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th>
+            <th>GF</th><th>GC</th><th>Dif</th><th>Pts</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }).join('');
+}
 
-    const sorted = computeStandingsForZone(zoneName, teams);
+// ═══════════════════════════════════════════════════════
+//  RENDER EQUIPOS
+// ═══════════════════════════════════════════════════════
 
-    sorted.forEach((row, idx) => {
-      const rank = idx + 1;
-      const tr = document.createElement("tr");
-      if (rank === 1) tr.classList.add("rank-1");
-      if (rank >= 2 && rank <= 4) tr.classList.add(`rank-${rank}`);
+let equipoFilterGroup = 'ALL';
 
-      const DG = row.GF - row.GC;
+function filterEquipos(group, btn){
+  equipoFilterGroup = group;
+  document.querySelectorAll('#equiposTabs .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderEquipos();
+}
 
-      tr.innerHTML = `
-        <td class="pos">${rank}</td>
-        <td>
-          <a class="team-cell-link" href="#calendario" data-teamlink="${row.team}" title="Ver fixture de ${row.team}">
-            <span class="team-badge" aria-hidden="true">
-              <img src="${logoOf(row.team)}" alt="${row.team}" />
-            </span>
-            <span class="team-name-standings">${row.team}</span>
-          </a>
-        </td>
-        <td class="muted">${row.PJ}</td>
-        <td class="muted">${row.PG}</td>
-        <td class="muted">${row.PE}</td>
-        <td class="muted">${row.PP}</td>
-        <td class="muted">${row.GF}</td>
-        <td class="muted">${row.GC}</td>
-        <td class="muted">${DG}</td>
-        <td><strong>${row.Pts}</strong></td>
-      `;
-      body.appendChild(tr);
-    });
+function renderEquipos(){
+  const grid = document.getElementById('equiposGrid');
+  const teamNames = Object.keys(TEAMS).filter(t =>
+    equipoFilterGroup === 'ALL' || TEAMS[t].group === equipoFilterGroup
+  );
 
-    body.querySelectorAll('[data-teamlink]').forEach(a => {
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const team = a.getAttribute('data-teamlink');
-        setTeamFilter(team);
-        document.getElementById("calendario").scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    });
+  grid.innerHTML = teamNames.map(name => {
+    const team = TEAMS[name];
+    const hasPlayers = team.players.length > 0;
+    const initials = team.abbr || name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
 
-    return sorted;
-  }
+    const playersHtml = hasPlayers
+      ? `<table class="plantel-table">
+           <thead><tr><th>#</th><th>Apellido</th><th>Nombre</th><th>Nacimiento</th></tr></thead>
+           <tbody>${team.players.map((p,i) =>
+             `<tr><td>${p.nro!=='—'?p.nro:i+1}</td><td>${p.apellido}</td><td>${p.nombre}</td><td>${p.nacimiento}</td></tr>`
+           ).join('')}</tbody>
+         </table>`
+      : `<div class="no-plantel">Planilla de inscripción pendiente de recepción.</div>`;
 
-  function getAllMatchesForTeam(team) {
-    const items = [];
-    schedule.forEach(r => {
-      [["A", r.A], ["B", r.B]].forEach(([zone, matches]) => {
-        matches.forEach(([home, away]) => {
-          if (home === team || away === team) {
-            const res = resultOf(r.round, zone, home, away);
-            items.push({ round: r.round, label: r.label, date: r.date, zone, home, away, res });
-          }
-        });
-      });
-    });
-    items.sort((a,b) => a.round - b.round);
-    return items;
-  }
-
-  function getNextMatch(team) {
-    const ms = getAllMatchesForTeam(team);
-    return ms.find(m => !m.res) || null;
-  }
-
-  function getLastResult(team) {
-    const ms = getAllMatchesForTeam(team).filter(m => !!m.res);
-    return ms.length ? ms[ms.length - 1] : null;
-  }
-
-  function buildPositionsIndex(standingsArr) {
-    const map = new Map();
-    standingsArr.forEach((r, idx) => map.set(r.team, { ...r, rank: idx + 1, DG: r.GF - r.GC }));
-    return map;
-  }
-
-  function renderWidgets(posIndexA, posIndexB) {
-    document.querySelectorAll(".franchise-detail[data-team]").forEach(article => {
-      const team = article.getAttribute("data-team");
-      const widget = article.querySelector("[data-widget]");
-      if (!widget) return;
-
-      const inA = posIndexA.has(team);
-      const pos = inA ? posIndexA.get(team) : posIndexB.get(team);
-      const next = getNextMatch(team);
-      const last = getLastResult(team);
-
-      const zone = inA ? "A" : "B";
-
-      const nextText = next
-        ? `${next.label} (${next.date}) · Zona ${next.zone} · ${next.home} vs ${next.away}`
-        : "Sin próximos partidos";
-
-      const lastText = last
-        ? `${last.label} (${last.date}) · Zona ${last.zone} · ${last.home} ${last.res.home}–${last.res.away} ${last.away}`
-        : "Sin resultados cargados todavía";
-
-      const kpis = pos
-        ? `
-          <div class="mini-kpis">
-            <span class="kpi"><small>Zona</small>${zone}</span>
-            <span class="kpi"><small>Pos</small>${pos.rank}°</span>
-            <span class="kpi"><small>Pts</small>${pos.Pts}</span>
-            <span class="kpi"><small>PJ</small>${pos.PJ}</span>
-            <span class="kpi"><small>DG</small>${pos.DG}</span>
+    return `
+      <div class="equipo-card" onclick="toggleEquipo('eq-${name.replace(/\s+/g,'-')}', this)">
+        <div class="equipo-card-header">
+          <div class="equipo-badge" style="background:${team.color}">${initials}</div>
+          <div class="equipo-info">
+            <div class="equipo-name">${name}</div>
+            <div class="equipo-group">Grupo ${team.group}</div>
+            <div class="equipo-count">${hasPlayers ? team.players.length + ' jugadoras' : 'Planilla pendiente'}</div>
           </div>
-        `
-        : `
-          <div class="mini-kpis">
-            <span class="kpi"><small>Zona</small>${zone}</span>
-            <span class="kpi"><small>Pos</small>–</span>
-            <span class="kpi"><small>Pts</small>0</span>
-            <span class="kpi"><small>PJ</small>0</span>
-            <span class="kpi"><small>DG</small>0</span>
+          <div class="toggle-icon">▾</div>
+        </div>
+        <div class="equipo-body" id="eq-${name.replace(/\s+/g,'-')}">
+          ${team.uniformeOf[0] !== '—' ? `
+          <div class="uniforme-row">
+            ${team.uniformeOf.map(u=>`<span class="uniforme-pill">✅ ${u}</span>`).join('')}
+          </div>` : ''}
+          <div style="font-size:.78rem;color:var(--muted);margin-top:.5rem;margin-bottom:.2rem">
+            👩 Referente: <strong>${team.referente.split('·')[0].trim()}</strong>
           </div>
-        `;
-
-      widget.innerHTML = `
-        <div class="mini-row">
-          ${kpis}
-          <div class="mini-actions">
-            <button class="mini-btn" data-action="fixture">Ver fixture</button>
-            <button class="mini-btn" data-action="pos">Ver tabla</button>
-          </div>
+          ${playersHtml}
         </div>
+      </div>`;
+  }).join('');
+}
 
-        <div class="mini-matchline">
-          <div class="label">Próximo</div>
-          <div class="value" title="${nextText}">${nextText}</div>
-        </div>
+function toggleEquipo(id, card){
+  const body = document.getElementById(id);
+  const icon = card.querySelector('.toggle-icon');
+  const isOpen = body.classList.toggle('open');
+  icon.textContent = isOpen ? '▴' : '▾';
+}
 
-        <div class="mini-matchline">
-          <div class="label">Último</div>
-          <div class="value" title="${lastText}">${lastText}</div>
-        </div>
-      `;
+// ═══════════════════════════════════════════════════════
+//  RENDER REGLAMENTO
+// ═══════════════════════════════════════════════════════
 
-      widget.querySelector('[data-action="fixture"]').addEventListener("click", () => {
-        setTeamFilter(team);
-        document.getElementById("calendario").scrollIntoView({ behavior: "smooth", block: "start" });
-      });
+function renderReglamento(){
+  const grid = document.getElementById('regGrid');
+  grid.innerHTML = REGLAMENTO.map(r => {
+    let content = '';
+    if(r.body) content += `<div class="reg-body">${r.body}</div>`;
+    if(r.table){
+      content += `<table class="reg-table">
+        <thead><tr>${r.table[0].map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+        <tbody>${r.table.slice(1).map(row=>`<tr>${row.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table>`;
+    }
+    return `
+      <div class="reg-card">
+        <div class="reg-num">Art. ${r.num}</div>
+        <div class="reg-title">${r.title}</div>
+        ${content}
+      </div>`;
+  }).join('');
+}
 
-      widget.querySelector('[data-action="pos"]').addEventListener("click", () => {
-        document.getElementById("posiciones").scrollIntoView({ behavior: "smooth", block: "start" });
-      });
+// ═══════════════════════════════════════════════════════
+//  LOGIN (conecta al backend si está disponible)
+// ═══════════════════════════════════════════════════════
+
+function populateLoginSelect(){
+  const sel = document.getElementById('loginUser');
+  Object.keys(TEAMS).forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t;
+    opt.textContent = t + ' (Grupo ' + TEAMS[t].group + ')';
+    sel.appendChild(opt);
+  });
+}
+
+async function doLogin(){
+  const user = document.getElementById('loginUser').value;
+  const pass = document.getElementById('loginPass').value;
+  const msg = document.getElementById('loginMsg');
+  msg.className = 'login-msg';
+  msg.style.display = 'none';
+
+  if(!user){ msg.className='login-msg error'; msg.textContent='Seleccioná tu equipo.'; return; }
+  if(!pass){ msg.className='login-msg error'; msg.textContent='Ingresá la contraseña.'; return; }
+
+  try {
+    const res = await fetch(API_BASE+'/api/login', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ team: user, password: pass })
     });
+    const data = await res.json();
+    if(res.ok && data.token){
+      sessionStorage.setItem('tm50_token', data.token);
+      sessionStorage.setItem('tm50_team',  data.team);
+      sessionStorage.setItem('tm50_group', data.group);
+      window.location.href = 'planilla.html';
+    } else {
+      msg.className='login-msg error';
+      msg.textContent = data.error || 'Usuario o contraseña incorrectos.';
+    }
+  } catch(e){
+    // Backend no disponible - modo offline
+    msg.className='login-msg error';
+    msg.textContent = '⚠️ El servidor no está disponible. Iniciá el backend con: node backend/server.js';
   }
+}
 
-  const standingsA = renderStandings("bodyA", "A", ZONA_A);
-  const standingsB = renderStandings("bodyB", "B", ZONA_B);
+// ═══════════════════════════════════════════════════════
+//  FETCH SCORES FROM BACKEND (si está disponible)
+// ═══════════════════════════════════════════════════════
 
-  const posIndexA = buildPositionsIndex(standingsA);
-  const posIndexB = buildPositionsIndex(standingsB);
+async function fetchScoresFromBackend(){
+  try {
+    const res = await fetch(API_BASE+'/api/matches', { signal: AbortSignal.timeout(2000) });
+    if(!res.ok) return;
+    const data = await res.json();
+    // data: { "f1m1": { h: 2, a: 1 }, ... }
+    const stored = {};
+    Object.keys(data).forEach(id => {
+      stored[id] = { h: data[id].h, a: data[id].a,
+        sh: data[id].sh ?? null, sa: data[id].sa ?? null,
+        wo: data[id].wo || false };
+    });
+    localStorage.setItem('tm50_scores', JSON.stringify(stored));
+    mergeScores();
+    renderFixtureContent();
+    renderStandings();
+  } catch(e){
+    // Backend no disponible, usar localStorage
+  }
+}
 
-  renderWidgets(posIndexA, posIndexB);
+// ═══════════════════════════════════════════════════════
+//  GOLEADORAS & TARJETAS
+// ═══════════════════════════════════════════════════════
+
+async function fetchStats(){
+  try {
+    const d = await fetch('/api/stats');
+    const data = await d.json();
+    renderScorers(data.scorers || []);
+    renderCards(data.cards || []);
+  } catch(e){ /* backend no disponible */ }
+}
+
+function renderScorers(list){
+  const el = document.getElementById('statsScorers');
+  if(!el) return;
+  if(!list.length){ el.innerHTML='<div class="stats-empty">Sin goles registrados aún.</div>'; return; }
+  el.innerHTML = list.map((r,i) => `
+    <div class="stats-row">
+      <span class="stats-pos">${i+1}</span>
+      <div>
+        <div class="stats-name">${r.player||'—'}</div>
+        <div class="stats-team">${r.team}${r.pc||r.ps ? ` · ${r.pc?r.pc+'PC ':''}${r.ps?r.ps+'PS':''}`.trim() : ''}</div>
+      </div>
+      <span class="stats-val">${r.total} ⚽</span>
+    </div>`).join('');
+}
+
+function renderCards(list){
+  const el = document.getElementById('statsCards');
+  if(!el) return;
+  if(!list.length){ el.innerHTML='<div class="stats-empty">Sin tarjetas registradas aún.</div>'; return; }
+  el.innerHTML = list.map((r,i) => {
+    const parts = [];
+    if(r.amarilla) parts.push(`${r.amarilla}🟡`);
+    if(r.roja)     parts.push(`${r.roja}🔴`);
+    if(r.verde)    parts.push(`${r.verde}🟢`);
+    return `
+    <div class="stats-row">
+      <span class="stats-pos">${i+1}</span>
+      <div>
+        <div class="stats-name">${r.player||'—'}</div>
+        <div class="stats-team">${r.team}</div>
+      </div>
+      <span class="stats-val">${parts.join(' ')}</span>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+
+(function init(){
+  mergeScores();
+  renderHeroFechas();
+  renderFixtureTabs();
+  renderFixtureContent();
+  renderStandings();
+  renderEquipos();
+  renderReglamento();
+  populateLoginSelect();
+  fetchScoresFromBackend();
+  fetchStats();
+})();
 </script>
-
 </body>
 </html>
