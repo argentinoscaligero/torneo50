@@ -19,6 +19,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'master50-secret-2026-changeme';
 const ROOT_DIR    = path.join(__dirname, '..');
 const USERS_FILE  = path.join(__dirname, 'data', 'users.json');
 const MATCHES_FILE= path.join(__dirname, 'data', 'matches.json');
+const CONFIG_FILE  = path.join(__dirname, 'data', 'config.json');
+const PLAYERS_FILE = path.join(__dirname, 'data', 'players.json');
 
 // ── middleware ─────────────────────────────────────────
 app.use(cors());
@@ -387,6 +389,10 @@ app.post('/api/matches/:id/admin-edit', authMiddleware, (req, res) => {
   if(phase) match.phase = phase;
   // Si se reabre el partido, limpiar el flag W.O.
   if(phase && phase !== 'done') { match.wo = false; match.wo_winner = null; }
+  if(req.body.sede  !== undefined) match.sede   = req.body.sede  || null;
+  if(req.body.horario !== undefined) match.horario= req.body.horario|| null;
+  if(req.body.r1    !== undefined) match.r1     = req.body.r1    || null;
+  if(req.body.r2    !== undefined) match.r2     = req.body.r2    || null;
 
   writeJSON(MATCHES_FILE, matches);
   res.json({ ok: true, match });
@@ -415,6 +421,66 @@ app.post('/api/matches/:id/wo', authMiddleware, (req, res) => {
 
   writeJSON(MATCHES_FILE, matches);
   res.json({ ok: true, match });
+});
+
+// ═══════════════════════════════════════════════════════
+//  CONFIG - fecha activa
+// ═══════════════════════════════════════════════════════
+
+// GET /api/config  → fecha activa (público)
+app.get('/api/config', (req, res) => {
+  try { res.json(readJSON(CONFIG_FILE)); }
+  catch(e){ res.json({ fechaActiva: 1 }); }
+});
+
+// POST /api/admin/config  → actualizar fecha activa
+app.post('/api/admin/config', authMiddleware, (req, res) => {
+  if(!isAdmin(req)) return res.status(403).json({ error: 'Solo admin' });
+  const { fechaActiva } = req.body;
+  if(!fechaActiva || isNaN(fechaActiva))
+    return res.status(400).json({ error: 'fechaActiva inválido' });
+  let cfg = {};
+  try { cfg = readJSON(CONFIG_FILE); } catch(e){}
+  cfg.fechaActiva = Number(fechaActiva);
+  writeJSON(CONFIG_FILE, cfg);
+  res.json({ ok: true, fechaActiva: cfg.fechaActiva });
+});
+
+// ═══════════════════════════════════════════════════════
+//  PLAYERS - planteles
+// ═══════════════════════════════════════════════════════
+
+// GET /api/teams  → planteles (público)
+app.get('/api/teams', (req, res) => {
+  try { res.json(readJSON(PLAYERS_FILE)); }
+  catch(e){ res.json({}); }
+});
+
+// POST /api/admin/teams/:team/player  → agregar jugadora
+app.post('/api/admin/teams/:team/player', authMiddleware, (req, res) => {
+  if(!isAdmin(req)) return res.status(403).json({ error: 'Solo admin' });
+  const team = decodeURIComponent(req.params.team);
+  const { nro='—', apellido, nombre='' } = req.body;
+  if(!apellido) return res.status(400).json({ error: 'apellido requerido' });
+  let players = {};
+  try { players = readJSON(PLAYERS_FILE); } catch(e){}
+  if(!players[team]) players[team] = [];
+  players[team].push({ nro: String(nro), apellido, nombre });
+  writeJSON(PLAYERS_FILE, players);
+  res.json({ ok: true, players: players[team] });
+});
+
+// DELETE /api/admin/teams/:team/player  → quitar jugadora (por índice)
+app.delete('/api/admin/teams/:team/player/:idx', authMiddleware, (req, res) => {
+  if(!isAdmin(req)) return res.status(403).json({ error: 'Solo admin' });
+  const team = decodeURIComponent(req.params.team);
+  const idx = Number(req.params.idx);
+  let players = {};
+  try { players = readJSON(PLAYERS_FILE); } catch(e){}
+  if(!players[team]) return res.status(404).json({ error: 'Equipo no encontrado' });
+  players[team].splice(idx, 1);
+  writeJSON(PLAYERS_FILE, players);
+  res.json({ ok: true, players: players[team] });
 });
 
 // ═══════════════════════════════════════════════════════

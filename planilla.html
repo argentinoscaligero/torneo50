@@ -176,6 +176,14 @@
     .done-score{font-size:2.8rem;font-weight:900;color:var(--primary);margin:.4rem 0}
     .done-teams{font-size:.9rem;color:var(--muted)}
 
+    .admin-panel{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden}
+    .admin-panel-tabs{display:flex;border-bottom:1px solid rgba(0,0,0,.08)}
+    .admin-panel-tab{flex:1;padding:.55rem .5rem;text-align:center;font-size:.8rem;font-weight:700;cursor:pointer;color:var(--muted);border:none;background:none;border-bottom:2px solid transparent}
+    .admin-panel-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+    .admin-panel-body{padding:.9rem}
+    .plantel-edit-row{display:flex;align-items:center;gap:.4rem;padding:.3rem .4rem;border-bottom:1px solid rgba(0,0,0,.05);font-size:.8rem}
+    .plantel-edit-row:last-child{border-bottom:none}
+
     @media(max-width:600px){
       /* Header */
       header{padding:.5rem .75rem}
@@ -292,11 +300,15 @@
         <div class="welcome-name" id="welcomeName">—</div>
         <div class="welcome-group" id="welcomeGroup">—</div>
       </div>
-      <a href="index.html">
-        <button class="btn btn-secondary" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)">← Volver al sitio</button>
-      </a>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <a href="index.html">
+          <button class="btn btn-secondary" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)">← Volver al sitio</button>
+        </a>
+        <button class="btn btn-sm" id="adminPanelBtn" style="display:none;background:rgba(255,165,0,.25);color:#fff;border:1px solid rgba(255,165,0,.4)" onclick="toggleAdminPanel()">⚙️ Admin</button>
+      </div>
     </div>
     <div class="tabs" id="fechaTabs"></div>
+    <div id="adminPanelWrap"></div>
     <div id="matchList"></div>
   </main>
 </div>
@@ -318,7 +330,7 @@
 // ═══════════════════════════════════════════════════════
 //  DATOS DE PLANTELES
 // ═══════════════════════════════════════════════════════
-const PLAYERS = {
+let PLAYERS = {
   "Black Velvet":[
     {nro:"3",a:"Arizabalo",n:"Ariadna"},{nro:"15",a:"Biotti",n:"Julia"},
     {nro:"8",a:"Di Meglio",n:"Juana"},{nro:"9",a:"Etchegoyen",n:"Monica"},
@@ -461,7 +473,29 @@ const EV_TYPES = [
   {v:"verde",    icon:"🟢", label:"Verde"},
 ];
 
-const FECHA_ACTIVA = 1;
+let FECHA_ACTIVA = 1;
+
+async function loadConfig(){
+  try{
+    const d = await fetch('/api/config');
+    const cfg = await d.json();
+    if(cfg.fechaActiva) FECHA_ACTIVA = cfg.fechaActiva;
+  }catch(e){}
+}
+
+async function loadPlayers(){
+  try{
+    const d = await fetch('/api/teams');
+    const data = await d.json();
+    if(Object.keys(data).length > 0){
+      // Convert from {apellido,nombre,nro} to {a,n,nro} format used internally
+      PLAYERS = {};
+      Object.keys(data).forEach(team => {
+        PLAYERS[team] = data[team].map(p => ({nro:p.nro, a:p.apellido, n:p.nombre}));
+      });
+    }
+  }catch(e){}
+}
 
 // ═══════════════════════════════════════════════════════
 //  STATE & API
@@ -620,9 +654,12 @@ async function enterApp(){
   document.getElementById('hdrTeam').textContent=S.team;
   document.getElementById('welcomeName').textContent=S.isAdmin?'👑 Administrador':S.team;
   document.getElementById('welcomeGroup').textContent=S.isAdmin?'Acceso completo':`Grupo ${S.group}`;
+  await Promise.all([loadConfig(), loadPlayers()]);
   await loadMatches();
   renderFechaTabs();
   renderMatchList();
+  if(S.isAdmin) document.getElementById('adminPanelBtn').style.display='';
+  renderAdminPanel();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1115,6 +1152,17 @@ function renderAdminSection(m){
   return `<div class="section" style="border:2px solid rgba(200,100,0,.25);background:rgba(255,243,224,.4)">
     <div class="sec-title" style="color:#e65100">🛠️ Admin — Editar partido</div>
     ${woLabel}
+    <div style="margin-bottom:.65rem">
+  <div style="font-size:.78rem;font-weight:800;color:var(--primary);margin-bottom:.35rem">Sede y árbitros</div>
+  <div style="display:grid;gap:.35rem">
+    <input id="adSede" placeholder="Sede" value="${m.sede||''}" style="border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.4rem .6rem;font-size:.82rem;width:100%"/>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem">
+      <input id="adHorario" placeholder="Horario (ej: 09:00)" value="${m.horario||''}" style="border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.4rem .6rem;font-size:.82rem"/>
+      <input id="adR1" placeholder="Árbitro 1" value="${m.r1||''}" style="border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.4rem .6rem;font-size:.82rem"/>
+    </div>
+    <input id="adR2" placeholder="Árbitro 2" value="${m.r2||''}" style="border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.4rem .6rem;font-size:.82rem;width:100%"/>
+  </div>
+</div>
     <div style="margin-top:.6rem">
       <div style="font-size:.78rem;font-weight:800;color:var(--primary);margin-bottom:.35rem">Resultado</div>
       <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
@@ -1165,9 +1213,16 @@ async function adminEdit(){
     const d = await api('POST', `/api/matches/${S.currentId}/admin-edit`,
       { scoreH: h===''?null:Number(h), scoreA: a===''?null:Number(a),
         shootoutH: sh===''?null:Number(sh), shootoutA: sa===''?null:Number(sa),
-        phase });
+        phase,
+        sede: document.getElementById('adSede')?.value||null,
+        horario: document.getElementById('adHorario')?.value||null,
+        r1: document.getElementById('adR1')?.value||null,
+        r2: document.getElementById('adR2')?.value||null,
+      });
     if(d.ok){
       S.matches[S.currentId]=d.match;
+      const m2=d.match;
+      document.getElementById('dpGroup').textContent=`Grupo ${m2.group}${m2.sede?' · '+m2.sede:''}${m2.horario?' · '+m2.horario:''}`;
       msg.className='msg ok'; msg.textContent='✅ Guardado';
       setTimeout(()=>{ msg.className='msg'; renderDetail(); },1000);
     } else { msg.className='msg error'; msg.textContent=d.error||'Error'; }
@@ -1264,7 +1319,7 @@ function refreshEventsLog(){
   const m=S.matches[S.currentId];
   if(!m) return;
   const el=document.getElementById('evLog'); if(!el) return;
-  const readonly=m.phase==='done';
+  const readonly=m.phase==='done' && !S.isAdmin;
   const evs=m.events||[];
   el.innerHTML=evs.length
     ? evs.map(ev=>`
@@ -1294,6 +1349,143 @@ async function delEvent(eid){
       updateScoreHeader();
       refreshEventsLog();
       syncAdminInputs(m);
+    }
+  }catch(e){ console.error(e); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  ADMIN PANEL
+// ═══════════════════════════════════════════════════════
+let adminPanelOpen = false;
+let adminPanelTab = 'fecha';
+
+function toggleAdminPanel(){
+  adminPanelOpen = !adminPanelOpen;
+  renderAdminPanel();
+}
+
+function showAdminPanelTab(tab){
+  adminPanelTab = tab;
+  renderAdminPanel();
+}
+
+function renderAdminPanel(){
+  const wrap = document.getElementById('adminPanelWrap');
+  if(!wrap) return;
+  if(!S.isAdmin || !adminPanelOpen){ wrap.innerHTML=''; return; }
+
+  const tabs = [
+    {id:'fecha', label:'📅 Fecha activa'},
+    {id:'planteles', label:'👥 Planteles'},
+  ];
+  const tabsHtml = tabs.map(t=>
+    `<button class="admin-panel-tab ${adminPanelTab===t.id?'active':''}" onclick="showAdminPanelTab('${t.id}')">${t.label}</button>`
+  ).join('');
+
+  let bodyHtml = '';
+  if(adminPanelTab === 'fecha'){
+    bodyHtml = renderAdminTabFecha();
+  } else if(adminPanelTab === 'planteles'){
+    bodyHtml = renderAdminTabPlanteles();
+  }
+
+  wrap.innerHTML = `<div class="admin-panel">
+    <div class="admin-panel-tabs">${tabsHtml}</div>
+    <div class="admin-panel-body">${bodyHtml}</div>
+  </div>`;
+}
+
+function renderAdminTabFecha(){
+  return `<div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem">
+      Fecha activa actual: <strong>Fecha ${FECHA_ACTIVA}</strong><br>
+      <span style="font-size:.75rem">Los equipos solo pueden acceder a su fecha activa. El admin ve todas.</span>
+    </div>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+      ${[1,2,3].map(f=>`
+        <button class="btn btn-sm ${FECHA_ACTIVA===f?'btn-primary':'btn-secondary'}" onclick="setFechaActiva(${f})">Fecha ${f}</button>
+      `).join('')}
+      <span id="fechaMsg" class="msg" style="display:inline-block;padding:.25rem .6rem"></span>
+    </div>
+  </div>`;
+}
+
+async function setFechaActiva(n){
+  try{
+    const d = await api('POST', '/api/admin/config', { fechaActiva: n });
+    if(d.ok){
+      FECHA_ACTIVA = d.fechaActiva;
+      renderAdminPanel();
+      renderFechaTabs();
+      renderMatchList();
+    }
+  }catch(e){ console.error(e); }
+}
+
+function renderAdminTabPlanteles(){
+  const teams = Object.keys(PLAYERS).sort();
+  if(!teams.length) return `<div style="color:var(--muted);font-size:.85rem">Cargando planteles...</div>`;
+
+  const selectedTeam = window._adminSelectedTeam || teams[0];
+  const players = PLAYERS[selectedTeam] || [];
+
+  const playerRows = players.map((p,i)=>`
+    <div class="plantel-edit-row">
+      <span style="color:var(--muted);font-weight:700;min-width:28px">${p.nro}</span>
+      <span style="flex:1">${p.a}, ${p.n}</span>
+      <button onclick="removePlayer('${encodeURIComponent(selectedTeam)}',${i})" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:.9rem;padding:0 .3rem">✕</button>
+    </div>`).join('');
+
+  return `<div>
+    <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap">
+      <select onchange="window._adminSelectedTeam=decodeURIComponent(this.value);renderAdminPanel()" style="border-radius:9px;border:1px solid rgba(0,0,0,.1);padding:.4rem .6rem;font-size:.85rem">
+        ${teams.map(t=>`<option value="${encodeURIComponent(t)}" ${t===selectedTeam?'selected':''}>${t}</option>`).join('')}
+      </select>
+      <span style="font-size:.78rem;color:var(--muted)">${players.length} jugadoras</span>
+    </div>
+    <div style="max-height:200px;overflow-y:auto;border:1px solid rgba(0,0,0,.07);border-radius:10px;margin-bottom:.7rem">
+      ${playerRows || '<div style="padding:.6rem;color:var(--muted);font-size:.82rem;font-style:italic">Sin jugadoras</div>'}
+    </div>
+    <div style="border-top:1px solid rgba(0,0,0,.06);padding-top:.6rem">
+      <div style="font-size:.75rem;font-weight:800;color:var(--primary);margin-bottom:.4rem">+ Agregar jugadora</div>
+      <div style="display:grid;grid-template-columns:60px 1fr 1fr auto;gap:.35rem;align-items:end">
+        <div><label style="font-size:.7rem;font-weight:700;color:var(--muted)">Nro</label>
+          <input id="newPNro" placeholder="—" style="width:100%;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.35rem .45rem;font-size:.82rem"/></div>
+        <div><label style="font-size:.7rem;font-weight:700;color:var(--muted)">Apellido</label>
+          <input id="newPAp" placeholder="Apellido" style="width:100%;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.35rem .45rem;font-size:.82rem"/></div>
+        <div><label style="font-size:.7rem;font-weight:700;color:var(--muted)">Nombre</label>
+          <input id="newPNom" placeholder="Nombre" style="width:100%;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.35rem .45rem;font-size:.82rem"/></div>
+        <div><label style="font-size:.7rem">&nbsp;</label>
+          <button class="btn btn-primary btn-sm" onclick="addPlayer('${encodeURIComponent(selectedTeam)}')">+ Agregar</button></div>
+      </div>
+      <span id="plantelMsg" class="msg" style="display:inline-block;margin-top:.4rem;padding:.25rem .6rem"></span>
+    </div>
+  </div>`;
+}
+
+async function addPlayer(encodedTeam){
+  const team = decodeURIComponent(encodedTeam);
+  const nro = document.getElementById('newPNro')?.value||'—';
+  const apellido = document.getElementById('newPAp')?.value?.trim();
+  const nombre = document.getElementById('newPNom')?.value?.trim()||'';
+  const msg = document.getElementById('plantelMsg');
+  if(!apellido){ if(msg){msg.className='msg error';msg.textContent='El apellido es obligatorio';} return; }
+  try{
+    const d = await api('POST', `/api/admin/teams/${encodedTeam}/player`, {nro, apellido, nombre});
+    if(d.ok){
+      PLAYERS[team] = d.players.map(p=>({nro:p.nro,a:p.apellido,n:p.nombre}));
+      renderAdminPanel();
+    } else if(msg){ msg.className='msg error'; msg.textContent=d.error||'Error'; }
+  }catch(e){ if(msg){msg.className='msg error';msg.textContent='Error de conexión';} }
+}
+
+async function removePlayer(encodedTeam, idx){
+  const team = decodeURIComponent(encodedTeam);
+  try{
+    const d = await api('DELETE', `/api/admin/teams/${encodedTeam}/player/${idx}`);
+    if(d.ok){
+      PLAYERS[team] = d.players.map(p=>({nro:p.nro,a:p.apellido,n:p.nombre}));
+      renderAdminPanel();
     }
   }catch(e){ console.error(e); }
 }
