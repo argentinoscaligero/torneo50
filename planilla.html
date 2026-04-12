@@ -603,6 +603,7 @@ function setFecha(n,btn){
 }
 
 function phaseBadge(m){
+  if(m.phase==='done' && m.wo) return `<span class="phase-badge pb-done" style="background:var(--red)">🏳️ W.O.</span>`;
   if(m.phase==='done')         return `<span class="phase-badge pb-done">✅ Finalizado</span>`;
   if(m.phase==='partido')      return m.mode==='live'
     ? `<span class="phase-badge pb-live">🔴 En vivo</span>`
@@ -690,6 +691,8 @@ function renderDetail(){
     html+=renderEventsSection(m, phase);
     html+=renderCloseSection(m);
   }
+
+  if(S.isAdmin) html+=renderAdminSection(m);
 
   document.getElementById('dpBody').innerHTML=html;
   if(m.mode==='live' && phase==='partido') updateTimerUI();
@@ -1043,18 +1046,110 @@ async function closeMatch(){
   }
 }
 
+// ── ADMIN ──
+function renderAdminSection(m){
+  const sh = m.shootoutH ?? '';
+  const sa = m.shootoutA ?? '';
+  const phaseOpts = ['pre','lineup_sent','partido','done']
+    .map(p=>`<option value="${p}" ${m.phase===p?'selected':''}>${p}</option>`).join('');
+  const woLabel = m.wo
+    ? `<span style="color:var(--red);font-weight:700">⚠️ Ya es W.O. (ganó ${m.wo_winner==='home'?m.home:m.away})</span>`
+    : '';
+  return `<div class="section" style="border:2px solid rgba(200,100,0,.25);background:rgba(255,243,224,.4)">
+    <div class="sec-title" style="color:#e65100">🛠️ Admin — Editar partido</div>
+    ${woLabel}
+    <div style="margin-top:.6rem">
+      <div style="font-size:.78rem;font-weight:800;color:var(--primary);margin-bottom:.35rem">Resultado</div>
+      <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+        <input type="number" id="adH" value="${m.scoreH??''}" placeholder="${m.home}" min="0" max="99"
+          style="width:62px;font-size:1.4rem;font-weight:900;text-align:center;border-radius:10px;border:2px solid rgba(0,75,141,.2);padding:.25rem;color:var(--primary)"/>
+        <span style="font-size:1.2rem;font-weight:900;color:var(--muted)">–</span>
+        <input type="number" id="adA" value="${m.scoreA??''}" placeholder="${m.away}" min="0" max="99"
+          style="width:62px;font-size:1.4rem;font-weight:900;text-align:center;border-radius:10px;border:2px solid rgba(0,75,141,.2);padding:.25rem;color:var(--primary)"/>
+        <span style="font-size:.75rem;color:var(--muted);margin-left:.3rem">Shoot:
+          <input type="number" id="adSH" value="${sh}" placeholder="—" min="0" max="10"
+            style="width:38px;text-align:center;border-radius:7px;border:1px solid rgba(0,0,0,.1);padding:.2rem;font-size:.85rem"/>
+          –
+          <input type="number" id="adSA" value="${sa}" placeholder="—" min="0" max="10"
+            style="width:38px;text-align:center;border-radius:7px;border:1px solid rgba(0,0,0,.1);padding:.2rem;font-size:.85rem"/>
+        </span>
+      </div>
+      <div style="margin-top:.5rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+        <label style="font-size:.75rem;font-weight:800;color:var(--primary)">Fase:</label>
+        <select id="adPhase" style="font-size:.82rem;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.3rem .5rem">
+          ${phaseOpts}
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="adminEdit()">💾 Guardar</button>
+        <span id="adMsg" class="msg" style="display:inline-block;padding:.25rem .6rem"></span>
+      </div>
+    </div>
+    <div style="margin-top:.75rem;padding-top:.65rem;border-top:1px solid rgba(200,100,0,.2)">
+      <div style="font-size:.78rem;font-weight:800;color:var(--red);margin-bottom:.4rem">⚠️ W.O. (5–0, sin stats de jugadoras)</div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+        <select id="woWinner" style="font-size:.82rem;border-radius:8px;border:1px solid rgba(0,0,0,.1);padding:.3rem .5rem">
+          <option value="home">Ganó ${m.home}</option>
+          <option value="away">Ganó ${m.away}</option>
+        </select>
+        <button class="btn btn-sm" style="background:var(--red);color:#fff" onclick="declareWO()">🏳️ Declarar W.O.</button>
+        <span id="woMsg" class="msg" style="display:inline-block;padding:.25rem .6rem"></span>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function adminEdit(){
+  const h  = document.getElementById('adH')?.value;
+  const a  = document.getElementById('adA')?.value;
+  const sh = document.getElementById('adSH')?.value;
+  const sa = document.getElementById('adSA')?.value;
+  const phase = document.getElementById('adPhase')?.value;
+  const msg = document.getElementById('adMsg');
+  try{
+    const d = await api('POST', `/api/matches/${S.currentId}/admin-edit`,
+      { scoreH: h===''?null:Number(h), scoreA: a===''?null:Number(a),
+        shootoutH: sh===''?null:Number(sh), shootoutA: sa===''?null:Number(sa),
+        phase });
+    if(d.ok){
+      S.matches[S.currentId]=d.match;
+      msg.className='msg ok'; msg.textContent='✅ Guardado';
+      setTimeout(()=>{ msg.className='msg'; renderDetail(); },1000);
+    } else { msg.className='msg error'; msg.textContent=d.error||'Error'; }
+  }catch(e){ msg.className='msg error'; msg.textContent='Error de conexión'; }
+}
+
+async function declareWO(){
+  const winner = document.getElementById('woWinner')?.value;
+  const msg = document.getElementById('woMsg');
+  const m = S.matches[S.currentId];
+  const winnerName = winner==='home'?m.home:m.away;
+  if(!confirm(`¿Declarar W.O.? Ganó ${winnerName} por 5-0. Los goles NO se asignan a ninguna jugadora.`)) return;
+  try{
+    const d = await api('POST', `/api/matches/${S.currentId}/wo`, { winner });
+    if(d.ok){
+      S.matches[S.currentId]=d.match;
+      msg.className='msg ok'; msg.textContent='✅ W.O. declarado';
+      setTimeout(()=>{ msg.className='msg'; renderDetail(); },1000);
+    } else { msg.className='msg error'; msg.textContent=d.error||'Error'; }
+  }catch(e){ msg.className='msg error'; msg.textContent='Error de conexión'; }
+}
+
 // ── DONE ──
 function renderDoneSection(m){
+  const woLine = m.wo
+    ? `<div style="margin-top:.4rem;font-size:.82rem;font-weight:700;color:var(--red)">
+         🏳️ W.O. — Ganó ${m.wo_winner==='home'?m.home:m.away}
+       </div>` : '';
   return `<div class="section">
     <div class="sec-title">✅ Partido finalizado</div>
     <div class="done-summary">
       <div class="done-teams">${m.home}</div>
       <div class="done-score">${m.scoreH} – ${m.scoreA}</div>
       <div class="done-teams">${m.away}</div>
-      ${m.shootoutH!==null&&m.shootoutH!==undefined
+      ${woLine}
+      ${!m.wo && m.shootoutH!==null&&m.shootoutH!==undefined
         ?`<div style="margin-top:.4rem;font-size:.82rem;color:var(--muted)">Shootouts: ${m.shootoutH} – ${m.shootoutA}</div>`:''}
       <div style="margin-top:.5rem;font-size:.75rem;color:var(--muted)">
-        Enviado el ${m.submitted_at?new Date(m.submitted_at).toLocaleString('es-AR'):'—'}
+        ${m.submitted_at?new Date(m.submitted_at).toLocaleString('es-AR'):'—'}
       </div>
     </div>
   </div>`;

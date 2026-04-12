@@ -763,6 +763,7 @@ function mergeScores(){
       m.scoreA    = saved[m.id].a;
       m.shootoutH = saved[m.id].sh ?? null;
       m.shootoutA = saved[m.id].sa ?? null;
+      m.wo        = saved[m.id].wo || false;
     }
   }));
 }
@@ -850,7 +851,7 @@ function renderFixtureContent(){
     gMatches.forEach(m => {
       const hasScore = m.scoreH !== null && m.scoreA !== null;
       const scoreHtml = hasScore
-        ? `<div class="score-display">${m.scoreH} – ${m.scoreA}</div>`
+        ? `<div class="score-display">${m.scoreH} – ${m.scoreA}${m.wo?'<span style="font-size:.65rem;font-weight:800;color:var(--red);margin-left:.4rem">W.O.</span>':''}</div>`
         : `<div class="score-display score-pending">– vs –</div>`;
 
       const metaHtml = (m.sede || m.horario) ? `
@@ -1086,7 +1087,8 @@ async function fetchScoresFromBackend(){
     const stored = {};
     Object.keys(data).forEach(id => {
       stored[id] = { h: data[id].h, a: data[id].a,
-        sh: data[id].sh ?? null, sa: data[id].sa ?? null };
+        sh: data[id].sh ?? null, sa: data[id].sa ?? null,
+        wo: data[id].wo || false };
     });
     localStorage.setItem('tm50_scores', JSON.stringify(stored));
     mergeScores();

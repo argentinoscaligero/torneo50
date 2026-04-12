@@ -104,7 +104,8 @@ app.get('/api/matches', (req, res) => {
     const m = matches[id];
     if(m.scoreH !== null && m.scoreA !== null){
       scores[id] = { h: m.scoreH, a: m.scoreA,
-        sh: m.shootoutH ?? null, sa: m.shootoutA ?? null };
+        sh: m.shootoutH ?? null, sa: m.shootoutA ?? null,
+        wo: m.wo || false };
     }
   });
   res.json(scores);
@@ -115,6 +116,7 @@ app.get('/api/stats', (req, res) => {
   const matches = readJSON(MATCHES_FILE);
   const scorers = {}, cards = {};
   Object.values(matches).forEach(m => {
+    if(m.wo) return; // W.O.: los goles 5-0 no cuentan para ninguna jugadora
     (m.events||[]).forEach(ev => {
       if(!ev.player) return;
       const key = `${ev.player}||${ev.team}`;
@@ -362,6 +364,57 @@ app.post('/api/matches/:id/phase', authMiddleware, (req, res) => {
 
   writeJSON(MATCHES_FILE, matches);
   res.json({ ok:true, match });
+});
+
+// ═══════════════════════════════════════════════════════
+//  ADMIN - editar resultado / W.O.
+// ═══════════════════════════════════════════════════════
+
+// POST /api/matches/:id/admin-edit  → editar resultado (admin)
+app.post('/api/matches/:id/admin-edit', authMiddleware, (req, res) => {
+  if(!isAdmin(req)) return res.status(403).json({ error: 'Solo el admin puede editar resultados' });
+  const matches = readJSON(MATCHES_FILE);
+  const match   = matches[req.params.id];
+  if(!match) return res.status(404).json({ error: 'Partido no encontrado' });
+
+  const { scoreH, scoreA, shootoutH, shootoutA, phase } = req.body;
+  if(scoreH !== undefined) match.scoreH = scoreH === '' ? null : Number(scoreH);
+  if(scoreA !== undefined) match.scoreA = scoreA === '' ? null : Number(scoreA);
+  match.shootoutH = (shootoutH !== undefined && shootoutH !== '' && shootoutH !== null)
+    ? Number(shootoutH) : null;
+  match.shootoutA = (shootoutA !== undefined && shootoutA !== '' && shootoutA !== null)
+    ? Number(shootoutA) : null;
+  if(phase) match.phase = phase;
+  // Si se reabre el partido, limpiar el flag W.O.
+  if(phase && phase !== 'done') { match.wo = false; match.wo_winner = null; }
+
+  writeJSON(MATCHES_FILE, matches);
+  res.json({ ok: true, match });
+});
+
+// POST /api/matches/:id/wo  → W.O. (admin)
+app.post('/api/matches/:id/wo', authMiddleware, (req, res) => {
+  if(!isAdmin(req)) return res.status(403).json({ error: 'Solo el admin puede declarar W.O.' });
+  const matches = readJSON(MATCHES_FILE);
+  const match   = matches[req.params.id];
+  if(!match) return res.status(404).json({ error: 'Partido no encontrado' });
+
+  const { winner } = req.body; // 'home' | 'away'
+  if(!['home','away'].includes(winner))
+    return res.status(400).json({ error: 'winner debe ser "home" o "away"' });
+
+  match.wo          = true;
+  match.wo_winner   = winner;
+  match.scoreH      = winner === 'home' ? 5 : 0;
+  match.scoreA      = winner === 'away' ? 5 : 0;
+  match.shootoutH   = null;
+  match.shootoutA   = null;
+  match.events      = []; // sin eventos → sin stats de jugadoras
+  match.phase       = 'done';
+  match.submitted_at = new Date().toISOString();
+
+  writeJSON(MATCHES_FILE, matches);
+  res.json({ ok: true, match });
 });
 
 // ═══════════════════════════════════════════════════════
