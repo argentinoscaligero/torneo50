@@ -176,12 +176,64 @@
     .done-score{font-size:2.8rem;font-weight:900;color:var(--primary);margin:.4rem 0}
     .done-teams{font-size:.9rem;color:var(--muted)}
 
-    @media(max-width:520px){
-      .formation-grid,.mode-grid{grid-template-columns:1fr}
-      .ev-grid{grid-template-columns:repeat(3,1fr)}
-      .post-event-form{grid-template-columns:50px 1fr}
-      .timer-display{font-size:3rem}
-      .dp-score{font-size:1.2rem}
+    @media(max-width:600px){
+      /* Header */
+      header{padding:.5rem .75rem}
+      .hdr-title{font-size:.82rem}
+      .hdr-sub{display:none}
+      .hdr-team{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem}
+      /* Main */
+      main{padding:.75rem;padding-bottom:4rem}
+      /* Welcome */
+      .welcome{padding:.8rem 1rem;gap:.5rem}
+      .welcome-name{font-size:1rem}
+      .welcome-group{font-size:.78rem}
+      /* Fecha tabs — scroll horizontal */
+      .tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:.3rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+      .tabs::-webkit-scrollbar{display:none}
+      .tab-btn{white-space:nowrap;flex-shrink:0;font-size:.78rem;padding:.35rem .7rem}
+      /* Match list */
+      .match-item{padding:.75rem .9rem}
+      .mi-teams{font-size:.88rem}
+      .mi-vs{font-size:.7rem}
+      /* Detail panel header */
+      .dp-body{padding:.75rem}
+      .dp-score{font-size:1.1rem;min-width:58px;padding:.15rem .5rem}
+      .dp-title{font-size:.82rem}
+      .dp-group{font-size:.68rem}
+      /* Sections */
+      .section{padding:.85rem}
+      /* Formation — checkboxes más grandes para touch */
+      .player-scroll{max-height:260px}
+      .prow{padding:.52rem .5rem;gap:.4rem}
+      .prow .chk-lbl input{width:20px;height:20px}
+      .prow .chk-lbl{padding:0 .4rem}
+      .prow .pname{font-size:.85rem}
+      /* Mode select */
+      .mode-grid{grid-template-columns:1fr 1fr}
+      .mode-card{padding:.9rem .6rem}
+      .mode-icon{font-size:1.8rem}
+      .mode-name{font-size:.85rem}
+      /* Timer */
+      .timer-display{font-size:3.2rem}
+      .timer-btns{gap:.4rem}
+      .timer-btns .btn{font-size:.85rem;padding:.5rem .9rem}
+      /* Team toggle — nombres largos */
+      .team-toggle button{font-size:.72rem;padding:.55rem .3rem;line-height:1.3}
+      /* Player select */
+      .qe-player{font-size:.88rem;padding:.55rem .65rem}
+      /* Event buttons — más grandes para touch */
+      .ev-grid{grid-template-columns:repeat(3,1fr);gap:.4rem}
+      .ev-btn{padding:.7rem .2rem}
+      .ev-icon{font-size:1.5rem}
+      .ev-label{font-size:.68rem}
+      /* Post score */
+      .score-input{width:72px;font-size:1.9rem}
+      .score-sep{font-size:1.5rem}
+      /* Post event form — 2 col en móvil */
+      .post-event-form{grid-template-columns:52px 1fr}
+      .post-event-form > div:nth-child(3){grid-column:1 / -1}
+      .post-event-form > div:nth-child(4){grid-column:1 / -1;text-align:right}
     }
   </style>
 </head>

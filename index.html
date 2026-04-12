@@ -181,18 +181,56 @@
     /* ── RESPONSIVE ── */
     @media(max-width:960px){
       .hero{grid-template-columns:minmax(0,1fr)}
-      .hero-right{order:-1}
+      .hero-right{order:-1;text-align:left}
+      .hero-right img{max-width:120px}
       .standings-wrap{grid-template-columns:minmax(0,1fr)}
       .equipos-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .grid-2,.grid-3,.reg-grid{grid-template-columns:minmax(0,1fr)}
     }
     @media(max-width:640px){
-      .nav{flex-direction:column;align-items:flex-start}
-      main{padding:1rem}
-      .hero{padding:1.3rem}
-      .hero-title{font-size:1.65rem}
-      .equipos-grid{grid-template-columns:minmax(0,1fr)}
+      /* Nav */
+      .nav{padding:.5rem 1rem;gap:.5rem}
+      .nav-left img{height:32px}
+      .nav-sub{display:none}
+      .nav-links{gap:.2rem;overflow-x:auto;flex-wrap:nowrap;padding-bottom:.1rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+      .nav-links::-webkit-scrollbar{display:none}
+      .nav-links a{white-space:nowrap;font-size:.8rem;padding:.25rem .55rem;flex-shrink:0}
+      /* Layout */
+      main{padding:.85rem}
+      /* Hero */
+      .hero{padding:1.1rem;gap:1rem}
+      .hero-title{font-size:1.45rem}
+      .hero-subtitle{font-size:.85rem}
+      .hero-right{display:none}
+      .hero-tags{gap:.3rem}
+      .tag{font-size:.7rem;padding:.18rem .45rem}
+      .hero-actions{gap:.5rem}
+      .btn-primary,.btn-secondary{font-size:.85rem;padding:.55rem 1rem}
+      /* Section */
+      .section-title{font-size:1.15rem}
+      .section-subtitle{font-size:.82rem}
+      /* Fixture tabs — scroll horizontal en vez de wrap */
+      .tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:.3rem;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:.35rem}
+      .tabs::-webkit-scrollbar{display:none}
+      .tab-btn{white-space:nowrap;flex-shrink:0;font-size:.8rem;padding:.35rem .7rem}
+      /* Match cards */
+      .match-card{padding:.8rem .9rem}
+      .team-name-fix{font-size:.82rem}
+      .vs-pill{font-size:.72rem;padding:.1rem .35rem}
+      .score-display{font-size:1rem;min-width:52px;padding:.2rem .5rem}
+      .meta-pill{font-size:.7rem;padding:.14rem .4rem}
+      .match-refs{font-size:.72rem}
+      /* Standings */
       .standings-wrap{grid-template-columns:minmax(0,1fr)}
+      table.standings{font-size:.78rem}
+      table.standings thead th,table.standings tbody td{padding:.4rem .2rem}
+      table.standings tbody td:first-child{padding-left:.5rem}
+      /* Equipos */
+      .equipos-grid{grid-template-columns:minmax(0,1fr)}
+      /* Stats */
+      .stats-wrap{grid-template-columns:1fr}
+      /* Footer */
+      footer{padding:1rem .85rem 3rem}
     }
   </style>
 </head>
