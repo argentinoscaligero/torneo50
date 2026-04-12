@@ -403,7 +403,13 @@ app.get('/api/admin/users', authMiddleware, (req, res) => {
 
 // Migrar datos existentes: agregar phase, subs, ids en eventos
 (function migrateData(){
-  const matches = readJSON(MATCHES_FILE);
+  let matches;
+  try {
+    matches = readJSON(MATCHES_FILE);
+  } catch(e) {
+    console.error('[migrateData] matches.json inválido — el servidor arranca igual, pero hay que corregir el archivo.');
+    return; // no crashear el proceso
+  }
   let changed = false;
   Object.values(matches).forEach(m => {
     if(!m.phase){ m.phase = m.submitted ? 'done' : 'pre'; changed = true; }
