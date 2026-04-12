@@ -464,6 +464,7 @@ function pauseTimer(){
   T.running=false; T.startedAt=null;
   clearInterval(T.interval); T.interval=null;
   saveTimer();
+  updateTimerUI();
 }
 function nextQuarter(){
   T.quarter++; T.elapsedAtPause=0; T.startedAt=null; T.running=false;
@@ -880,8 +881,35 @@ async function addLiveEvent(type){
       m.scoreH=d.scoreH; m.scoreA=d.scoreA;
       updateScoreHeader();
       refreshEventsLog();
+    } else {
+      // Mostrar error visible al usuario
+      const errMsg = d.error||'Error al registrar evento';
+      const existing = document.getElementById('liveErrMsg');
+      const container = document.getElementById('evLog')?.parentElement;
+      if(!existing && container){
+        const div = document.createElement('div');
+        div.id='liveErrMsg';
+        div.className='msg error';
+        div.style.cssText='margin-top:.5rem;padding:.4rem .7rem';
+        div.textContent='⚠️ '+errMsg+(errMsg.includes('401')||errMsg.includes('auth')?
+          ' — Tu sesión expiró, volvé a iniciar sesión.':'');
+        container.appendChild(div);
+        setTimeout(()=>div.remove(), 5000);
+      }
     }
-  }catch(e){ console.error(e); }
+  }catch(err){
+    console.error(err);
+    const existing = document.getElementById('liveErrMsg');
+    const container = document.getElementById('evLog')?.parentElement;
+    if(!existing && container){
+      const div = document.createElement('div');
+      div.id='liveErrMsg'; div.className='msg error';
+      div.style.cssText='margin-top:.5rem;padding:.4rem .7rem';
+      div.textContent='⚠️ Error de conexión. Verificá el internet e intentá de nuevo.';
+      container.appendChild(div);
+      setTimeout(()=>div.remove(), 5000);
+    }
+  }
 }
 
 // confirmFinish ya no se usa — el cierre pasa por closeMatch()
@@ -1067,6 +1095,8 @@ function refreshEventsLog(){
           ${!readonly?`<button class="ev-del" onclick="delEvent('${ev.id}')">✕</button>`:''}
         </div>`).join('')
     : `<div class="no-events">Sin eventos registrados.</div>`;
+  // Scroll al último evento
+  el.scrollTop = el.scrollHeight;
 }
 
 async function delEvent(eid){
