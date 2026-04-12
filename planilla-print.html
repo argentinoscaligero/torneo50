@@ -447,22 +447,22 @@ const TEAMS = {
 
 function chk(){ return `<div class="chk-box"></div>`; }
 
-function rosterRows(teamName, minRows=22){
+function rosterRows(teamName, side, minRows=22){
   const players = (TEAMS[teamName]||{}).players || [];
   const rows = [];
   players.forEach(p => {
-    rows.push(`<tr>
+    const key = `${p.nro}-${p.a}`;
+    rows.push(`<tr data-key="${key}" data-side="${side}">
       <td class="nro">${p.nro}</td>
       <td class="name">${p.a}, ${p.n}</td>
-      <td class="evt">${chk()}</td>
-      <td class="evt">${chk()}</td>
-      <td class="evt"></td>
-      <td class="evt"></td>
-      <td class="evt"></td>
-      <td class="evt"></td>
+      <td class="evt" data-col="T">${chk()}</td>
+      <td class="evt" data-col="S">${chk()}</td>
+      <td class="evt" data-col="G"></td>
+      <td class="evt" data-col="TAm"></td>
+      <td class="evt" data-col="TVe"></td>
+      <td class="evt" data-col="TRo"></td>
     </tr>`);
   });
-  // blank extra rows
   const total = Math.max(minRows, players.length + 2);
   for(let i=players.length; i<total; i++){
     rows.push(`<tr class="empty-row">
@@ -495,10 +495,12 @@ function render(match){
   const html = `
   <div class="pl-header">
     <div class="pl-logo"><img src="assets/logo-torneo-master-50.png" alt="Logo" style="width:40px;height:40px;object-fit:contain;border-radius:50%"/></div>
-    <div class="pl-header-text">
+    <div class="pl-header-text" style="flex:1">
       <h1>Campeonato Máster +50 Femenino 2026 — Torneo Apertura</h1>
       <p>Confederación Argentina de Hockey · Planilla Oficial de Partido</p>
     </div>
+    <div id="liveBadge" style="font-size:.7rem;font-weight:800;color:#fff;background:#888;
+      padding:.25rem .7rem;border-radius:999px;white-space:nowrap;align-self:center"></div>
   </div>
 
   <div class="pl-info">
@@ -531,9 +533,9 @@ function render(match){
     </div>
     <div>
       <div class="pl-score-box">
-        <div class="pl-score-cell"></div>
+        <div class="pl-score-cell" id="liveScoreH"></div>
         <div class="pl-score-sep">–</div>
-        <div class="pl-score-cell"></div>
+        <div class="pl-score-cell" id="liveScoreA"></div>
       </div>
     </div>
     <div class="pl-team">
@@ -550,17 +552,17 @@ function render(match){
         <th>PC</th><th>Total</th>
       </tr></thead>
       <tbody>
-        <tr>
+        <tr id="qtrHome">
           <td class="team-lbl">${f.home}</td>
-          <td class="score-cell"></td><td class="score-cell"></td>
-          <td class="score-cell"></td><td class="score-cell"></td>
-          <td class="score-cell"></td><td class="score-cell"></td>
+          <td class="score-cell" id="qH1"></td><td class="score-cell" id="qH2"></td>
+          <td class="score-cell" id="qH3"></td><td class="score-cell" id="qH4"></td>
+          <td class="score-cell" id="qHpc"></td><td class="score-cell" id="qHtot"></td>
         </tr>
-        <tr>
+        <tr id="qtrAway">
           <td class="team-lbl">${f.away}</td>
-          <td class="score-cell"></td><td class="score-cell"></td>
-          <td class="score-cell"></td><td class="score-cell"></td>
-          <td class="score-cell"></td><td class="score-cell"></td>
+          <td class="score-cell" id="qA1"></td><td class="score-cell" id="qA2"></td>
+          <td class="score-cell" id="qA3"></td><td class="score-cell" id="qA4"></td>
+          <td class="score-cell" id="qApc"></td><td class="score-cell" id="qAtot"></td>
         </tr>
       </tbody>
     </table>
@@ -580,7 +582,7 @@ function render(match){
           <th title="Tarjeta Verde">TVe</th>
           <th title="Tarjeta Roja">TRo</th>
         </tr></thead>
-        <tbody>${rosterRows(f.home)}</tbody>
+        <tbody>${rosterRows(f.home,'home')}</tbody>
       </table>
     </div>
     <div class="roster-divider"></div>
@@ -597,7 +599,7 @@ function render(match){
           <th title="Tarjeta Verde">TVe</th>
           <th title="Tarjeta Roja">TRo</th>
         </tr></thead>
-        <tbody>${rosterRows(f.away)}</tbody>
+        <tbody>${rosterRows(f.away,'away')}</tbody>
       </table>
     </div>
   </div>
@@ -676,10 +678,98 @@ function render(match){
   document.getElementById('planilla').style.display = '';
 }
 
+// ── LIVE DATA OVERLAY ──────────────────────────────────
+function mark(side, key, col, val){
+  const row = document.querySelector(`tr[data-side="${side}"][data-key="${key}"]`);
+  if(row){ const td = row.querySelector(`[data-col="${col}"]`); if(td) td.textContent = val; }
+}
+
+function applyLiveData(live, homeTeam, awayTeam){
+  // Score total
+  if(live.scoreH !== null){ document.getElementById('liveScoreH').textContent = live.scoreH; }
+  if(live.scoreA !== null){ document.getElementById('liveScoreA').textContent = live.scoreA; }
+
+  // Titulares / Suplentes
+  (live.lineup_home||[]).forEach(k => mark('home', k, 'T', '✓'));
+  (live.subs_home||[]).forEach(k   => mark('home', k, 'S', '✓'));
+  (live.lineup_away||[]).forEach(k => mark('away', k, 'T', '✓'));
+  (live.subs_away||[]).forEach(k   => mark('away', k, 'S', '✓'));
+
+  // Eventos → goles por cuarto y stats por jugadora
+  const GOAL_TYPES = ['gol','pc','ps'];
+  const qH={1:0,2:0,3:0,4:0}, qA={1:0,2:0,3:0,4:0};
+  const playerStats = {};  // key → {G,TAm,TVe,TRo}
+
+  (live.events||[]).forEach(ev => {
+    const side = ev.team === homeTeam ? 'home' : 'away';
+    const q    = ev.quarter || 1;
+
+    if(GOAL_TYPES.includes(ev.type)){
+      if(side==='home') qH[q]=(qH[q]||0)+1;
+      else              qA[q]=(qA[q]||0)+1;
+    }
+
+    // match player string to roster key by apellido
+    if(ev.player){
+      const rows = document.querySelectorAll(`tr[data-side="${side}"]`);
+      rows.forEach(row => {
+        const key = row.dataset.key || '';
+        const ap  = key.split('-').slice(1).join('-').toLowerCase();
+        if(ev.player.toLowerCase().includes(ap) && ap.length > 2){
+          if(!playerStats[side+'|'+key]) playerStats[side+'|'+key]={G:0,TAm:0,TVe:0,TRo:0};
+          const s = playerStats[side+'|'+key];
+          if(GOAL_TYPES.includes(ev.type))   s.G++;
+          if(ev.type==='amarilla')           s.TAm++;
+          if(ev.type==='verde')              s.TVe++;
+          if(ev.type==='roja')               s.TRo++;
+        }
+      });
+    }
+  });
+
+  // Rellenar cuartos
+  [1,2,3,4].forEach(q => {
+    const h = document.getElementById(`qH${q}`); if(h && qH[q]) h.textContent = qH[q];
+    const a = document.getElementById(`qA${q}`); if(a && qA[q]) a.textContent = qA[q];
+  });
+  const totH = document.getElementById('qHtot'); if(totH && live.scoreH!==null) totH.textContent = live.scoreH;
+  const totA = document.getElementById('qAtot'); if(totA && live.scoreA!==null) totA.textContent = live.scoreA;
+
+  // Stats por jugadora
+  Object.entries(playerStats).forEach(([sk, s]) => {
+    const [side, key] = sk.split('|');
+    if(s.G)   mark(side, key, 'G',   s.G);
+    if(s.TAm) mark(side, key, 'TAm', '●'.repeat(s.TAm));
+    if(s.TVe) mark(side, key, 'TVe', '●'.repeat(s.TVe));
+    if(s.TRo) mark(side, key, 'TRo', '●'.repeat(s.TRo));
+  });
+
+  // Badge de estado
+  const badge = document.getElementById('liveBadge');
+  if(badge){
+    const labels = {pre:'Sin iniciar', lineup_sent:'Formación enviada', partido:'En curso', done:'Finalizado'};
+    const colors = {pre:'#888', lineup_sent:'#f9b000', partido:'#d32f2f', done:'#2e7d32'};
+    const ph = live.phase||'pre';
+    badge.textContent = labels[ph]||ph;
+    badge.style.background = colors[ph]||'#888';
+  }
+}
+
 // Init
 const params = new URLSearchParams(location.search);
 const matchId = params.get('match');
-if(matchId){ render(matchId); }
+if(matchId){
+  render(matchId);
+  // Fetch live data from backend
+  fetch(`/api/matches/${matchId}/public`)
+    .then(r => r.ok ? r.json() : null)
+    .then(live => {
+      if(!live) return;
+      const f = FIXTURE.flatMap(f=>f.matches).find(m=>m.id===matchId);
+      if(f) applyLiveData(live, f.home, f.away);
+    })
+    .catch(()=>{}); // offline — planilla estática igual funciona
+}
 else{
   // show all matches as links
   document.getElementById('planilla').innerHTML = `

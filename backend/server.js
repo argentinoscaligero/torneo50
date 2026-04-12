@@ -116,6 +116,22 @@ app.get('/api/stats', (req, res) => {
   });
 });
 
+// GET /api/matches/:id/public  → datos públicos del partido (sin auth)
+app.get('/api/matches/:id/public', (req, res) => {
+  const matches = readJSON(MATCHES_FILE);
+  const match   = matches[req.params.id];
+  if(!match) return res.status(404).json({ error: 'Partido no encontrado' });
+  const { home, away, group, sede, horario, r1, r2,
+          scoreH, scoreA, shootoutH, shootoutA,
+          phase, mode, events,
+          lineup_home, lineup_away, subs_home, subs_away } = match;
+  res.json({ home, away, group, sede, horario, r1, r2,
+             scoreH, scoreA, shootoutH, shootoutA,
+             phase, mode, events: events||[],
+             lineup_home: lineup_home||[], lineup_away: lineup_away||[],
+             subs_home: subs_home||[], subs_away: subs_away||[] });
+});
+
 // GET /api/matches/full  → todos los datos (requiere auth)
 app.get('/api/matches/full', authMiddleware, (req, res) => {
   const matches = readJSON(MATCHES_FILE);
