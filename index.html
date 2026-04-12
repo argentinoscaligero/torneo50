@@ -246,7 +246,7 @@
   <!-- FIXTURE -->
   <section id="fixture">
     <h2 class="section-title">Fixture</h2>
-    <p class="section-subtitle">3 fechas de fase de grupos + playoffs el 14 de junio.</p>
+    <p class="section-subtitle">3 fechas de fase de grupos + finales a confirmar.</p>
     <div class="tabs" id="fixtureTabs"></div>
     <div id="fixtureContent"></div>
   </section>
@@ -332,26 +332,26 @@
 // ═══════════════════════════════════════════════════════
 
 const FECHAS_TORNEO = [
-  { num: 1, date: "29 de marzo 2026",   label: "Fecha 1",   status: "en_curso" },
-  { num: 2, date: "12 de abril 2026",   label: "Fecha 2",   status: "pendiente" },
-  { num: 3, date: "17 de mayo 2026",    label: "Fecha 3",   status: "pendiente" },
-  { num: 4, date: "14 de junio 2026",   label: "Finales",   status: "finales" },
+  { num: 1, date: "12 de abril 2026",   label: "Fecha 1",   status: "en_curso" },
+  { num: 2, date: "17 de mayo 2026",    label: "Fecha 2",   status: "pendiente" },
+  { num: 3, date: "14 de junio 2026",   label: "Fecha 3",   status: "pendiente" },
+  { num: 4, date: "A confirmar",        label: "Finales",   status: "finales" },
 ];
 
 const FIXTURE = [
   {
-    fecha: 1, date: "29 de marzo 2026",
+    fecha: 1, date: "12 de abril 2026",
     matches: [
-      { id:"f1m1", group:"A", home:"Black Velvet",        away:"Siamo Eterne",        sede:"Ferro",               horario:"09:00", r1:"GALVAN, Matías",        r2:"MOBRICI, Julieta",   scoreH:null, scoreA:null },
-      { id:"f1m2", group:"A", home:"No tan Santas",       away:"Zanjeras",            sede:"Hacoaj Agua",         horario:"10:00", r1:"SILVA, Aimé",           r2:"SOLER, Daniela",     scoreH:null, scoreA:null },
-      { id:"f1m3", group:"B", home:"Las Suricatas",       away:"Las Terrazas",        sede:"Ferro",               horario:"10:30", r1:"GALVAN, Matías",        r2:"MOBRICI, Julieta",   scoreH:null, scoreA:null },
-      { id:"f1m4", group:"B", home:"Viento Norte",        away:"NEA Irupe",           sede:"Ferro",               horario:"12:00", r1:"ROJAS VIEYRA, Cecilia", r2:"RIENTE, Alessandro", scoreH:null, scoreA:null },
-      { id:"f1m5", group:"C", home:"Eternas Guerreras",   away:"Las Inoxidables",     sede:"Hacoaj Agua",         horario:"11:30", r1:"SILVA, Aimé",           r2:"SOLER, Daniela",     scoreH:null, scoreA:null },
-      { id:"f1m6", group:"C", home:"San Fer",             away:"Deportivo Soraya",    sede:"Depto. Santa Bárbara",horario:"12:00", r1:"SIFFER, Diego",         r2:"SIFFER, Abigail",    scoreH:null, scoreA:null },
+      { id:"f1m1", group:"A", home:"Black Velvet",       away:"Siamo Eterne",     sede:"Ferro",                    horario:"09:00", r1:"Garofolo, Gerardo",    r2:"Galvan, Matias",          scoreH:null, scoreA:null },
+      { id:"f1m2", group:"A", home:"No tan Santas",      away:"Zanjeras",         sede:"TRC",                      horario:"08:30", r1:"Beltran, Mario",        r2:"Zambrano, David",         scoreH:null, scoreA:null },
+      { id:"f1m3", group:"B", home:"Las Suricatas",      away:"Las Terrazas",     sede:"TRC",                      horario:"10:00", r1:"Beltran, Mario",        r2:"Zambrano, David",         scoreH:null, scoreA:null },
+      { id:"f1m4", group:"B", home:"Viento Norte",       away:"NEA Irupe",        sede:"Circ. Fuerza Aérea",       horario:"11:30", r1:"Lopez, Hernan",         r2:"Gomez, Lucas Lautaro",    scoreH:null, scoreA:null },
+      { id:"f1m5", group:"C", home:"Eternas Guerreras",  away:"Las Inoxidables",  sede:"Ferro",                    horario:"10:30", r1:"Garofolo, Gerardo",    r2:"Galvan, Matias",          scoreH:null, scoreA:null },
+      { id:"f1m6", group:"C", home:"San Fer",            away:"Deportivo Soraya", sede:"Circ. Fuerza Aérea",       horario:"08:30", r1:"Lopez, Hernan",         r2:"Gomez, Lucas Lautaro",    scoreH:null, scoreA:null },
     ]
   },
   {
-    fecha: 2, date: "12 de abril 2026",
+    fecha: 2, date: "17 de mayo 2026",
     matches: [
       { id:"f2m1", group:"A", home:"Siamo Eterne",      away:"Zanjeras",            sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
       { id:"f2m2", group:"A", home:"Black Velvet",      away:"No tan Santas",       sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
@@ -362,7 +362,7 @@ const FIXTURE = [
     ]
   },
   {
-    fecha: 3, date: "17 de mayo 2026",
+    fecha: 3, date: "14 de junio 2026",
     matches: [
       { id:"f3m1", group:"A", home:"Black Velvet",        away:"Zanjeras",            sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
       { id:"f3m2", group:"A", home:"No tan Santas",       away:"Siamo Eterne",        sede:null, horario:null, r1:null, r2:null, scoreH:null, scoreA:null },
@@ -385,7 +385,7 @@ const TEAMS = {
     players:[
       {nro:"3",  apellido:"Arizabalo",      nombre:"Ariadna",    nacimiento:"18/02/1967"},
       {nro:"15", apellido:"Biotti",         nombre:"Julia",      nacimiento:"19/10/1966"},
-      {nro:"8",  apellido:"Di Meglio",      nombre:"Juana",      nacimiento:"13/06/1964"},
+      {nro:"8",  apellido:"Korolev",         nombre:"Barbara",    nacimiento:"16/08/1976"},
       {nro:"9",  apellido:"Etchegoyen",     nombre:"Monica",     nacimiento:"06/08/1969"},
       {nro:"5",  apellido:"Fagiani",        nombre:"Fernanda",   nacimiento:"31/07/1977"},
       {nro:"7",  apellido:"Garcia Girado",  nombre:"Silvina",    nacimiento:"15/11/1968"},
@@ -634,7 +634,9 @@ const TEAMS = {
       {nro:"—", apellido:"Castello",     nombre:"Flor",             nacimiento:"06/08/1968"},
       {nro:"—", apellido:"D'aprile",     nombre:"Gabriela",         nacimiento:"28/10/1968"},
       {nro:"—", apellido:"Gil",          nombre:"María Celina",     nacimiento:"14/04/1970"},
-      {nro:"—", apellido:"Acosta",       nombre:"Huerto",           nacimiento:"27/03/1972"},
+      {nro:"—", apellido:"Acosta",                  nombre:"Huerto",        nacimiento:"27/03/1972"},
+      {nro:"—", apellido:"Pascualli",               nombre:"Guillermina",   nacimiento:"29/03/1969"},
+      {nro:"—", apellido:"Spraggon Perciavalle",    nombre:"Verónica",      nacimiento:"05/12/1969"},
     ]
   },
   "Eternas Guerreras": {
@@ -677,10 +679,11 @@ const TEAMS = {
       {nro:"—", apellido:"Zone",     nombre:"Judith",           nacimiento:"09/10/1968"},
       {nro:"—", apellido:"Hurtado",  nombre:"Viviana",          nacimiento:"28/08/1970"},
       {nro:"—", apellido:"Manduti",  nombre:"Cecilia Laura",    nacimiento:"10/02/1975"},
-      {nro:"—", apellido:"Vinue",    nombre:"Ana Maria",        nacimiento:"22/08/1959"},
+      {nro:"—", apellido:"Vinue",    nombre:"Ana Maria",        nacimiento:"22/08/1952"},
       {nro:"—", apellido:"Alfaro",   nombre:"Maria Laura",      nacimiento:"16/11/1972"},
       {nro:"—", apellido:"Amarilla", nombre:"Evelin",           nacimiento:"24/09/1977"},
-      {nro:"—", apellido:"Castilla", nombre:"Maria Victoria",   nacimiento:"17/07/1975"},
+      {nro:"—", apellido:"Castilla",   nombre:"Maria Victoria",       nacimiento:"17/07/1975"},
+      {nro:"—", apellido:"Sereboves", nombre:"Gabriela Elizabeth",   nacimiento:"14/04/1971"},
     ]
   },
 };
@@ -731,7 +734,7 @@ const REGLAMENTO = [
   },
   {
     num:"7", title:"Playoffs 2026",
-    body:"Finales programadas para el 14 de junio de 2026. Detalles del formato se comunicarán una vez finalizada la fase de grupos."
+    body:"Fecha a confirmar. Detalles del formato se comunicarán una vez finalizada la fase de grupos."
   },
   {
     num:"8", title:"Tribunal de Disciplina",
