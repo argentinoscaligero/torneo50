@@ -26,8 +26,26 @@ app.use(express.json());
 app.use(express.static(ROOT_DIR)); // sirve index.html, assets, etc.
 
 // ── helpers ────────────────────────────────────────────
-function readJSON(file){ return JSON.parse(fs.readFileSync(file, 'utf8')); }
-function writeJSON(file, data){ fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8'); }
+function readJSON(file){
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch(e) {
+    console.error(`[ERROR] readJSON failed for ${file}:`, e.message);
+    throw e; // re-throw para que el route devuelva 500 en vez de crashear el proceso
+  }
+}
+function writeJSON(file, data){
+  // Escribir en archivo temporal primero, luego renombrar (atomic write)
+  const tmp = file + '.tmp';
+  try {
+    fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
+    fs.renameSync(tmp, file);
+  } catch(e) {
+    console.error(`[ERROR] writeJSON failed for ${file}:`, e.message);
+    try { fs.unlinkSync(tmp); } catch(_){}
+    throw e;
+  }
+}
 
 function authMiddleware(req, res, next){
   const header = req.headers.authorization || '';
@@ -402,6 +420,21 @@ app.get('/api/admin/users', authMiddleware, (req, res) => {
   });
   if(changed) writeJSON(MATCHES_FILE, matches);
 })();
+
+// ── Global error handler (evita crasheos por excepciones no capturadas) ──
+app.use((err, req, res, next) => {
+  console.error('[ERROR] Unhandled in route:', err.message);
+  res.status(500).json({ error: 'Error interno del servidor' });
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('[FATAL] uncaughtException:', err.message, err.stack);
+  // No salir — pm2 igual lo va a reiniciar, pero loguear el error
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('[FATAL] unhandledRejection:', reason);
+});
 
 app.listen(PORT, () => {
   console.log(`\n✅  Servidor Torneo Máster +50 corriendo en http://localhost:${PORT}`);
