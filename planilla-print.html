@@ -605,7 +605,9 @@ function render(match){
   </div>
 
   <div class="pl-shootout">
-    <h3>🎯 Shootout (en caso de empate)</h3>
+    <h3>🎯 Shootout (en caso de empate)
+      <span id="shootoutScore" style="margin-left:.7rem;font-size:.82rem;font-weight:900;color:#d32f2f;display:none"></span>
+    </h3>
     <div class="shootout-grid">
       <div class="shootout-side">
         <div class="shootout-side-title">${f.home}</div>
@@ -616,7 +618,7 @@ function render(match){
             <th>⬜ Convirtió</th>
             <th>⬜ No convirtió</th>
           </tr></thead>
-          <tbody>${shootoutRows(5)}</tbody>
+          <tbody id="shootoutBodyH">${shootoutRows(5)}</tbody>
         </table>
       </div>
       <div class="shootout-divider"></div>
@@ -629,7 +631,7 @@ function render(match){
             <th>⬜ Convirtió</th>
             <th>⬜ No convirtió</th>
           </tr></thead>
-          <tbody>${shootoutRows(5)}</tbody>
+          <tbody id="shootoutBodyA">${shootoutRows(5)}</tbody>
         </table>
       </div>
     </div>
@@ -743,6 +745,34 @@ function applyLiveData(live, homeTeam, awayTeam){
     if(s.TVe) mark(side, key, 'TVe', '●'.repeat(s.TVe));
     if(s.TRo) mark(side, key, 'TRo', '●'.repeat(s.TRo));
   });
+
+  // Shootout
+  const sh = live.shootoutH, sa = live.shootoutA;
+  if(sh !== null && sh !== undefined && sa !== null && sa !== undefined){
+    const scoreEl = document.getElementById('shootoutScore');
+    if(scoreEl){
+      scoreEl.textContent = `Resultado: ${sh} – ${sa}`;
+      scoreEl.style.display = '';
+    }
+    // Marcar filas de conversión: las primeras N filas = "Convirtió"
+    ['H','A'].forEach(side => {
+      const total = side==='H' ? sh : sa;
+      const tbody = document.getElementById(`shootoutBody${side}`);
+      if(!tbody) return;
+      tbody.querySelectorAll('tr').forEach((row, i) => {
+        const cells = row.querySelectorAll('td.chk');
+        if(!cells.length) return;
+        if(i < total){
+          cells[0].textContent = '✓'; // Convirtió
+          cells[0].style.fontWeight = '900';
+          cells[0].style.color = '#2e7d32';
+        } else if(i < 5){
+          cells[1].textContent = '✗'; // No convirtió
+          cells[1].style.color = '#c62828';
+        }
+      });
+    });
+  }
 
   // Badge de estado
   const badge = document.getElementById('liveBadge');
